@@ -26,3 +26,5 @@ The shared thank-you rotation also contains helder, guilherme, zampa, dan, anne,
 Rendering fixes: R/GA retains white internal lettering as mask cutouts. Live Ad is now a native SVG contour trace of the supplied bitmap, replacing its raster/filter wrapper. Wieden+Kennedy has an explicit viewbox. The initial rotation plays all nine clients in order; subsequent rounds shuffle all 19 clients, people, and agencies without weighting or repetition within a round.
 
 All twelve logos were raster-rendered and inspected together. The user approved keeping R/GA’s original square-and-wordmark design.
+
+MESA: vector contour trace of the user-supplied screenshot. Latest user direction removes the isolated R/GA square and retains its slash wordmark. Scanlines use alpha masks so no background stripe panel covers the video.

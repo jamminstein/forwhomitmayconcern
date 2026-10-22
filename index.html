@@ -6,9 +6,9 @@
 -->
 <head>
 <meta charset="utf-8">
+<meta name="site-version" content="drums-mobile-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#e9e8e1">
-<link rel="shortcut icon" href="favicon.ico?v=doodles-1">
 <link id="doodleFavicon" rel="icon" type="image/gif" href="favicon.gif?v=doodles-1">
 <title>Tiago Pereira — Living Image</title>
 <meta name="description" content="Creative direction, moving images, and musical experiments by Tiago Pereira.">
@@ -369,6 +369,41 @@ html[data-theme=dark] .transform-grip[data-corner=br],html[data-theme=dark] .tra
 #workCredits[data-brand=wieden-kennedy] #currentBrand{width:65px;height:29px}
 html[data-theme=light] .rotate-grip,html[data-theme=light] .rotate-grip:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20transform%3D%22translate%2832%200%29%20scale%28-1%201%29%22%3E%3Cpath%20d%3D%22M9%2010%20C15%203%2028%206%2027%2017%20C27%2026%2016%2030%208%2023%20M8%207%20L8%2013%20L15%2012%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 16 16,crosshair;}
 html[data-theme=dark] .rotate-grip,html[data-theme=dark] .rotate-grip:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20transform%3D%22translate%2832%200%29%20scale%28-1%201%29%22%3E%3Cpath%20d%3D%22M9%2010%20C15%203%2028%206%2027%2017%20C27%2026%2016%2030%208%2023%20M8%207%20L8%2013%20L15%2012%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 16 16,crosshair;}
+
+.brand-scanlines{display:none!important}
+#currentBrand{mask-image:repeating-linear-gradient(0deg,#000 0 2px,#0009 2px 2.7px);-webkit-mask-image:repeating-linear-gradient(0deg,#000 0 2px,#0009 2px 2.7px)}
+#drumMachine{position:fixed;left:7vw;bottom:20vh;width:120px;height:66px;z-index:7;color:#000;transform:rotate(-9deg)}
+#drumMachine svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;display:block;overflow:visible}
+.drum-shell{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.drum-pad{position:absolute;top:27px;width:29px;height:29px;padding:0;border:0;background:transparent;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.drum-pad[data-drum=kick]{left:15px}.drum-pad[data-drum=snare]{left:47px}.drum-pad[data-drum=hat]{left:79px}
+.drum-pad svg{width:29px;height:29px;transition:transform .08s,opacity .08s}
+.drum-pad.hit svg{transform:translateY(2px) rotate(4deg);opacity:.45}
+.drum-pad:focus-visible{outline:1px dashed currentColor;outline-offset:3px}
+html[data-theme=dark] #drumMachine{color:#fff}
+.stage-wrap{width:min(56.355vw,97.5375vh);max-width:953.7px}
+@media(max-width:760px){.stage-wrap{width:65.025vw;max-width:none}}
+@media(max-width:430px){.stage-wrap{width:66.47vw}}
+@media(max-width:700px){
+ html{height:auto;min-height:100%;overflow-x:hidden}
+ body{height:auto;min-height:240svh;overflow-x:hidden;overflow-y:auto;position:relative}
+ .shell{position:fixed;inset:0;width:100%;height:100svh;min-height:0;padding:0;pointer-events:none;z-index:2}
+ .stage-wrap{pointer-events:auto}
+ .stage{touch-action:pan-y}
+ #overlay .point,.transform-frame button{touch-action:none}
+ #pageWritings{position:absolute;inset:0 0 auto;height:235svh;z-index:3}
+ .portrait-link,#themeToggle,.written-name{position:absolute}
+ .glass-dock{position:absolute;top:83svh;bottom:auto;z-index:20}
+ #workCredits{position:absolute;top:219svh;bottom:auto;right:16px}
+ #drumMachine{position:absolute;top:145svh;left:13vw;bottom:auto;z-index:7;transform:rotate(-9deg)}
+ .page-writing:nth-child(1){top:13%!important;left:5%!important;max-width:51vw}
+ .page-writing:nth-child(2){top:44%!important;bottom:auto!important;left:7%!important;max-width:68vw}
+ .page-writing:nth-child(3){top:27%!important;bottom:auto!important;left:35%!important;max-width:57vw}
+ .page-writing:nth-child(4){top:71%!important;bottom:auto!important;right:5%!important;max-width:62vw}
+ .page-writing:nth-child(5){top:82%!important;bottom:auto!important;left:5%!important;right:auto!important;max-width:64vw}
+ .page-writing:nth-child(6){top:57%!important;bottom:auto!important;left:45%!important;max-width:47vw}
+ .page-writing svg{max-width:100%}
+}
 </style>
 </head>
 <body>
@@ -428,6 +463,12 @@ html[data-theme=dark] .rotate-grip,html[data-theme=dark] .rotate-grip:active{cur
 <a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-cutout.png" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div id="writtenName" class="written-name"></div>
 <div id="pageWritings"></div>
+<div id="drumMachine" role="group" aria-label="Drum machine: J kick, K snare, L hi-hat">
+<svg class="drum-shell" viewBox="0 0 120 66" aria-hidden="true"><path d="M8 14 L110 10 L116 58 L5 61 Z M13 22 L106 19 M17 8 L32 6 M82 5 L101 7"/><path d="M17 18 L21 17 M27 17 L31 17 M87 15 L91 15 M98 14 L103 14"/></svg>
+<button class="drum-pad" data-drum="kick" aria-label="Kick drum (J)"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M5 5 L23 4 L24 23 L4 24 Z M9 10 L17 10 L17 18 Q16 23 11 19"/></svg></button>
+<button class="drum-pad" data-drum="snare" aria-label="Snare drum (K)"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 5 L23 6 L24 24 L5 23 Z M10 9 L10 20 M18 9 L11 15 L19 20"/></svg></button>
+<button class="drum-pad" data-drum="hat" aria-label="Hi-hat (L)"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M5 4 L24 5 L23 23 L4 24 Z M11 9 L10 20 L19 19"/></svg></button>
+</div>
 <aside id="workCredits" aria-label="Thank you to clients, collaborators, and agencies">
 <div id="workCreditsLabel"></div><div class="brand-screen"><img id="currentBrand" src="brand-logos/spacex.svg?v=wordmarks-1" alt="SpaceX" width="96" height="31"><div id="currentPerson" hidden></div><span class="brand-scanlines" aria-hidden="true"></span></div>
 </aside>
@@ -449,7 +490,7 @@ html[data-theme=dark] .rotate-grip,html[data-theme=dark] .rotate-grip:active{cur
 <div class="sketch-volume"><svg viewBox="0 0 30 60" aria-hidden="true"><path d="M14 52 Q11 43 15 33 T14 9"/><path id="volumeKnob" d="M-4 -1 C-6 -6 3 -7 5 -2 C7 4 0 7 -4 3 Z"/></svg><input id="soundtrackVolume" type="range" min="0" max="1" step=".01" value=".32" aria-label="Music volume" aria-orientation="vertical"></div>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<audio id="audio" preload="metadata"></audio>
+<audio crossorigin="anonymous" id="audio" preload="metadata"></audio>
 <script>
 (()=>{
   const themeButton=document.querySelector('#themeToggle');
@@ -586,16 +627,17 @@ html[data-theme=dark] .rotate-grip,html[data-theme=dark] .rotate-grip:active{cur
   audio.addEventListener('play',updateAudioState);audio.addEventListener('pause',updateAudioState);audio.addEventListener('ended',()=>nextSong());
   audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)){audioSeek.max=audio.duration;audioSeek.value=audio.currentTime;audioTime.textContent=`${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`}});
   audioSeek.addEventListener('input',()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(audioSeek.value)});
-  document.querySelector('#volume').addEventListener('input',e=>{fadeActive=false;audio.volume=Number(e.target.value)});audio.volume=soundtrackLevel;
+  document.querySelector('#volume').addEventListener('input',e=>{fadeActive=false;setPlaybackLevel(Number(e.target.value))});setPlaybackLevel(soundtrackLevel);
   window.addEventListener('keydown',e=>{if(e.target.closest?.('input,button,textarea,.point'))return;if(e.key.toLowerCase()==='v'){videoFile.click();return}if(e.key.toLowerCase()==='a'){audioFiles.click();return}if(e.key.toLowerCase()==='r'){setMorph(false);initialPoints();selectedPoint=-1;drawOverlay();return}if(e.key.toLowerCase()==='f'){document.querySelector('.stage-wrap').requestFullscreen?.();return}if(currentTrack>=0&&e.key==='ArrowRight')nextSong();if(currentTrack>=0&&e.key==='ArrowLeft')previousSong()});
   window.addEventListener('dragover',e=>e.preventDefault());
   window.addEventListener('drop',e=>{e.preventDefault();const files=[...e.dataTransfer.files];const clip=files.find(f=>f.type.startsWith('video/'));if(clip){loadVideoFile(clip);return}const songs=files.filter(f=>f.type.startsWith('audio/'));if(songs.length){songs.forEach(file=>{const url=URL.createObjectURL(file);audioURLs.push(url);tracks.push({name:file.name.replace(/\.[^.]+$/,''),url})});renderTracks();if(currentTrack<0)selectTrack(0,false)}});
   function updateVolumeSketch(){document.querySelector('#volumeKnob').setAttribute('transform',`translate(14 ${52-43*soundtrackLevel})`)}
-  document.querySelector('#soundtrackVolume').addEventListener('input',e=>{soundtrackLevel=Number(e.target.value);fadeActive=false;audio.volume=soundtrackLevel;updateVolumeSketch()});
+  document.querySelector('#soundtrackVolume').addEventListener('input',e=>{soundtrackLevel=Number(e.target.value);fadeActive=false;setPlaybackLevel(soundtrackLevel);updateVolumeSketch()});
   updateVolumeSketch();
-  function animateAudioFade(now){if(!fadeActive||audio.paused)return;const t=Math.min(1,Math.max(0,(now-fadeStarted)/3500));audio.volume=soundtrackLevel*t*t*(3-2*t);if(t===1)fadeActive=false}
-  function beginAudioFade(){musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;audio.volume=0}
-  function tryAutoplayMusic(){if(musicStarted||autoplayPending||!tracks.length||currentTrack<0)return;autoplayPending=true;audio.volume=0;audio.play().then(()=>{if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;audio.volume=soundtrackLevel})}
+  function setPlaybackLevel(level){window.siteMixLevel=level;if(window.setSiteMusicLevel)window.setSiteMusicLevel(level);else audio.volume=level}
+  function animateAudioFade(now){if(!fadeActive||audio.paused)return;const t=Math.min(1,Math.max(0,(now-fadeStarted)/3500));setPlaybackLevel(soundtrackLevel*t*t*(3-2*t));if(t===1)fadeActive=false}
+  function beginAudioFade(){musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;setPlaybackLevel(0)}
+  function tryAutoplayMusic(){if(musicStarted||autoplayPending||!tracks.length||currentTrack<0)return;autoplayPending=true;setPlaybackLevel(0);audio.play().then(()=>{if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;setPlaybackLevel(soundtrackLevel)})}
   audio.addEventListener('play',()=>{if(!musicStarted)beginAudioFade()});
   window.addEventListener('pointerdown',e=>{if(e.target.closest('#musicPlay,#musicPrev,#musicNext'))return;tryAutoplayMusic()});
   window.addEventListener('keydown',e=>{if(!e.repeat&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.target.closest('input,textarea,button'))tryAutoplayMusic()});
@@ -609,7 +651,8 @@ html[data-theme=dark] .rotate-grip,html[data-theme=dark] .rotate-grip:active{cur
 </script>
 
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
-<script type="module" src="brand-strip.js?v=thanks-mixed-4"></script>
-<script type="module" src="favicon.js?v=doodles-1"></script>
+<script type="module" src="brand-strip.js?v=drums-mobile-1"></script>
+<script type="module" src="favicon.js?v=doodles-2"></script>
+<script type="module" src="drum-machine.js?v=drums-1"></script>
 </body>
 </html>

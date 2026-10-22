@@ -1,0 +1,1022 @@
+[
+  {
+    "file": "kick-01.wav",
+    "family": "vowelsweep",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_367.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-02.wav",
+    "family": "resonant",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_468.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_87.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_214.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-03.wav",
+    "family": "swell",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_79.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-04.wav",
+    "family": "contrast",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_178.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_374.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_431.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-05.wav",
+    "family": "hybrid",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_135.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_330.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_300.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-06.wav",
+    "family": "layered",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_432.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_247.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_426.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-07.wav",
+    "family": "knock",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_403.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_54.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-08.wav",
+    "family": "split-brain",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_119.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_135.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_441.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-09.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_426.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-10.wav",
+    "family": "tuned",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_455.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_427.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_283.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-11.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_312.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-12.wav",
+    "family": "complement",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_312.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_229.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_135.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-13.wav",
+    "family": "synth",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_296.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_210.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_266.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_159.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-14.wav",
+    "family": "contrast",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_198.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_374.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_431.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_313.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-15.wav",
+    "family": "contrast",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_95.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_374.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_431.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_139.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "kick-16.wav",
+    "family": "resonant",
+    "layers": [
+      {
+        "file": "drum-sklad_kick_152.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_451.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_123.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_303.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_128.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -18,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-01.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_534.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-02.wav",
+    "family": "tuned",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_246.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_335.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-03.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_402.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-04.wav",
+    "family": "layered",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_127.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_231.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_234.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-05.wav",
+    "family": "swell",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_383.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-06.wav",
+    "family": "vowelsweep",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_283.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-07.wav",
+    "family": "synth",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_335.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_283.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_214.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-08.wav",
+    "family": "split-brain",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_373.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_154.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_272.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_481.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_98.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-09.wav",
+    "family": "ott",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_156.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_356.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_340.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-10.wav",
+    "family": "knock",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_503.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_103.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-11.wav",
+    "family": "resonant",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_493.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_367.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_232.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-12.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_200.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-13.wav",
+    "family": "swell",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_428.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-14.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_355.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-15.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_280.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "snare-16.wav",
+    "family": "layered",
+    "layers": [
+      {
+        "file": "drum-sklad_snare_326.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_189.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_493.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -20,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-01.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_241.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-02.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_304.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-03.wav",
+    "family": "swell",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_332.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-04.wav",
+    "family": "ott",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_374.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_154.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_264.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-05.wav",
+    "family": "knock",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_191.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_314.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_318.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-06.wav",
+    "family": "resonant",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_115.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_388.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_262.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_98.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-07.wav",
+    "family": "vowelsweep",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_72.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-08.wav",
+    "family": "synth",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_57.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_329.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_142.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_kick_363.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-09.wav",
+    "family": "layered",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_241.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_293.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_269.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-10.wav",
+    "family": "tuned",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_106.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_208.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-11.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_359.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-12.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_395.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-13.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_60.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-14.wav",
+    "family": "unison",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_211.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-15.wav",
+    "family": "resonant",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_367.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_188.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_hat_63.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      },
+      {
+        "file": "drum-sklad_snare_342.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  },
+  {
+    "file": "hat-16.wav",
+    "family": "octave",
+    "layers": [
+      {
+        "file": "drum-sklad_hat_273.wav",
+        "source": "drum-sklad",
+        "license": "public-domain"
+      }
+    ],
+    "normalization": {
+      "activeRmsTargetDbfs": -26,
+      "peakCeilingDbfs": -3
+    }
+  }
+]

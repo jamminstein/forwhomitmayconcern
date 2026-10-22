@@ -36,3 +36,13 @@ Buildless static website. GitHub Pages serves the main branch root. All media an
 ## Verification
 
 Script initialization, mesh operations, morphing, audio transport, fade-in, volume, and handwriting rendering were checked with simulated browser/media objects. Real browser rendering, native gestures, and mobile audio policies still require device testing.
+
+## Drum machine and mobile canvas
+
+A small three-pad drawing is playable by pointer/touch or J (kick), K (snare), L (hi-hat). Each load selects one different sound in each category from the previous session kit when available. The shipped selection has 16 normalized 44.1 kHz mono WAV files per category, sourced from the local Sample Stacker collection. Only layers recorded as CC0/public-domain in that collection's provenance were included; see drum-samples/SOURCES.json. The complete library is not uploaded. All public sample URLs are accessible to visitors.
+
+The Web Audio mixer routes music and drums through a shared compressor and soft ceiling after a user gesture. The existing volume/fade controls drive both buses; per-class active-RMS normalization and peak headroom keep hits balanced. Hats choke their previous tail. Actual device latency, perceived loudness, and mobile browser policies still need listening tests.
+
+On narrow screens the video stays centered in a fixed layer while the surrounding words, portrait, controls, drum drawing, and thank-you element scroll over a 240-viewport-height canvas. The video starts another 15% smaller than the earlier version. Logos use transparent scanline masks rather than painting background-colored stripes over the video. R/GA uses the wordmark without the isolated square. MESA is traced from the supplied logo image.
+
+The favicon contains a valid 16-frame GIF and a script that replaces a single icon link with successive PNG frames for browsers that do not animate GIF favicons. Browser UI may still suppress tab-icon animation; reduced-motion preferences deliberately freeze it.

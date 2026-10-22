@@ -1,0 +1,16 @@
+import {getMixer} from './audio-mixer.js?v=drums-1';
+export function chooseKit(manifest,previous={},rng=Math.random){return Object.fromEntries(['kick','snare','hat'].map(kind=>{const pool=manifest[kind].filter(url=>url!==previous[kind]);const choices=pool.length?pool:manifest[kind];return [kind,choices[Math.floor(rng()*choices.length)]]}))}
+const padKeys={j:'kick',k:'snare',l:'hat'},pads=[...document.querySelectorAll('.drum-pad')],blobs={},buffers={},active=new Set();let lastHat=null;
+const kitReady=fetch('drum-samples.json?v=drums-1').then(r=>{if(!r.ok)throw Error('Missing drum manifest');return r.json()}).then(manifest=>{let previous={};try{previous=JSON.parse(sessionStorage.getItem('last-drum-kit')||'{}')}catch{}const kit=chooseKit(manifest,previous);try{sessionStorage.setItem('last-drum-kit',JSON.stringify(kit))}catch{}return Promise.all(Object.entries(kit).map(async([kind,url])=>{const response=await fetch(url);if(!response.ok)throw Error('Missing drum hit');blobs[kind]=await response.arrayBuffer()}))});
+async function prepare(){const mix=getMixer();if(!mix)return null;await mix.context.resume();await kitReady;await Promise.all(Object.keys(blobs).map(async kind=>{if(!buffers[kind])buffers[kind]=mix.context.decodeAudioData(blobs[kind].slice(0));buffers[kind]=await buffers[kind]}));return mix}
+kitReady.then(()=>{document.querySelector('#drumMachine').dataset.ready='true'}).catch(()=>{document.querySelector('#drumMachine').dataset.ready='false'});
+function flash(kind){const pad=document.querySelector(`[data-drum="${kind}"]`);pad.classList.remove('hit');void pad.offsetWidth;pad.classList.add('hit');setTimeout(()=>pad.classList.remove('hit'),120)}
+export async function triggerDrum(kind){flash(kind);try{const mix=await prepare();if(!mix)return;const {context,drumGain}=mix,now=context.currentTime;const source=context.createBufferSource(),gain=context.createGain();source.buffer=buffers[kind];gain.gain.value=.92;source.connect(gain);gain.connect(drumGain);
+ if(kind==='hat'&&lastHat){lastHat.gain.gain.cancelScheduledValues(now);lastHat.gain.gain.setTargetAtTime(0,now,.004);try{lastHat.source.stop(now+.025)}catch{}}
+ const voice={source,gain};if(kind==='hat')lastHat=voice;active.add(voice);source.onended=()=>{source.disconnect();gain.disconnect();active.delete(voice)};source.start(now);
+ if(active.size>24){const oldest=active.values().next().value;oldest.gain.gain.setTargetAtTime(0,now,.003);try{oldest.source.stop(now+.02)}catch{}}
+ }catch(error){console.warn('Drum hit unavailable',error)}}
+for(const pad of pads){pad.addEventListener('pointerdown',e=>{e.preventDefault();triggerDrum(pad.dataset.drum)});pad.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();e.stopPropagation();triggerDrum(pad.dataset.drum)}})}
+window.addEventListener('keydown',e=>{const kind=padKeys[e.key.toLowerCase()];if(!kind||e.repeat||e.metaKey||e.ctrlKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;e.preventDefault();triggerDrum(kind)});
+// Decode after the first gesture, before the first intentional drum hit when possible.
+window.addEventListener('pointerdown',()=>prepare().catch(()=>{}),{once:true});
