@@ -462,7 +462,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
     <div class="stage" id="stage">
       <canvas id="gl" aria-label="Warped video display"></canvas>
       <svg id="overlay" aria-label="Bezier mesh editing controls"></svg>
-      <video id="video" muted playsinline loop aria-hidden="true"></video>
+      <video id="video" autoplay muted playsinline webkit-playsinline preload="auto" loop aria-hidden="true"></video>
       <div class="edit-hint" id="editHint"><b>Mesh edit</b><span>Drag the corners + Bezier points</span></div>
     </div>
     <div class="stage-controls">
@@ -553,10 +553,9 @@ html[data-theme=dark] #currentSongId{color:#fff}
   initialPoints();
   const showToast=()=>{};
 
-  // Local copy of MDN's CC0 flower footage; visitors can replace it with V or drag/drop.
-  video.src='tiago-v2.mp4';
-  video.autoplay=true;
-  video.muted=true;
+  // Muted artwork stays independent from the Acervo soundtrack.
+  video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;
+  video.src='tiago-mobile.mp4';
   video.play().catch(()=>showToast('Click the image to start the video.'));
   stage.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{})});
 
@@ -726,5 +725,6 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=variants-1"></script>
 <script type="module" src="song-id.js?v=handwritten-5"></script>
+<script type="module" src="video-playback.js?v=mobile-1"></script>
 </body>
 </html>
