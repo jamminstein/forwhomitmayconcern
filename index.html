@@ -309,7 +309,7 @@ html[data-theme=dark] #overlay .point:active,html[data-theme=dark] .stage-wrap.b
 .glass-dock #morph[aria-pressed=true]{opacity:1}
 #morph .morph-loop{transform-box:fill-box;transform-origin:center}
 #morph[aria-pressed=true] .morph-loop{animation:morph-sway 3.8s ease-in-out infinite}
-#morph[aria-pressed=true] .morph-loop:nth-child(2){animation-direction:reverse}
+#morph[aria-pressed=true] .morph-loop:nth-child(2){animation-delay:-1.9s}
 @keyframes morph-sway{0%,100%{transform:translate(-.6px,.2px) rotate(-1deg)}50%{transform:translate(.6px,-.2px) rotate(1deg)}}
 @media(prefers-reduced-motion:reduce){#morph[aria-pressed=true] .morph-loop{animation:none}}
 
