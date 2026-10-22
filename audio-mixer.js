@@ -1,6 +1,6 @@
 let mixer=null;
 export function getMixer(){
- if(mixer){if(mixer.context.state==='suspended')mixer.context.resume().catch(()=>{});return mixer}
+ if(mixer){if(mixer.context.state!=='running'&&mixer.context.state!=='closed')mixer.context.resume().catch(()=>{});return mixer}
  const AudioContext=window.AudioContext||window.webkitAudioContext;if(!AudioContext)return null;
  const context=new AudioContext({latencyHint:'interactive'}),music=document.querySelector('#audio');
  const musicGain=context.createGain(),drumGain=context.createGain(),compressor=context.createDynamicsCompressor(),ceiling=context.createWaveShaper();
@@ -13,5 +13,10 @@ export function getMixer(){
  mixer={context,musicGain,drumGain};context.resume().catch(()=>{});return mixer;
 }
 function activateMixer(){try{getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
-window.addEventListener('pointerdown',activateMixer,{once:true});
-window.addEventListener('keydown',e=>{if(!e.repeat&&!e.metaKey&&!e.ctrlKey&&!e.altKey)activateMixer()},{once:true});
+window.resumeSiteAudio=activateMixer;
+for(const event of ['pointerdown','touchend','click','keydown'])window.addEventListener(event,e=>{
+ if(e.type==='keydown'&&(e.repeat||e.metaKey||e.ctrlKey||e.altKey))return;
+ activateMixer();
+},{capture:true,passive:true});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mixer)activateMixer()});
+window.addEventListener('pageshow',()=>{if(mixer)activateMixer()});

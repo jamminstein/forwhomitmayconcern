@@ -534,7 +534,7 @@ html[data-theme=dark] .project-links{color:#fff}
   const gridSize=5, pointIndex=(r,c)=>r*gridSize+c;
   let points=[];
   let morphing=false,morphFrom=null,morphTo=null,morphStarted=0;
-  let soundtrackLevel=.32;let musicStarted=false,autoplayPending=false,fadeStarted=0,fadeActive=false;
+  let soundtrackLevel=.32;let musicStarted=false,userPausedMusic=false,autoplayPending=false,fadeStarted=0,fadeActive=false;
   function initialPoints(){points=[];const h=1/(gridSize-1)/3;for(let r=0;r<gridSize;r++)for(let c=0;c<gridSize;c++)points.push({x:c/(gridSize-1),y:r/(gridSize-1),left:{x:-h,y:0},right:{x:h,y:0},up:{x:0,y:-h},down:{x:0,y:h}});}
 
   initialPoints();
@@ -613,7 +613,7 @@ html[data-theme=dark] .project-links{color:#fff}
   document.querySelector('#musicAdd').onclick=()=>audioFiles.click();
   document.querySelector('#musicPrev').onclick=()=>{if(tracks.length)previousSong()};
   document.querySelector('#musicNext').onclick=()=>{if(tracks.length)nextSong()};
-  document.querySelector('#musicPlay').onclick=()=>{if(!tracks.length){showToast('Soundtrack coming soon.');return}audio.paused?audio.play().catch(()=>showToast('This song could not play.')):audio.pause()};
+  document.querySelector('#musicPlay').onclick=()=>{if(!tracks.length){showToast('Soundtrack coming soon.');return}toggleMusic()};
   function updateZoomSketch(){const t=(view.scale-.3)/1.7;document.querySelector('#zoomKnob').setAttribute('transform',`translate(${8+94*t} ${27-17*t})`)}
   updateZoomSketch();
   function updateDockMusic(){document.querySelector('#songLabel').textContent=currentTrack>=0?tracks[currentTrack].name:'Acervo';document.querySelector('#musicPlaySketch').setAttribute('d',audio.paused?'M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z':'M12 8 L14 14 L10 22 L12 32 M27 7 L24 17 L28 23 L25 32');document.querySelector('#musicPlay').setAttribute('aria-label',audio.paused?'Play music':'Pause music');for(const id of ['musicPrev','musicNext'])document.querySelector('#'+id).disabled=!tracks.length}
@@ -648,9 +648,9 @@ html[data-theme=dark] .project-links{color:#fff}
   document.querySelector('#addSongs').addEventListener('click',()=>audioFiles.click());
   audioFiles.addEventListener('change',()=>{const files=[...audioFiles.files||[]].filter(f=>f.type.startsWith('audio/'));if(!files.length)return;files.forEach(file=>{const url=URL.createObjectURL(file);audioURLs.push(url);tracks.push({name:file.name.replace(/\.[^.]+$/,''),url})});audioFiles.value='';renderTracks();if(currentTrack<0)selectTrack(0,false);showToast(`${files.length} song${files.length===1?'':'s'} added.`)});
   function renderTracks(){if(tracks.some(t=>t.remote)){document.querySelector('#trackCount').textContent=`${tracks.length} TRACKS`;[audioPlay,audioSeek,document.querySelector('#prevTrack'),document.querySelector('#nextTrack')].forEach(b=>b.disabled=false);updateDockMusic();return}document.querySelector('#trackCount').textContent=`${tracks.length} TRACK${tracks.length===1?'':'S'}`;trackList.replaceChildren();if(!tracks.length){const li=document.createElement('li');li.className='empty-playlist';li.textContent='Add your own audio files. They play independently from the moving image.';trackList.appendChild(li)}else tracks.forEach((track,i)=>{const li=document.createElement('li');li.className='track'+(i===currentTrack?' selected':'');li.tabIndex=0;li.setAttribute('role','button');li.innerHTML=`<span class="track-no">${String(i+1).padStart(2,'0')}</span><span><span class="track-name"></span><span class="track-meta">jamminstein / original</span></span><span class="track-length" data-duration="${i}">--:--</span>`;li.querySelector('.track-name').textContent=track.name;li.addEventListener('click',()=>selectTrack(i,true));li.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectTrack(i,true)}});trackList.appendChild(li);const probe=new Audio();probe.preload='metadata';probe.src=track.url;probe.addEventListener('loadedmetadata',()=>{const d=trackList.querySelector(`[data-duration="${i}"]`);if(d)d.textContent=formatTime(probe.duration)},{once:true})});const has=tracks.length>0;[audioPlay,audioSeek,document.querySelector('#prevTrack'),document.querySelector('#nextTrack')].forEach(b=>b.disabled=!has)}
-  function selectTrack(i,playNow){if(!tracks.length)return;currentTrack=(i+tracks.length)%tracks.length;audio.src=tracks[currentTrack].url;audio.load();audioSeek.value=0;audioTime.textContent='00:00';renderTracks();if(playNow)audio.play().then(()=>updateAudioState()).catch(()=>showToast('Tap play to start the selected song.'));else updateAudioState()}
+  function selectTrack(i,playNow){if(!tracks.length)return;if(playNow){userPausedMusic=false;window.resumeSiteAudio?.();}currentTrack=(i+tracks.length)%tracks.length;audio.src=tracks[currentTrack].url;audio.load();audioSeek.value=0;audioTime.textContent='00:00';renderTracks();if(playNow)audio.play().then(()=>updateAudioState()).catch(()=>showToast('Tap play to start the selected song.'));else updateAudioState()}
   function updateAudioState(){audioPlay.textContent=audio.paused?'▶':'Ⅱ';audioPlay.setAttribute('aria-label',audio.paused?'Play audio':'Pause audio');document.querySelector('#audioStatus').textContent=audio.paused?'Video sound off':'Playlist playing';}
-  audioPlay.addEventListener('click',()=>{if(currentTrack<0){showToast('Add a song to begin.');return}if(audio.paused)audio.play().catch(()=>showToast('This audio file could not be played.'));else audio.pause()});
+  audioPlay.addEventListener('click',()=>{if(currentTrack<0){showToast('Add a song to begin.');return}toggleMusic()});
   document.querySelector('#prevTrack').addEventListener('click',()=>previousSong());document.querySelector('#nextTrack').addEventListener('click',()=>nextSong());
   audio.addEventListener('play',updateAudioState);audio.addEventListener('pause',updateAudioState);audio.addEventListener('ended',()=>nextSong());
   audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)){audioSeek.max=audio.duration;audioSeek.value=audio.currentTime;audioTime.textContent=`${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`}});
@@ -665,10 +665,29 @@ html[data-theme=dark] .project-links{color:#fff}
   function setPlaybackLevel(level){window.siteMixLevel=level;if(window.setSiteMusicLevel)window.setSiteMusicLevel(level);else audio.volume=level}
   function animateAudioFade(now){if(!fadeActive||audio.paused)return;const t=Math.min(1,Math.max(0,(now-fadeStarted)/3500));setPlaybackLevel(soundtrackLevel*t*t*(3-2*t));if(t===1)fadeActive=false}
   function beginAudioFade(){musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;setPlaybackLevel(0)}
-  function tryAutoplayMusic(){if(musicStarted||autoplayPending||!tracks.length||currentTrack<0)return;autoplayPending=true;setPlaybackLevel(0);audio.play().then(()=>{if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;setPlaybackLevel(soundtrackLevel)})}
-  audio.addEventListener('play',()=>{if(!musicStarted)beginAudioFade()});
-  window.addEventListener('pointerdown',e=>{if(e.target.closest('#musicPlay,#musicPrev,#musicNext'))return;tryAutoplayMusic()});
-  window.addEventListener('keydown',e=>{if(!e.repeat&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.target.closest('input,textarea,button'))tryAutoplayMusic()});
+  function toggleMusic(){
+    window.resumeSiteAudio?.();
+    if(audio.paused){userPausedMusic=false;audio.play().catch(()=>{autoplayPending=false})}
+    else{userPausedMusic=true;audio.pause()}
+  }
+  function tryAutoplayMusic(fromGesture=false){
+    if(userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
+    if(!audio.paused&&musicStarted)return;
+    autoplayPending=true;if(!musicStarted)setPlaybackLevel(0);
+    audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;if(!fadeActive)setPlaybackLevel(soundtrackLevel)});
+  }
+  audio.addEventListener('playing',()=>{if(!musicStarted)beginAudioFade()});
+  function unlockSoundtrack(e){
+    if(e.type==='keydown'&&(e.repeat||e.metaKey||e.ctrlKey||e.altKey))return;
+    window.resumeSiteAudio?.();
+    if(e.target.closest?.('#musicPlay,#audioPlay,#musicPrev,#musicNext,#prevTrack,#nextTrack'))return;
+    tryAutoplayMusic(true);
+  }
+  // Capture runs even when dragging a warp point stops event propagation.
+  for(const event of ['pointerdown','touchend','click','keydown'])window.addEventListener(event,unlockSoundtrack,{capture:true,passive:true});
+  function recoverSoundtrack(){if(document.hidden)return;window.resumeSiteAudio?.();if(musicStarted&&!userPausedMusic)tryAutoplayMusic()}
+  document.addEventListener('visibilitychange',recoverSoundtrack);
+  window.addEventListener('pageshow',recoverSoundtrack);
   let songQueue=[],songHistory=[];
   function shuffled(values){const out=[...values];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}return out}
   function nextSong(){if(!tracks.length)return;if(!songQueue.length)songQueue=shuffled(tracks.map((_,i)=>i).filter(i=>i!==currentTrack));if(!songQueue.length){audio.currentTime=0;audio.play().catch(()=>{});return}if(currentTrack>=0)songHistory.push(currentTrack);selectTrack(songQueue.pop(),true)}
@@ -681,7 +700,7 @@ html[data-theme=dark] .project-links{color:#fff}
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
 <script type="module" src="brand-strip.js?enso-1&v=drums-mobile-1"></script>
 
-<script type="module" src="drum-machine.js?v=drums-1"></script>
+<script type="module" src="drum-machine.js?v=mobile-audio-2"></script>
 <script type="module" src="drum-layout.js?v=3"></script>
 <nav class="project-links" aria-label="Other projects"><a href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="only music" data-label="only music"><svg viewBox="0 0 32 32" width="25" height="25" aria-hidden="true"><path d="M6 21 L5 15 C4 2 27 1 27 15 L26 22 M6 17 L3 18 L4 26 L9 27 L10 18 Z M26 17 L29 19 L27 27 L23 26 L23 18 Z M8 12 C10 4 22 5 25 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></nav>
 
