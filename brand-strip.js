@@ -3,7 +3,7 @@ export const brands=[
  ['SpaceX','spacex'],['Nike','nike'],['Google','google'],['Nickelodeon','nickelodeon'],['Lyft','lyft'],["Arc'Teryx",'arcteryx'],["Ben & Jerry's",'benandjerrys'],['Indeed','indeed'],['Comedy Central','comedycentral']
 ];
 export const agencies=[['Wieden+Kennedy','wieden-kennedy'],['Live Ad','live-ad'],['R/GA','rga'],['MESA','mesa']];
-export const people=['helder','guilherme','zampa','dan','anne','kako','santi','mauro','kirk','mom'];
+export const people=['helder','guilherme','zampa','dan','anne','kako','santi','mauro','kirk','mom','kevin'];
 const asLogo=(pair,category)=>({name:pair[0],file:pair[1],category});
 // Clients get one opening round; subsequent rounds include every entry equally.
 export const entries=[...brands.map(pair=>asLogo(pair,'clients')),...agencies.map(pair=>asLogo(pair,'agencies')),...people.map(name=>({name,category:'people'}))];
