@@ -306,7 +306,9 @@ html[data-theme=dark] #overlay .point:active,html[data-theme=dark] .stage-wrap.b
 
 .glass-dock #morph{order:10;margin-left:13px;width:31px;transform:translateY(3px) rotate(-11deg);opacity:1}
 .glass-dock #morph svg{width:28px;height:31px}
-.glass-dock #morph[aria-pressed=true]{opacity:1}
+.glass-dock #morph .morph-loop{opacity:.5;transition:opacity .45s ease}
+.glass-dock #morph[aria-pressed=true] .morph-loop{opacity:1}
+@media(prefers-reduced-motion:reduce){.glass-dock #morph .morph-loop{transition:none}}
 
 .sketch-volume{position:relative;order:11;width:30px;height:60px;margin-left:4px;flex-shrink:0;transform:rotate(3deg)}
 .sketch-volume svg{position:absolute;inset:0;width:30px;height:60px}
