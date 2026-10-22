@@ -1,80 +1,410 @@
 {
   "library": "CORPUS",
-  "frames": 552,
-  "fps": 15,
-  "duration": 36.8,
-  "clips": [
+  "variants": [
     {
-      "id": "alvin_ailey_american_dan_t1081_0000",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
-      "company": "",
-      "fps": 14.985014985014985,
-      "n_frames": 66
+      "id": 1,
+      "loop": "dancers/loop-1.webp",
+      "still": "dancers/still-1.webp",
+      "duration": 36.8,
+      "bytes": 1258338,
+      "clips": [
+        {
+          "id": "alvin_ailey_american_dan_t1081_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 66
+        },
+        {
+          "id": "alvin_ailey_american_dan_t1129_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 135
+        },
+        {
+          "id": "ballet2_t115_0001",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 215
+        },
+        {
+          "id": "ballet2_t147_0002",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 358
+        },
+        {
+          "id": "ballet2_t151_0003",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 228
+        },
+        {
+          "id": "ballet2_t40_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 360
+        },
+        {
+          "id": "ballet2_t581_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 258
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t2256_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 46
+        }
+      ]
     },
     {
-      "id": "alvin_ailey_american_dan_t1129_0000",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
-      "company": "",
-      "fps": 14.985014985014985,
-      "n_frames": 135
+      "id": 2,
+      "loop": "dancers/loop-2.webp",
+      "still": "dancers/still-2.webp",
+      "duration": 36.8,
+      "bytes": 1213432,
+      "clips": [
+        {
+          "id": "alvin_ailey_american_dan_t681_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 52
+        },
+        {
+          "id": "ballet2_t281_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 241
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t1969_0007",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 175
+        },
+        {
+          "id": "batsheva_dance_company_l_t1184_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "batsheva_dance_company_lOtZikc7360.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 69
+        },
+        {
+          "id": "alvin_ailey_american_dan_t927_0001",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 160
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t747_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 83
+        },
+        {
+          "id": "alvin_ailey_american_dan_t2135_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 84
+        },
+        {
+          "id": "ballet2_t30_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 219
+        }
+      ]
     },
     {
-      "id": "ballet2_t115_0001",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "ballet2.mov",
-      "company": "Ballet 2",
-      "fps": 12.0,
-      "n_frames": 215
+      "id": 3,
+      "loop": "dancers/loop-3.webp",
+      "still": "dancers/still-3.webp",
+      "duration": 36.8,
+      "bytes": 1241800,
+      "clips": [
+        {
+          "id": "ballet2_t40_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 360
+        },
+        {
+          "id": "alvin_ailey_american_dan_t1062_0004",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 209
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t987_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 57
+        },
+        {
+          "id": "ballet2_t151_0003",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 228
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t1011_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 113
+        },
+        {
+          "id": "alvin_ailey_american_dan_t1062_0005",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 80
+        },
+        {
+          "id": "ballet2_t147_0002",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 358
+        },
+        {
+          "id": "vertigo_dance_company_sz_t1713_0002",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "vertigo_dance_company_sz9MHrPV-yU.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 35
+        }
+      ]
     },
     {
-      "id": "ballet2_t147_0002",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "ballet2.mov",
-      "company": "Ballet 2",
-      "fps": 12.0,
-      "n_frames": 358
+      "id": 4,
+      "loop": "dancers/loop-4.webp",
+      "still": "dancers/still-4.webp",
+      "duration": 36.8,
+      "bytes": 1139802,
+      "clips": [
+        {
+          "id": "ballet2_t581_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 258
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t2256_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 46
+        },
+        {
+          "id": "ballet2_t115_0001",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 215
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t1046_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 31
+        },
+        {
+          "id": "alvin_ailey_american_dan_t1129_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 135
+        },
+        {
+          "id": "ballet2_t281_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 241
+        },
+        {
+          "id": "batsheva_dance_company_l_t1184_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "batsheva_dance_company_lOtZikc7360.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 69
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t1969_0007",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 175
+        }
+      ]
     },
     {
-      "id": "ballet2_t151_0003",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "ballet2.mov",
-      "company": "Ballet 2",
-      "fps": 12.0,
-      "n_frames": 228
-    },
-    {
-      "id": "ballet2_t40_0000",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "ballet2.mov",
-      "company": "Ballet 2",
-      "fps": 12.0,
-      "n_frames": 360
-    },
-    {
-      "id": "ballet2_t581_0000",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "ballet2.mov",
-      "company": "Ballet 2",
-      "fps": 12.0,
-      "n_frames": 258
-    },
-    {
-      "id": "manual_PERPETUUM_MOBILE__t2256_0000",
-      "source": "footage",
-      "material": "footage-cut",
-      "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
-      "company": "",
-      "fps": 12.5,
-      "n_frames": 46
+      "id": 5,
+      "loop": "dancers/loop-5.webp",
+      "still": "dancers/still-5.webp",
+      "duration": 36.8,
+      "bytes": 1216406,
+      "clips": [
+        {
+          "id": "alvin_ailey_american_dan_t2135_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 84
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t747_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 83
+        },
+        {
+          "id": "ballet2_t30_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 219
+        },
+        {
+          "id": "alvin_ailey_american_dan_t1081_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 66
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t987_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 57
+        },
+        {
+          "id": "alvin_ailey_american_dan_t927_0001",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+          "company": "",
+          "fps": 14.985014985014985,
+          "n_frames": 160
+        },
+        {
+          "id": "manual_PERPETUUM_MOBILE__t1011_0000",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+          "company": "",
+          "fps": 12.5,
+          "n_frames": 113
+        },
+        {
+          "id": "ballet2_t151_0001",
+          "source": "footage",
+          "material": "footage-cut",
+          "video": "ballet2.mov",
+          "company": "Ballet 2",
+          "fps": 12.0,
+          "n_frames": 199
+        }
+      ]
     }
   ]
 }

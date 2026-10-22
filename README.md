@@ -49,4 +49,4 @@ The favicon contains a valid 16-frame GIF and a script that replaces a single ic
 
 ## Hidden CORPUS dancers
 
-A small transparent 36.8-second dance collage sits behind the warped video. Eight real footage-cut phrases from the local CORPUS library crossfade into one continuous loop; provenance is in `dancer-sources.json`. The rendered animated WebP is 96 × 128 pixels and uses a still frame for reduced-motion preferences. No library runtime or source footage is loaded by the site.
+Five transparent 36.8-second dance collages sit behind the warped video. One is randomly selected per page load, excluding the previous session choice. Only that render downloads, at low priority after the main video has initial data; the other four are never preloaded. Eight real footage-cut phrases from the local CORPUS library crossfade into each continuous loop; provenance and file sizes are in `dancer-sources.json`. Renders are 96 × 128 pixels and use matching stills for reduced-motion preferences. No library runtime or source footage is loaded by the site.
