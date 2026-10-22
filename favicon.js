@@ -1,11 +1,18 @@
-// Keep exactly one favicon link and replace its node on each tick so engines
-// that cache an unchanged link still pick up the next doodle.
-let icon=document.querySelector('#doodleFavicon');
-const frames=Array.from({length:16},(_,i)=>`favicon-frames/${String(i).padStart(2,'0')}.png?v=doodles-2`);
+// Swap canvas-generated PNGs; browsers that ignore updates retain the static icon.
+const icon=document.querySelector('#doodleFavicon');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-for(const frame of frames){const image=new Image();image.src=frame}
-let index=0;
-function showFrame(i){const next=document.createElement('link');next.id='doodleFavicon';next.rel='icon';next.type='image/png';next.sizes='32x32';next.href=frames[i];icon.replaceWith(next);icon=next}
-function tick(){if(document.hidden||reduced.matches)return;index=(index+1)%frames.length;showFrame(index)}
-showFrame(0);setInterval(tick,650);
-reduced.addEventListener('change',()=>{if(reduced.matches)showFrame(0)});
+const canvas=document.createElement('canvas');canvas.width=32;canvas.height=32;
+const ctx=canvas.getContext('2d');
+const random=(a,b)=>a+Math.random()*(b-a);
+function draw(){
+ if(!ctx||document.hidden||reduced.matches)return;
+ ctx.clearRect(0,0,32,32);ctx.strokeStyle='#000';ctx.lineWidth=1.3;ctx.lineCap='round';ctx.lineJoin='round';
+ ctx.beginPath();ctx.moveTo(random(7,12),random(7,12));
+ for(let i=0;i<4;i++)ctx.bezierCurveTo(random(3,29),random(3,29),random(3,29),random(3,29),random(5,27),random(5,27));
+ ctx.lineTo(random(8,25),random(7,26));ctx.stroke();
+ icon.href=canvas.toDataURL('image/png');
+}
+function restore(){icon.href='favicon.png?v=static-1'}
+setInterval(draw,1000);
+reduced.addEventListener('change',()=>{if(reduced.matches)restore();else draw()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)draw()});
