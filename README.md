@@ -46,3 +46,7 @@ The Web Audio mixer routes music and drums through a shared compressor and soft 
 On narrow screens the video stays centered in a fixed layer while the surrounding words, portrait, controls, drum drawing, and thank-you element scroll over a 240-viewport-height canvas. The video starts another 15% smaller than the earlier version. Logos use transparent scanline masks rather than painting background-colored stripes over the video. R/GA uses the wordmark without the isolated square. MESA is traced from the supplied logo image.
 
 The favicon contains a valid 16-frame GIF and a script that replaces a single icon link with successive PNG frames for browsers that do not animate GIF favicons. Browser UI may still suppress tab-icon animation; reduced-motion preferences deliberately freeze it.
+
+## Hidden CORPUS dancers
+
+A small transparent 36.8-second dance collage sits behind the warped video. Eight real footage-cut phrases from the local CORPUS library crossfade into one continuous loop; provenance is in `dancer-sources.json`. The rendered animated WebP is 96 × 128 pixels and uses a still frame for reduced-motion preferences. No library runtime or source footage is loaded by the site.

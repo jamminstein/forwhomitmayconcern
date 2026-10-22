@@ -437,6 +437,10 @@ html[data-theme=dark] .project-links{color:#fff}
 html[data-theme=dark] #musicWaveform{color:#fff}
 #musicWaveform:focus-visible{outline:1px dashed currentColor;outline-offset:6px}
 @media(max-width:700px){#musicWaveform{left:25px;bottom:calc(23px + env(safe-area-inset-bottom));width:53px;height:24px}}
+#hiddenDancers{position:fixed;left:70vw;top:65vh;width:57px;height:76px;z-index:1;pointer-events:none;transform:rotate(-3deg)}
+#hiddenDancers img{display:block;width:100%;height:100%;object-fit:contain}
+html[data-theme=dark] #hiddenDancers{filter:invert(1)}
+@media(max-width:700px){#hiddenDancers{left:65vw;top:49svh;width:45px;height:60px}}
 </style>
 </head>
 <body>
@@ -713,5 +717,6 @@ html[data-theme=dark] #musicWaveform{color:#fff}
 <script type="module" src="favicon.js?v=canvas-1"></script>
 <a id="musicWaveform" href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="Only music — open Acervo"><svg viewBox="0 0 64 28"><path d="M2 15 Q10 12 18 15 T34 14 T50 15 L62 13"/></svg></a>
 <script type="module" src="waveform.js?v=drums-3"></script>
+<picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)" srcset="dancer-still.webp"><img src="dancer-loop.webp" width="96" height="128" alt="" decoding="async"></picture>
 </body>
 </html>

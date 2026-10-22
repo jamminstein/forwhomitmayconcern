@@ -1,0 +1,80 @@
+{
+  "library": "CORPUS",
+  "frames": 552,
+  "fps": 15,
+  "duration": 36.8,
+  "clips": [
+    {
+      "id": "alvin_ailey_american_dan_t1081_0000",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+      "company": "",
+      "fps": 14.985014985014985,
+      "n_frames": 66
+    },
+    {
+      "id": "alvin_ailey_american_dan_t1129_0000",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "alvin_ailey_american_dan_UCsv5QlFo2Q.mp4",
+      "company": "",
+      "fps": 14.985014985014985,
+      "n_frames": 135
+    },
+    {
+      "id": "ballet2_t115_0001",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "ballet2.mov",
+      "company": "Ballet 2",
+      "fps": 12.0,
+      "n_frames": 215
+    },
+    {
+      "id": "ballet2_t147_0002",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "ballet2.mov",
+      "company": "Ballet 2",
+      "fps": 12.0,
+      "n_frames": 358
+    },
+    {
+      "id": "ballet2_t151_0003",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "ballet2.mov",
+      "company": "Ballet 2",
+      "fps": 12.0,
+      "n_frames": 228
+    },
+    {
+      "id": "ballet2_t40_0000",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "ballet2.mov",
+      "company": "Ballet 2",
+      "fps": 12.0,
+      "n_frames": 360
+    },
+    {
+      "id": "ballet2_t581_0000",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "ballet2.mov",
+      "company": "Ballet 2",
+      "fps": 12.0,
+      "n_frames": 258
+    },
+    {
+      "id": "manual_PERPETUUM_MOBILE__t2256_0000",
+      "source": "footage",
+      "material": "footage-cut",
+      "video": "manual_PERPETUUM_MOBILE_-_contemporary_dance_performance_-_MN_DANCE.mp4",
+      "company": "",
+      "fps": 12.5,
+      "n_frames": 46
+    }
+  ]
+}
