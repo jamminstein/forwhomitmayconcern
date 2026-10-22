@@ -8,7 +8,7 @@ function arrange(){
  const width=document.documentElement.clientWidth,height=innerHeight;
  const scroll=mobile?scrollY:0;
  const limit=mobile?height*2.35:height;
- const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#workCredits,.glass-dock,.project-links,#themeToggle')].map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
+ const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#workCredits,.glass-dock,#musicWaveform,.project-links,#themeToggle')].map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
  const preferred=userPosition||{x:width*(mobile?.13:.07),y:mobile?height*1.45:height*.8-66};
  const candidates=[];
  if(preferred.x>=14&&preferred.x<=width-134&&preferred.y>=14&&preferred.y<=limit-84)candidates.push(preferred);
@@ -25,7 +25,7 @@ const sizes=new ResizeObserver(schedule);
 function watchWritingSizes(){for(const el of writings.querySelectorAll('.page-writing,svg'))sizes.observe(el);schedule()}
 new MutationObserver(watchWritingSizes).observe(writings,{childList:true,subtree:true});
 watchWritingSizes();
-for(const el of document.querySelectorAll('.written-name,#workCredits,.glass-dock,.project-links'))sizes.observe(el);
+for(const el of document.querySelectorAll('.written-name,#workCredits,.glass-dock,#musicWaveform,.project-links'))sizes.observe(el);
 window.addEventListener('resize',schedule);
 window.addEventListener('load',schedule);
 schedule();

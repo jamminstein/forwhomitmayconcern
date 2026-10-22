@@ -8,9 +8,10 @@ export function getMixer(){
  const curve=new Float32Array(4096);for(let i=0;i<curve.length;i++){const x=i*2/(curve.length-1)-1,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.85?a:.85+.15*Math.tanh((a-.85)/.15))}ceiling.curve=curve;
  musicGain.connect(compressor);drumGain.connect(compressor);compressor.connect(ceiling);ceiling.connect(context.destination);
  const source=context.createMediaElementSource(music);source.connect(musicGain);
+ const analyser=context.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;source.connect(analyser);
  const level=window.siteMixLevel??.32;musicGain.gain.value=level;drumGain.gain.value=level;music.volume=1;
  window.setSiteMusicLevel=level=>{musicGain.gain.setTargetAtTime(level,context.currentTime,.015);drumGain.gain.setTargetAtTime(level,context.currentTime,.015)};
- mixer={context,musicGain,drumGain};context.resume().catch(()=>{});return mixer;
+ mixer={context,musicGain,drumGain,analyser};context.resume().catch(()=>{});return mixer;
 }
 function activateMixer(){try{getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
 window.resumeSiteAudio=activateMixer;
@@ -20,3 +21,5 @@ for(const event of ['pointerdown','touchend','click','keydown'])window.addEventL
 },{capture:true,passive:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mixer)activateMixer()});
 window.addEventListener('pageshow',()=>{if(mixer)activateMixer()});
+
+export function getMusicAnalyser(){return mixer?.analyser||null}
