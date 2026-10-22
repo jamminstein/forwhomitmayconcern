@@ -35,9 +35,10 @@ const slots=[
  {left:'5%',bottom:'19%',angle:3,height:25,width:285,mode:'lower',weight:1.15},
  {left:'33%',top:'12%',angle:-4,height:37,width:350,mode:'upper',weight:1.65},
  {right:'5%',top:'20%',angle:8,height:33,width:245,mode:'upper',weight:1.35},
- {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2}
+ {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2},
+ {left:'22%',top:'21%',angle:5,height:19,width:190,mode:'preserve',weight:1.1}
 ];
-fetch('writings.json?v=personal-phrases-1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
+fetch('writings.json?v=personal-phrases-2',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
  const text=typeof entry==='string'?entry:entry.text,div=document.createElement('div'),slot=slots[i];div.className='page-writing';
  for(const key of ['left','right','top','bottom'])if(slot[key])div.style[key]=slot[key];
  div.style.transform=`translate(${random(-14,14)}px,${random(-10,10)}px) rotate(${slot.angle+random(-4,4)}deg)`;
