@@ -21,6 +21,8 @@ const kitReady=loadKit().catch(error=>{machine.dataset.ready='false';throw error
 async function prepare(){const mix=getMixer();if(!mix)return null;await mix.context.resume();if(!data)await kitReady;const kit=data;await decodeKit(kit,mix);return {mix,kit}}
 export async function refreshKit(){
  if(refresh.disabled)return;
+ refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');
+ setTimeout(()=>refresh.classList.remove('spinning'),650);
  refresh.disabled=true;refresh.setAttribute('aria-busy','true');
  try{const mix=getMixer();if(mix)await mix.context.resume();await kitReady.catch(()=>{});await loadKit(mix)}
  catch(error){console.warn('New drum samples unavailable; retaining current kit',error)}

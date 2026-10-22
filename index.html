@@ -448,10 +448,13 @@ html[data-theme=dark] #currentSongId{color:#fff}
 #currentSongId svg path{stroke-width:.86;vector-effect:none}
 #overlay .touch-target{display:none}
 @media(max-width:700px){#overlay .touch-target{display:block;fill:transparent!important;stroke:none!important;pointer-events:all;r:13}}
-.drum-refresh{position:absolute;right:3px;top:0;width:25px;height:25px;padding:0;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.drum-refresh svg{width:13px;height:13px}
+.drum-refresh{position:absolute;right:-20px;top:auto;bottom:-12px;width:25px;height:25px;padding:0;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.drum-refresh svg{width:16px;height:16px}
 .drum-refresh:disabled{opacity:.4;cursor:wait}
 .drum-refresh:focus-visible{outline:1px dashed currentColor;outline-offset:1px}
+#drumRefresh.spinning svg{animation:drum-refresh-turn .6s ease-in-out 1;transform-origin:center}
+@keyframes drum-refresh-turn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#drumRefresh.spinning svg{animation:none}}
 </style>
 </head>
 <body>
@@ -582,12 +585,12 @@ html[data-theme=dark] #currentSongId{color:#fff}
   for(let y=0;y<subdivisions;y++)for(let x=0;x<subdivisions;x++){const a=y*(subdivisions+1)+x,b=a+1,c=a+subdivisions+1,d=c+1;indices.push(a,c,b,b,c,d)}
   const indexArray=new Uint16Array(indices);indexCount=indexArray.length;
   if(gl){gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.bufferData(gl.ARRAY_BUFFER,uvs,gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexArray,gl.STATIC_DRAW)}
-  function sizeCanvas(){const rect={width:stage.clientWidth,height:stage.clientHeight},maxDimension=gl?gl.getParameter(gl.MAX_RENDERBUFFER_SIZE):8192,dpr=Math.min(devicePixelRatio||1,2,maxDimension/Math.max(2,rect.width*4),maxDimension/Math.max(2,rect.height*4)),w=Math.max(2,Math.round(rect.width*4*dpr)),h=Math.max(2,Math.round(rect.height*4*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;if(gl)gl.viewport(0,0,w,h)}drawOverlay()}
+  function sizeCanvas(){const rect={width:stage.clientWidth,height:stage.clientHeight},maxDimension=gl?gl.getParameter(gl.MAX_RENDERBUFFER_SIZE):8192,dpr=Math.min(devicePixelRatio||1,2,maxDimension/Math.max(2,rect.width*4),maxDimension/Math.max(2,rect.height*4),Math.sqrt(32000000/Math.max(1,rect.width*rect.height*16))),w=Math.max(2,Math.round(rect.width*4*dpr)),h=Math.max(2,Math.round(rect.height*4*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;if(gl)gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight)}drawOverlay()}
   function curve(a,b,dir,opposite,t){const w=bezier(t);return {x:w[0]*a.x+w[1]*(a.x+a[dir].x+spring.x)+w[2]*(b.x+b[opposite].x+spring.x)+w[3]*b.x,y:w[0]*a.y+w[1]*(a.y+a[dir].y+spring.y)+w[2]*(b.y+b[opposite].y+spring.y)+w[3]*b.y}}
   function surface(u,v){const n=gridSize-1,c=Math.min(n-1,Math.floor(u*n)),r=Math.min(n-1,Math.floor(v*n)),x=u*n-c,y=v*n-r,a=points[pointIndex(r,c)],b=points[pointIndex(r,c+1)],d=points[pointIndex(r+1,c)],e=points[pointIndex(r+1,c+1)],top=curve(a,b,'right','left',x),bottom=curve(d,e,'right','left',x),left=curve(a,d,'down','up',y),right=curve(b,e,'down','up',y);const out={};for(const k of ['x','y'])out[k]=(1-y)*top[k]+y*bottom[k]+(1-x)*left[k]+x*right[k]-((1-x)*(1-y)*a[k]+x*(1-y)*b[k]+(1-x)*y*d[k]+x*y*e[k]);return out}
   const vertexCache=new Float32Array(uvs.length);
   function surfaceVertices(){const out=vertexCache;for(let i=0;i<uvs.length;i+=2){const p=surface(uvs[i],uvs[i+1]);out[i]=(p.x-.5)/2;out[i+1]=(.5-p.y)/2}return out}
-  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&video.readyState>=2){try{gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
+  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&video.readyState>=2){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
   let selectedPoint=-1,dragState=null;
   function directions(i){const r=Math.floor(i/gridSize),c=i%gridSize;return [...(c>0?['left']:[]),...(c<gridSize-1?['right']:[]),...(r>0?['up']:[]),...(r<gridSize-1?['down']:[])]}
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
@@ -724,8 +727,8 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
 <script type="module" src="brand-strip.js?enso-1&v=drums-mobile-1"></script>
 
-<script type="module" src="drum-machine.js?v=refresh-4"></script>
-<script type="module" src="drum-layout.js?v=manual-drop-5"></script>
+<script type="module" src="drum-machine.js?v=refresh-spin-5"></script>
+<script type="module" src="drum-layout.js?v=outside-refresh-6"></script>
 
 
 <script type="module" src="favicon.js?v=canvas-1"></script>
