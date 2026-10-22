@@ -341,6 +341,12 @@ html[data-theme=dark] #currentBrand{filter:brightness(0) invert(1) url(#brandTra
 .transform-grip[data-corner=br]{right:-25px;left:auto;top:-25px;cursor:nesw-resize}
 html[data-theme=light] .transform-grip[data-corner=br],html[data-theme=light] .transform-grip[data-corner=br]:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M25%207%20L7%2025%20M17%207%20L25%207%20L25%2015%20M7%2017%20L7%2025%20L15%2025%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,nesw-resize;}
 html[data-theme=dark] .transform-grip[data-corner=br],html[data-theme=dark] .transform-grip[data-corner=br]:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M25%207%20L7%2025%20M17%207%20L25%207%20L25%2015%20M7%2017%20L7%2025%20L15%2025%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,nesw-resize;}
+
+#workCredits{width:125px}
+#workCreditsLabel svg{max-width:110px}
+.brand-screen{margin-left:10px}
+#currentBrand,.brand-screen.switching #currentBrand{animation:none!important;transition:none!important;transform:none!important}
+@media(max-width:700px){#workCredits{width:110px}#workCreditsLabel svg{max-width:100px}.brand-screen{margin-left:8px}}
 </style>
 </head>
 <body>
@@ -580,7 +586,7 @@ html[data-theme=dark] .transform-grip[data-corner=br],html[data-theme=dark] .tra
 })();
 </script>
 
-<script type="module" src="handwriting.js?v=credits-1"></script>
-<script type="module" src="brand-strip.js?v=credits-1"></script>
+<script type="module" src="handwriting.js?v=credits-2"></script>
+<script type="module" src="brand-strip.js?v=credits-2"></script>
 </body>
 </html>

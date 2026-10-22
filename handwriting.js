@@ -39,7 +39,7 @@ const slots=[
  {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2,loose:true},
  {left:'22%',top:'21%',angle:5,height:19,width:190,mode:'preserve',weight:1.1}
 ];
-fetch('writings.json?v=credits-1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
+fetch('writings.json?v=credits-2',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
  const text=typeof entry==='string'?entry:entry.text,div=document.createElement('div'),slot=slots[i];div.className='page-writing';
  for(const key of ['left','right','top','bottom'])if(slot[key])div.style[key]=slot[key];
  div.style.transform=`translate(${random(-14,14)}px,${random(-10,10)}px) rotate(${slot.angle+random(-4,4)}deg)`;
