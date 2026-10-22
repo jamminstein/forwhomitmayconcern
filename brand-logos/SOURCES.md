@@ -28,3 +28,5 @@ Rendering fixes: R/GA retains white internal lettering as mask cutouts. Live Ad 
 All twelve logos were raster-rendered and inspected together. The user approved keeping R/GA’s original square-and-wordmark design.
 
 MESA: vector contour trace of the user-supplied screenshot. Latest user direction removes the isolated R/GA square and retains its slash wordmark. Scanlines use alpha masks so no background stripe panel covers the video.
+
+- ENSO: user-supplied screenshot; lettering isolated as black on transparent PNG.
