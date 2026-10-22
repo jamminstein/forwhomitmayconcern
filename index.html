@@ -408,6 +408,13 @@ html[data-theme=dark] #drumMachine{color:#fff}
  .page-writing:nth-child(6){top:57%!important;bottom:auto!important;left:45%!important;max-width:47vw}
  .page-writing svg{max-width:100%}
 }
+.project-links{position:fixed;left:25px;bottom:22px;z-index:8;display:flex;gap:18px;align-items:center;color:#000}
+.project-links a{display:flex;align-items:center;min-height:32px;color:inherit;text-decoration:none;transform:rotate(-3deg)}
+.project-links a:nth-child(2){transform:rotate(2deg)}
+.project-links svg{display:block;overflow:visible;max-width:92px}
+.project-links a:focus-visible{outline:1px dashed currentColor;outline-offset:5px}
+html[data-theme=dark] .project-links{color:#fff}
+@media(max-width:700px){.project-links{position:absolute;top:229svh;bottom:auto;left:20px;gap:16px}}
 </style>
 </head>
 <body>
@@ -660,5 +667,7 @@ html[data-theme=dark] #drumMachine{color:#fff}
 <script type="module" src="favicon.js?v=doodles-2"></script>
 <script type="module" src="drum-machine.js?v=drums-1"></script>
 <script type="module" src="drum-layout.js?v=3"></script>
+<nav class="project-links" aria-label="Other projects"><a href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="only music" data-label="only music"></a><a href="https://jamminstein.github.io/unthinkable/" target="_blank" rel="noopener noreferrer" aria-label="unthinkable" data-label="unthinkable"></a></nav>
+<script type="module" src="project-links.js?v=1"></script>
 </body>
 </html>
