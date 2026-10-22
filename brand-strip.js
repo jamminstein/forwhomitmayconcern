@@ -14,7 +14,7 @@ const host=document.querySelector('#workCredits');
 document.querySelector('#workCreditsLabel').appendChild(drawWriting('thank you',{height:11,maxWidth:100,caseMode:'preserve',weight:1.25}));
 const image=document.querySelector('#currentBrand'),person=document.querySelector('#currentPerson');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-for(const [,file] of [...brands,...agencies]){const preload=new Image();preload.src=`brand-logos/${file}.svg?v=mixed-2`}
-function showEntry(){const entry=takeEntry(),isPerson=entry.category==='people';host.dataset.category=entry.category;host.dataset.brand=entry.file||'';image.hidden=isPerson;person.hidden=!isPerson;person.replaceChildren();if(isPerson){person.appendChild(drawWriting(entry.name,{height:31,maxWidth:98,caseMode:'lower',weight:1.2,cursive:true}))}else{image.src=`brand-logos/${entry.file}.svg?v=mixed-2`;image.alt=entry.name}}
+for(const [,file] of [...brands,...agencies]){const preload=new Image();preload.src=`brand-logos/${file}.svg?v=mixed-3`}
+function showEntry(){const entry=takeEntry(),isPerson=entry.category==='people';host.dataset.category=entry.category;host.dataset.brand=entry.file||'';image.hidden=isPerson;person.hidden=!isPerson;person.replaceChildren();if(isPerson){person.appendChild(drawWriting(entry.name,{height:31,maxWidth:98,caseMode:'lower',weight:1.2,cursive:true}))}else{image.src=`brand-logos/${entry.file}.svg?v=mixed-3`;image.alt=entry.name}}
 showEntry();
 setInterval(()=>{if(document.hidden)return;showEntry()},reduced?5000:2600);
