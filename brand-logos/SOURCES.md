@@ -14,3 +14,11 @@ The marks identify Tiago Pereira's stated past clients; trademarks belong to the
 - Google full wordmark: https://github.com/pheralb/svgl/blob/main/static/library/google-wordmark.svg
 - Indeed full wordmark: https://logotyp.us/get/indeed/ ; https://logotyp.us/file/indeed.svg
 - Indeed and Ben & Jerry's viewboxes trimmed to visible path bounds, retaining a small margin.
+
+## Agencies
+
+- Wieden+Kennedy: https://commons.wikimedia.org/wiki/File:Wieden%2BKennedy_wordmark.svg
+- R/GA: https://worldvectorlogo.com/logo/r-ga ; https://cdn.worldvectorlogo.com/logos/r-ga.svg ; removed white background and cropped viewbox.
+- Live Ad: user-supplied share.png, embedded unchanged inside an SVG that converts white to transparent at display time.
+
+The shared thank-you rotation also contains helder, guilherme, zampa, dan, anne, kako, and santi, drawn in original cursive-like strokes by handwriting.js.

@@ -10,22 +10,23 @@ a:'M16 15 Q5 10 3 23 Q1 32 11 28 L16 19 L16 30 L20 28',b:'M3 2 L2 29 M3 21 Q7 10
 });
 const ns='http://www.w3.org/2000/svg',random=(a,b)=>a+Math.random()*(b-a);
 function el(tag,attrs={}){const node=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,v);return node}
-export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',slant=0,weight=1.3,loose=false}={}){
+export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',slant=0,weight=1.3,loose=false,cursive=false}={}){
  const svg=el('svg',{role:'img','aria-label':text});const group=el('g',{fill:'none',stroke:'currentColor','stroke-linecap':'round','stroke-linejoin':'round'});svg.appendChild(group);
- const unit=height/49,limit=maxWidth/unit;let x=8,y=8,maxX=0;
+ const unit=height/49,limit=maxWidth/unit;let x=8,y=8,maxX=0,previousPen=null;
  const nextLine=()=>{maxX=Math.max(maxX,x);x=8+(loose?random(0,30):0);y+=loose?random(39,64):46};
  for(const word of text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/(\s+)/)){
   if(word.trim()&&x>8&&x+word.length*21>limit){nextLine()}
   for(const raw of word){
    if(raw==='\n'){nextLine();continue}
-   if(/\s/.test(raw)){x+=loose?random(7,23)+(Math.random()<.2?random(9,21):0):random(9,14);continue}
+   if(/\s/.test(raw)){previousPen=null;x+=loose?random(7,23)+(Math.random()<.2?random(9,21):0):random(9,14);continue}
    const letter=caseMode==='lower'?raw.toLowerCase():caseMode==='upper'?raw.toUpperCase():caseMode==='mixed'?(Math.random()<.3?raw.toUpperCase():raw.toLowerCase()):raw;
    const d=glyphs[letter]||glyphs[letter.toUpperCase()];if(!d){x+=15;continue}
-   const g=el('g',{'data-letter':letter,transform:`translate(${x} ${y+random(-2,3)}) rotate(${random(-9,9)} 10 15) skewX(${slant+random(-5,5)}) scale(${random(.74,1.06)} ${random(.83,1.16)})`});
+   if(cursive&&previousPen){group.appendChild(el('path',{d:`M ${previousPen.x} ${previousPen.y} Q ${x-2} ${y+34} ${x+3} ${y+25}`,'stroke-width':weight*.85,opacity:.85}))}
+   const g=el('g',{'data-letter':letter,transform:`translate(${x} ${y+random(-2,3)}) rotate(${random(-9,9)} 10 15) skewX(${slant+(cursive?-12:0)+random(-5,5)}) scale(${random(.74,1.06)} ${random(.83,1.16)})`});
    const rough=d.replace(/-?\d+(?:\.\d+)?/g,n=>(Number(n)+random(-.65,.65)).toFixed(2));
    g.appendChild(el('path',{d:rough,'stroke-width':random(weight*.8,weight*1.2)}));
    if(Math.random()<.14)g.appendChild(el('path',{d:rough,transform:`translate(${random(.3,1)} ${random(-.5,.5)})`,'stroke-width':weight*.55,opacity:.6}));
-   group.appendChild(g);x+=random(18,24);
+   group.appendChild(g);previousPen={x:x+17,y:y+26};x+=cursive?random(17,21):random(18,24);
   }
  }
  maxX=Math.max(maxX,x)+12;svg.setAttribute('viewBox',`0 0 ${maxX} ${y+46}`);svg.style.width=`${Math.min(maxWidth,maxX*unit)}px`;svg.style.height='auto';return svg;
@@ -39,7 +40,7 @@ const slots=[
  {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2,loose:true},
  {left:'22%',top:'21%',angle:5,height:19,width:190,mode:'preserve',weight:1.1}
 ];
-fetch('writings.json?v=credits-3',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
+fetch('writings.json?v=thanks-mixed-1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
  const text=typeof entry==='string'?entry:entry.text,div=document.createElement('div'),slot=slots[i];div.className='page-writing';
  for(const key of ['left','right','top','bottom'])if(slot[key])div.style[key]=slot[key];
  div.style.transform=`translate(${random(-14,14)}px,${random(-10,10)}px) rotate(${slot.angle+random(-4,4)}deg)`;
