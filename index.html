@@ -441,7 +441,8 @@ html[data-theme=dark] #musicWaveform{color:#fff}
 #hiddenDancers img{display:block;width:100%;height:100%;object-fit:contain}
 html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 @media(max-width:700px){#hiddenDancers{left:65vw;top:49svh;width:45px;height:60px}}
-#currentSongId{position:absolute;top:calc(100% + 2px);left:65%;transform:translateX(-50%) rotate(-4deg);font:7px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.03em;color:inherit;opacity:.55;pointer-events:none;white-space:nowrap}
+#currentSongId{position:absolute;top:calc(100% + 2px);left:65%;transform:translateX(-50%) rotate(-4deg);font:12px/1.1 cursive;letter-spacing:.03em;color:inherit;opacity:.72;pointer-events:none;white-space:nowrap}
+#currentSongId svg{display:block;height:auto;overflow:visible;max-width:52px}
 </style>
 </head>
 <body>
@@ -628,7 +629,7 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
   function updateZoomSketch(){const t=(view.scale-.3)/1.7;document.querySelector('#zoomKnob').setAttribute('transform',`translate(${8+94*t} ${27-17*t})`)}
   updateZoomSketch();
   function positionSongId(){const play=document.querySelector('#musicPlay'),label=document.querySelector('#currentSongId');label.style.left=`${play.offsetLeft+play.offsetWidth/2}px`}
-  function updateSongId(){const track=currentTrack>=0?tracks[currentTrack]:null,id=track?.url.match(/\/(\d+)\.m4a(?:[?#]|$)/)?.[1]||track?.name.match(/Acervo\s*\/\s*(\d+)/)?.[1]||'';const label=document.querySelector('#currentSongId');label.textContent=id;label.setAttribute('aria-label',id?`Song ${id}`:'');positionSongId()}
+  function updateSongId(){const track=currentTrack>=0?tracks[currentTrack]:null,id=track?.url.match(/\/(\d+)\.m4a(?:[?#]|$)/)?.[1]||track?.name.match(/Acervo\s*\/\s*(\d+)/)?.[1]||'';const label=document.querySelector('#currentSongId');if(label.dataset.songId!==id){label.textContent=id;label.dataset.songId=id}label.setAttribute('aria-label',id?`Song ${id}`:'');positionSongId()}
   new ResizeObserver(positionSongId).observe(document.querySelector('.glass-dock'));
   function updateDockMusic(){updateSongId();document.querySelector('#songLabel').textContent=currentTrack>=0?tracks[currentTrack].name:'Acervo';document.querySelector('#musicPlaySketch').setAttribute('d',audio.paused?'M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z':'M12 8 L14 14 L10 22 L12 32 M27 7 L24 17 L28 23 L25 32');document.querySelector('#musicPlay').setAttribute('aria-label',audio.paused?'Play music':'Pause music');for(const id of ['musicPrev','musicNext'])document.querySelector('#'+id).disabled=!tracks.length}
   audio.addEventListener('playing',updateDockMusic);audio.addEventListener('error',()=>{document.querySelector('#musicPlay').setAttribute('aria-label','Audio unavailable; try the next song');updateDockMusic()});
@@ -723,5 +724,6 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 <script type="module" src="waveform.js?v=responsive-4"></script>
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=variants-1"></script>
+<script type="module" src="song-id.js?v=handwritten-1"></script>
 </body>
 </html>
