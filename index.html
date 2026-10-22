@@ -334,11 +334,11 @@ html[data-theme=dark] .written-name,html[data-theme=dark] #pageWritings{color:#f
 #workCredits{position:fixed;top:79px;right:29px;width:172px;z-index:6;color:#000;pointer-events:none;transform:rotate(3deg)}
 #workCreditsLabel svg{display:block;overflow:visible;max-width:100%}
 .brand-screen{position:relative;width:100px;height:35px;margin:4px 0 0 29px;overflow:hidden;isolation:isolate;transform:rotate(-3deg)}
-#currentBrand{display:block;object-fit:contain;max-width:100%;width:96px;height:31px;filter:brightness(0) url(#brandTracking);opacity:.85;animation:tape-drift 6s steps(1) infinite}
+#currentBrand{display:block;object-fit:contain;max-width:100%;width:96px;height:31px;filter:brightness(0);opacity:.85;animation:tape-drift 6s steps(1) infinite}
 .brand-scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,var(--gallery-bg,#fff) 2px 2.65px);opacity:.6}
 .brand-screen.switching #currentBrand{animation:tracking-slip .22s steps(2) both}
 html[data-theme=dark] #workCredits{color:#fff}
-html[data-theme=dark] #currentBrand{filter:brightness(0) invert(1) url(#brandTracking)}
+html[data-theme=dark] #currentBrand{filter:brightness(0) invert(1)}
 @keyframes tape-drift{0%,20%,24%,70%,74%,100%{transform:translate(0,0);opacity:.85}21%,73%{transform:translate(.6px,-.3px);opacity:.71}}
 @keyframes tracking-slip{0%{transform:translate(0,0)}30%{transform:translate(-3px,1px) skewX(-8deg);opacity:.45}70%{transform:translate(2px,-1px) skewX(5deg);opacity:.7}100%{transform:translate(0,0);opacity:.85}}
 @media(max-width:700px){#workCredits{right:13px;top:76px;width:128px}.brand-screen{width:79px;height:29px;margin-left:18px}#currentBrand{width:77px;height:26px}}
@@ -475,7 +475,7 @@ html[data-theme=dark] #drumMachine{color:#fff}
 <button class="drum-pad" data-drum="hat" aria-label="Hi-hat (L)"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M5 4 L24 5 L23 23 L4 24 Z M11 9 L10 20 L19 19"/></svg></button>
 </div>
 <aside id="workCredits" aria-label="Thank you to clients, collaborators, and agencies">
-<div id="workCreditsLabel"></div><div class="brand-screen"><img id="currentBrand" src="brand-logos/spacex.svg?v=wordmarks-1" alt="SpaceX" width="96" height="31"><div id="currentPerson" hidden></div><span class="brand-scanlines" aria-hidden="true"></span></div>
+<div id="workCreditsLabel"></div><div class="brand-screen"><img id="currentBrand" src="brand-logos/spacex.png?v=transparent-2" alt="SpaceX" width="96" height="31"><div id="currentPerson" hidden></div><span class="brand-scanlines" aria-hidden="true"></span></div>
 </aside>
 <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="brandTracking" x="-8%" y="-12%" width="116%" height="124%"><feTurbulence type="fractalNoise" baseFrequency=".025 .6" numOctaves="2" seed="5" result="static"/><feDisplacementMap in="SourceGraphic" in2="static" scale="1.3" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
 <button id="themeToggle" aria-label="Switch to dark mode">◐</button>
@@ -656,7 +656,7 @@ html[data-theme=dark] #drumMachine{color:#fff}
 </script>
 
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
-<script type="module" src="brand-strip.js?v=drums-mobile-1"></script>
+<script type="module" src="brand-strip.js?transparent-2&v=drums-mobile-1"></script>
 <script type="module" src="favicon.js?v=doodles-2"></script>
 <script type="module" src="drum-machine.js?v=drums-1"></script>
 <script type="module" src="drum-layout.js?v=3"></script>
