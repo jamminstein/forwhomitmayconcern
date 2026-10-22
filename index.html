@@ -324,6 +324,23 @@ html[data-theme=dark] .written-name,html[data-theme=dark] #pageWritings{color:#f
 
 @media(max-width:700px){.glass-dock{gap:4px;max-width:calc(100vw - 16px)}.glass-dock #dockReset{width:22px;flex-shrink:0}.glass-dock #randomize{width:42px;flex-shrink:0;margin-left:0;margin-right:4px}.glass-dock #warpScribble{width:38px;height:38px}.sketch-zoom{width:80px;margin:0}.sketch-zoom svg{width:80px}.glass-dock #musicPrev,.glass-dock #musicNext{width:24px;flex-shrink:0}.glass-dock #musicPlay{width:26px;flex-shrink:0}.glass-dock #morph{width:26px;margin-left:7px;flex-shrink:0}.sketch-volume{width:24px;margin-left:2px}.sketch-volume svg,.sketch-volume input{width:24px}}
 @media(max-width:360px){.glass-dock{gap:2px}.sketch-zoom,.sketch-zoom svg{width:64px}.glass-dock #randomize{width:36px;margin-right:2px}.glass-dock #musicPrev,.glass-dock #musicNext{width:22px;margin-left:0}.glass-dock #morph{margin-left:3px}}
+
+#workCredits{position:fixed;top:79px;right:29px;width:172px;z-index:6;color:#000;pointer-events:none;transform:rotate(3deg)}
+#workCreditsLabel svg{display:block;overflow:visible;max-width:100%}
+.brand-screen{position:relative;width:100px;height:35px;margin:4px 0 0 29px;overflow:hidden;isolation:isolate;transform:rotate(-3deg)}
+#currentBrand{display:block;object-fit:contain;max-width:100%;width:96px;height:31px;filter:brightness(0) url(#brandTracking);opacity:.85;animation:tape-drift 6s steps(1) infinite}
+.brand-scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 2px,var(--gallery-bg,#fff) 2px 2.65px);opacity:.6}
+.brand-screen.switching #currentBrand{animation:tracking-slip .22s steps(2) both}
+html[data-theme=dark] #workCredits{color:#fff}
+html[data-theme=dark] #currentBrand{filter:brightness(0) invert(1) url(#brandTracking)}
+@keyframes tape-drift{0%,20%,24%,70%,74%,100%{transform:translate(0,0);opacity:.85}21%,73%{transform:translate(.6px,-.3px);opacity:.71}}
+@keyframes tracking-slip{0%{transform:translate(0,0)}30%{transform:translate(-3px,1px) skewX(-8deg);opacity:.45}70%{transform:translate(2px,-1px) skewX(5deg);opacity:.7}100%{transform:translate(0,0);opacity:.85}}
+@media(max-width:700px){#workCredits{right:13px;top:76px;width:128px}.brand-screen{width:79px;height:29px;margin-left:18px}#currentBrand{width:77px;height:26px}}
+@media(prefers-reduced-motion:reduce){#currentBrand,.brand-screen.switching #currentBrand{animation:none}.brand-screen.switching #currentBrand{opacity:1}}
+.rotate-grip{left:-25px;right:auto;top:-25px}
+.transform-grip[data-corner=br]{right:-25px;left:auto;top:-25px;cursor:nesw-resize}
+html[data-theme=light] .transform-grip[data-corner=br],html[data-theme=light] .transform-grip[data-corner=br]:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M25%207%20L7%2025%20M17%207%20L25%207%20L25%2015%20M7%2017%20L7%2025%20L15%2025%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,nesw-resize;}
+html[data-theme=dark] .transform-grip[data-corner=br],html[data-theme=dark] .transform-grip[data-corner=br]:active{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M25%207%20L7%2025%20M17%207%20L25%207%20L25%2015%20M7%2017%20L7%2025%20L15%2025%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,nesw-resize;}
 </style>
 </head>
 <body>
@@ -383,6 +400,10 @@ html[data-theme=dark] .written-name,html[data-theme=dark] #pageWritings{color:#f
 <a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-cutout.png" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div id="writtenName" class="written-name"></div>
 <div id="pageWritings"></div>
+<aside id="workCredits" aria-label="I've worked with SpaceX, Nike, Google, Nickelodeon, Lyft, Arc'Teryx, Ben &amp; Jerry's, Indeed, and Comedy Central">
+<div id="workCreditsLabel"></div><div class="brand-screen"><img id="currentBrand" src="brand-logos/spacex.svg" alt="SpaceX" width="96" height="31"><span class="brand-scanlines" aria-hidden="true"></span></div>
+</aside>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="brandTracking" x="-8%" y="-12%" width="116%" height="124%"><feTurbulence type="fractalNoise" baseFrequency=".025 .6" numOctaves="2" seed="5" result="static"/><feDisplacementMap in="SourceGraphic" in2="static" scale="1.3" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
 <button id="themeToggle" aria-label="Switch to dark mode">◐</button>
 <nav class="glass-dock" aria-label="Video and music controls">
 <button id="dockReset" aria-label="Reset video"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M33 19 Q23 17 9 21 M17 10 L7 21 L19 30"/></svg></button>
@@ -559,6 +580,7 @@ html[data-theme=dark] .written-name,html[data-theme=dark] #pageWritings{color:#f
 })();
 </script>
 
-<script type="module" src="handwriting.js?v=personal-phrases-2"></script>
+<script type="module" src="handwriting.js?v=credits-1"></script>
+<script type="module" src="brand-strip.js?v=credits-1"></script>
 </body>
 </html>

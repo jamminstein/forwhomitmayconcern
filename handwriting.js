@@ -10,14 +10,15 @@ a:'M16 15 Q5 10 3 23 Q1 32 11 28 L16 19 L16 30 L20 28',b:'M3 2 L2 29 M3 21 Q7 10
 });
 const ns='http://www.w3.org/2000/svg',random=(a,b)=>a+Math.random()*(b-a);
 function el(tag,attrs={}){const node=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,v);return node}
-export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',slant=0,weight=1.3}={}){
+export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',slant=0,weight=1.3,loose=false}={}){
  const svg=el('svg',{role:'img','aria-label':text});const group=el('g',{fill:'none',stroke:'currentColor','stroke-linecap':'round','stroke-linejoin':'round'});svg.appendChild(group);
  const unit=height/49,limit=maxWidth/unit;let x=8,y=8,maxX=0;
+ const nextLine=()=>{maxX=Math.max(maxX,x);x=8+(loose?random(0,30):0);y+=loose?random(39,64):46};
  for(const word of text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/(\s+)/)){
-  if(word.trim()&&x>8&&x+word.length*21>limit){maxX=Math.max(maxX,x);x=8;y+=46}
+  if(word.trim()&&x>8&&x+word.length*21>limit){nextLine()}
   for(const raw of word){
-   if(raw==='\n'){maxX=Math.max(maxX,x);x=8;y+=46;continue}
-   if(/\s/.test(raw)){x+=random(9,14);continue}
+   if(raw==='\n'){nextLine();continue}
+   if(/\s/.test(raw)){x+=loose?random(7,23)+(Math.random()<.2?random(9,21):0):random(9,14);continue}
    const letter=caseMode==='lower'?raw.toLowerCase():caseMode==='upper'?raw.toUpperCase():caseMode==='mixed'?(Math.random()<.3?raw.toUpperCase():raw.toLowerCase()):raw;
    const d=glyphs[letter]||glyphs[letter.toUpperCase()];if(!d){x+=15;continue}
    const g=el('g',{'data-letter':letter,transform:`translate(${x} ${y+random(-2,3)}) rotate(${random(-9,9)} 10 15) skewX(${slant+random(-5,5)}) scale(${random(.74,1.06)} ${random(.83,1.16)})`});
@@ -32,15 +33,15 @@ export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',sla
 const name=document.querySelector('#writtenName');name.appendChild(drawWriting('tiago pereira',{height:30,maxWidth:170,caseMode:'lower'}));name.style.transform=`rotate(${random(-6,1)}deg)`;
 const slots=[
  {left:'3%',top:'27%',angle:-9,height:44,width:265,mode:'mixed',weight:1.25},
- {left:'5%',bottom:'19%',angle:3,height:25,width:285,mode:'lower',weight:1.15},
+ {left:'5%',bottom:'19%',angle:3,height:25,width:285,mode:'lower',weight:1.15,loose:true},
  {left:'33%',top:'12%',angle:-4,height:37,width:350,mode:'upper',weight:1.65},
  {right:'5%',top:'20%',angle:8,height:33,width:245,mode:'upper',weight:1.35},
- {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2},
+ {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2,loose:true},
  {left:'22%',top:'21%',angle:5,height:19,width:190,mode:'preserve',weight:1.1}
 ];
-fetch('writings.json?v=personal-phrases-2',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
+fetch('writings.json?v=credits-1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
  const text=typeof entry==='string'?entry:entry.text,div=document.createElement('div'),slot=slots[i];div.className='page-writing';
  for(const key of ['left','right','top','bottom'])if(slot[key])div.style[key]=slot[key];
  div.style.transform=`translate(${random(-14,14)}px,${random(-10,10)}px) rotate(${slot.angle+random(-4,4)}deg)`;
- div.appendChild(drawWriting(text,{height:slot.height*random(.9,1.1),maxWidth:slot.width,caseMode:slot.mode,slant:random(-10,9),weight:slot.weight}));document.querySelector('#pageWritings').appendChild(div)
+ div.appendChild(drawWriting(text,{height:slot.height*random(.9,1.1),maxWidth:slot.width,caseMode:slot.mode,slant:random(-10,9),weight:slot.weight,loose:slot.loose}));document.querySelector('#pageWritings').appendChild(div)
  });}).catch(()=>{});
