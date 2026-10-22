@@ -682,13 +682,13 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
   function beginAudioFade(){musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;setPlaybackLevel(0)}
   function toggleMusic(){
     window.resumeSiteAudio?.();
-    if(audio.paused){userPausedMusic=false;audio.play().catch(()=>{autoplayPending=false})}
-    else{userPausedMusic=true;audio.pause()}
+    if(audio.paused||userPausedMusic){userPausedMusic=false;window.prepareSiteMusic?.();audio.play().catch(()=>{autoplayPending=false})}
+    else{userPausedMusic=true;if(window.pauseSiteMusic)window.pauseSiteMusic();else audio.pause()}
   }
   function tryAutoplayMusic(fromGesture=false){
     if(userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
     if(!audio.paused&&musicStarted)return;
-    autoplayPending=true;if(!musicStarted)setPlaybackLevel(0);
+    autoplayPending=true;window.prepareSiteMusic?.();if(!musicStarted)setPlaybackLevel(0);
     audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;if(!fadeActive)setPlaybackLevel(soundtrackLevel)});
   }
   audio.addEventListener('playing',()=>{if(!musicStarted)beginAudioFade()});
@@ -715,13 +715,13 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
 <script type="module" src="brand-strip.js?enso-1&v=drums-mobile-1"></script>
 
-<script type="module" src="drum-machine.js?v=waveform-drums-2"></script>
+<script type="module" src="drum-machine.js?v=soft-transport-3"></script>
 <script type="module" src="drum-layout.js?v=manual-drop-5"></script>
 
 
 <script type="module" src="favicon.js?v=canvas-1"></script>
 <a id="musicWaveform" href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="Only music — open Acervo"><svg viewBox="0 0 64 28"><path d="M2 15 Q10 12 18 15 T34 14 T50 15 L62 13"/></svg></a>
-<script type="module" src="waveform.js?v=responsive-4"></script>
+<script type="module" src="waveform.js?v=soft-transport-5"></script>
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=variants-1"></script>
 <script type="module" src="song-id.js?v=handwritten-1"></script>
