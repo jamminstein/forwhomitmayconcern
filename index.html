@@ -304,11 +304,14 @@ html[data-theme=dark] .stage-wrap.center-drag,html[data-theme=dark] .stage-wrap.
 html[data-theme=dark] #overlay .point,html[data-theme=dark] .stage-wrap.center-drag #overlay .point{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M9%2016%20L9%209%20Q8%205%2011%206%20L12%2014%20L12%205%20Q14%202%2015%206%20L15%2013%20L16%206%20Q19%204%2019%208%20L19%2014%20L20%2010%20Q23%208%2023%2012%20L23%2020%20Q22%2027%2016%2027%20Q12%2027%209%2022%20L6%2017%20Q5%2014%207%2015%20L10%2018%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,grab;}
 html[data-theme=dark] #overlay .point:active,html[data-theme=dark] .stage-wrap.bezier-dragging,html[data-theme=dark] .stage-wrap.bezier-dragging .stage,html[data-theme=dark] .stage-wrap.bezier-dragging #overlay .point{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20d%3D%22M9%2015%20L9%2012%20Q9%209%2012%2011%20Q13%207%2016%2011%20Q18%208%2020%2012%20Q23%2010%2024%2014%20L23%2021%20Q21%2027%2015%2027%20Q10%2026%208%2021%20L6%2017%20Q5%2014%208%2015%20L11%2018%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 16 16,grabbing;}
 
-.glass-dock #morph{order:10;margin-left:13px;width:31px;transform:translateY(3px) rotate(-11deg);opacity:.6}
+.glass-dock #morph{order:10;margin-left:13px;width:31px;transform:translateY(3px) rotate(-11deg);opacity:1}
 .glass-dock #morph svg{width:28px;height:31px}
-.glass-dock #morph[aria-pressed=true]{opacity:1;animation:morph-breathe 3.5s ease-in-out infinite}
-@keyframes morph-breathe{0%,100%{transform:translateY(3px) rotate(-11deg) scale(.95)}50%{transform:translateY(1px) rotate(5deg) scale(1.06)}}
-@media(prefers-reduced-motion:reduce){.glass-dock #morph[aria-pressed=true]{animation:none}}
+.glass-dock #morph[aria-pressed=true]{opacity:1}
+#morph .morph-loop{transform-box:fill-box;transform-origin:center}
+#morph[aria-pressed=true] .morph-loop{animation:morph-sway 3.8s ease-in-out infinite}
+#morph[aria-pressed=true] .morph-loop:nth-child(2){animation-direction:reverse}
+@keyframes morph-sway{0%,100%{transform:translate(-.6px,.2px) rotate(-1deg)}50%{transform:translate(.6px,-.2px) rotate(1deg)}}
+@media(prefers-reduced-motion:reduce){#morph[aria-pressed=true] .morph-loop{animation:none}}
 
 .sketch-volume{position:relative;order:11;width:30px;height:60px;margin-left:4px;flex-shrink:0;transform:rotate(3deg)}
 .sketch-volume svg{position:absolute;inset:0;width:30px;height:60px}
@@ -528,7 +531,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <span class="divider"></span>
 <button id="musicPrev" aria-label="Previous song"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M28 7 L24 13 L29 16 L12 22 L26 29 L25 34 L29 31 L28 7 M8 9 L10 18 L7 24 L9 32"/></svg></button>
 <button id="musicPlay" aria-label="Play music"><svg viewBox="0 0 40 40" aria-hidden="true"><path id="musicPlaySketch" d="M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z"/></svg></button>
-<button id="morph" aria-label="Start morphing" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 22 C2 7 22 5 24 17 C29 32 11 36 8 22 M16 13 C32 3 38 22 27 29 C12 39 5 18 16 13"/></svg></button>
+<button id="morph" aria-label="Start morphing" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="morph-loop" d="M8 22 C2 7 22 5 24 17 C29 32 11 36 8 22"/><path class="morph-loop" d="M16 13 C32 3 38 22 27 29 C12 39 5 18 16 13"/></svg></button>
 <button id="musicNext" aria-label="Next song"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 8 L13 14 L11 18 L28 23 L12 29 L14 34 L9 31 L10 8 M32 8 L30 17 L33 24 L31 32"/></svg></button>
 <span class="song-label" id="songLabel">Acervo</span><span id="currentSongId"></span>
 <button id="musicAdd">+ Music</button>
