@@ -21,7 +21,7 @@ Serve this folder with a static HTTP server, for example `python3 -m http.server
 
 `writings.json` contains Tiago's five passages. `handwriting.js` draws original upper/lowercase glyphs with slight variations on every load. The portrait links to Tiago's LinkedIn profile.
 
-`sample-video.mp4` is placeholder CC0 flower footage from MDN: https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4
+`tiago.mp4` is the supplied artwork, compressed to H.264 at 1080p / 24 fps (CRF 24), without audio, with fast-start metadata for progressive playback. The soundtrack plays separately.
 
 `soundtrack.json` is a snapshot of 962 direct audio links from https://jamminstein.github.io/acervo-public/. Files stream from the original audio repositories; no audio collection is duplicated here.
 
