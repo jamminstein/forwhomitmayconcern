@@ -8,5 +8,10 @@ let started=false;
 function load(){if(started)return;started=true;source.srcset=`dancers/still-${selected}.webp`;image.src=`dancers/loop-${selected}.webp`}
 function whenIdle(){if('requestIdleCallback' in window)requestIdleCallback(load,{timeout:1500});else load()}
 const video=document.querySelector('#video');
+function reveal(){if(image.complete&&image.naturalWidth>0&&video.readyState>=2)host.classList.add('ready')}
+image.addEventListener('load',reveal);
+image.addEventListener('error',()=>host.classList.remove('ready'));
+video.addEventListener('loadeddata',reveal);
+reveal();
 if(video.readyState>=2)whenIdle();else video.addEventListener('loadeddata',whenIdle,{once:true});
 setTimeout(whenIdle,3000);

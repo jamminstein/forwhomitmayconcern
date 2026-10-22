@@ -437,7 +437,8 @@ html[data-theme=dark] .project-links{color:#fff}
 html[data-theme=dark] #musicWaveform{color:#fff}
 #musicWaveform:focus-visible{outline:1px dashed currentColor;outline-offset:6px}
 @media(max-width:700px){#musicWaveform{left:25px;bottom:calc(23px + env(safe-area-inset-bottom));width:53px;height:24px}}
-#hiddenDancers{position:fixed;left:70vw;top:65vh;width:57px;height:76px;z-index:1;pointer-events:none;transform:rotate(-3deg)}
+#hiddenDancers{position:fixed;left:70vw;top:65vh;width:57px;height:76px;z-index:1;pointer-events:none;transform:rotate(-3deg);visibility:hidden}
+#hiddenDancers.ready{visibility:visible}
 #hiddenDancers img{display:block;width:100%;height:100%;object-fit:contain}
 html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 @media(max-width:700px){#hiddenDancers{left:65vw;top:49svh;width:45px;height:60px}}
@@ -724,7 +725,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <a id="musicWaveform" href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="Only music — open Acervo"><svg viewBox="0 0 64 28"><path d="M2 15 Q10 12 18 15 T34 14 T50 15 L62 13"/></svg></a>
 <script type="module" src="waveform.js?v=soft-transport-5"></script>
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
-<script type="module" src="dancers.js?v=variants-1"></script>
+<script type="module" src="dancers.js?v=clean-loading-2"></script>
 <script type="module" src="song-id.js?v=handwritten-5"></script>
 <script type="module" src="video-playback.js?v=mobile-1"></script>
 </body>
