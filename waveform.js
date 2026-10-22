@@ -1,12 +1,12 @@
-import {getMusicAnalyser} from './audio-mixer.js?v=waveform-1';
-const path=document.querySelector('#musicWaveform path'),audio=document.querySelector('#audio');
+import {getOutputAnalyser} from './audio-mixer.js?v=waveform-drums-2';
+const path=document.querySelector('#musicWaveform path');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),samples=new Uint8Array(256);
 const points=Array.from({length:23},(_,i)=>({x:2+i*60/22,y:14,offset:Math.sin(i*2.7)*.65}));
 let last=0;
 function frame(now){
  requestAnimationFrame(frame);
  if(document.hidden||now-last<50)return;last=now;
- const analyser=getMusicAnalyser(),active=!audio.paused&&!audio.ended&&!reduced.matches&&analyser;
+ const analyser=getOutputAnalyser(),active=!reduced.matches&&analyser;
  if(active)analyser.getByteTimeDomainData(samples);
  let d='';
  for(let i=0;i<points.length;i++){

@@ -1,4 +1,4 @@
-import {getMixer} from './audio-mixer.js?v=waveform-1';
+import {getMixer} from './audio-mixer.js?v=waveform-drums-2';
 export function chooseKit(manifest,previous={},rng=Math.random){return Object.fromEntries(['kick','snare','hat'].map(kind=>{const pool=manifest[kind].filter(url=>url!==previous[kind]);const choices=pool.length?pool:manifest[kind];return [kind,choices[Math.floor(rng()*choices.length)]]}))}
 const padKeys={j:'kick',k:'snare',l:'hat'},pads=[...document.querySelectorAll('.drum-pad')],blobs={},buffers={},active=new Set();let lastHat=null;
 const kitReady=fetch('drum-samples.json?v=drums-1').then(r=>{if(!r.ok)throw Error('Missing drum manifest');return r.json()}).then(manifest=>{let previous={};try{previous=JSON.parse(sessionStorage.getItem('last-drum-kit')||'{}')}catch{}const kit=chooseKit(manifest,previous);try{sessionStorage.setItem('last-drum-kit',JSON.stringify(kit))}catch{}return Promise.all(Object.entries(kit).map(async([kind,url])=>{const response=await fetch(url);if(!response.ok)throw Error('Missing drum hit');blobs[kind]=await response.arrayBuffer()}))});

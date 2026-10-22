@@ -10,6 +10,13 @@ function arrange(){
  const width=document.documentElement.clientWidth,height=layoutHeight();
  const scroll=mobile?scrollY:0;
  const limit=mobile?height*2.35:height;
+ // Once moved by hand, respect the drop location instead of running collision placement.
+ if(userPosition){
+  userPosition.x=Math.max(14,Math.min(width-134,userPosition.x));
+  userPosition.y=Math.max(14,Math.min(limit-80,userPosition.y));
+  machine.style.left=`${userPosition.x}px`;machine.style.top=`${userPosition.y}px`;machine.style.bottom='auto';
+  return;
+ }
  const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#workCredits,.glass-dock,#musicWaveform,.project-links,#themeToggle')].filter(el=>!mobile||getComputedStyle(el).position!=='fixed').map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
  const preferred=userPosition||placedPosition||{x:width*(mobile?.13:.07),y:mobile?height*1.45:height*.8-66};
  const candidates=[];
