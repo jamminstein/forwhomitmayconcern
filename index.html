@@ -441,6 +441,7 @@ html[data-theme=dark] #musicWaveform{color:#fff}
 #hiddenDancers img{display:block;width:100%;height:100%;object-fit:contain}
 html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 @media(max-width:700px){#hiddenDancers{left:65vw;top:49svh;width:45px;height:60px}}
+#currentSongId{position:absolute;top:calc(100% + 2px);left:65%;transform:translateX(-50%) rotate(-4deg);font:7px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.03em;color:inherit;opacity:.55;pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -523,7 +524,7 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 <button id="musicPlay" aria-label="Play music"><svg viewBox="0 0 40 40" aria-hidden="true"><path id="musicPlaySketch" d="M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z"/></svg></button>
 <button id="morph" aria-label="Start morphing" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 22 C2 7 22 5 24 17 C29 32 11 36 8 22 M16 13 C32 3 38 22 27 29 C12 39 5 18 16 13"/></svg></button>
 <button id="musicNext" aria-label="Next song"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M10 8 L13 14 L11 18 L28 23 L12 29 L14 34 L9 31 L10 8 M32 8 L30 17 L33 24 L31 32"/></svg></button>
-<span class="song-label" id="songLabel">Acervo</span>
+<span class="song-label" id="songLabel">Acervo</span><span id="currentSongId"></span>
 <button id="musicAdd">+ Music</button>
 <div class="sketch-volume"><svg viewBox="0 0 30 60" aria-hidden="true"><path d="M14 52 Q11 43 15 33 T14 9"/><path id="volumeKnob" d="M-4 -1 C-6 -6 3 -7 5 -2 C7 4 0 7 -4 3 Z"/></svg><input id="soundtrackVolume" type="range" min="0" max="1" step=".01" value=".32" aria-label="Music volume" aria-orientation="vertical"></div>
 </nav>
@@ -626,7 +627,10 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
   document.querySelector('#musicPlay').onclick=()=>{if(!tracks.length){showToast('Soundtrack coming soon.');return}toggleMusic()};
   function updateZoomSketch(){const t=(view.scale-.3)/1.7;document.querySelector('#zoomKnob').setAttribute('transform',`translate(${8+94*t} ${27-17*t})`)}
   updateZoomSketch();
-  function updateDockMusic(){document.querySelector('#songLabel').textContent=currentTrack>=0?tracks[currentTrack].name:'Acervo';document.querySelector('#musicPlaySketch').setAttribute('d',audio.paused?'M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z':'M12 8 L14 14 L10 22 L12 32 M27 7 L24 17 L28 23 L25 32');document.querySelector('#musicPlay').setAttribute('aria-label',audio.paused?'Play music':'Pause music');for(const id of ['musicPrev','musicNext'])document.querySelector('#'+id).disabled=!tracks.length}
+  function positionSongId(){const play=document.querySelector('#musicPlay'),label=document.querySelector('#currentSongId');label.style.left=`${play.offsetLeft+play.offsetWidth/2}px`}
+  function updateSongId(){const track=currentTrack>=0?tracks[currentTrack]:null,id=track?.url.match(/\/(\d+)\.m4a(?:[?#]|$)/)?.[1]||track?.name.match(/Acervo\s*\/\s*(\d+)/)?.[1]||'';const label=document.querySelector('#currentSongId');label.textContent=id;label.setAttribute('aria-label',id?`Song ${id}`:'');positionSongId()}
+  new ResizeObserver(positionSongId).observe(document.querySelector('.glass-dock'));
+  function updateDockMusic(){updateSongId();document.querySelector('#songLabel').textContent=currentTrack>=0?tracks[currentTrack].name:'Acervo';document.querySelector('#musicPlaySketch').setAttribute('d',audio.paused?'M12 7 L14 13 L11 17 L30 22 L22 25 L10 33 L12 24 L10 12 Z':'M12 8 L14 14 L10 22 L12 32 M27 7 L24 17 L28 23 L25 32');document.querySelector('#musicPlay').setAttribute('aria-label',audio.paused?'Play music':'Pause music');for(const id of ['musicPrev','musicNext'])document.querySelector('#'+id).disabled=!tracks.length}
   audio.addEventListener('playing',updateDockMusic);audio.addEventListener('error',()=>{document.querySelector('#musicPlay').setAttribute('aria-label','Audio unavailable; try the next song');updateDockMusic()});
   audio.addEventListener('play',updateDockMusic);audio.addEventListener('pause',updateDockMusic);audio.addEventListener('loadedmetadata',updateDockMusic);updateDockMusic();
   window.addEventListener('keydown',e=>{if(e.target.closest?.('input,textarea,button,.point'))return;if(e.code==='Space'){e.preventDefault();spaceHeld=true}if(e.key.toLowerCase()==='t'){e.preventDefault();setTransform(!transformMode)}if(e.key==='Escape')setTransform(false);if(e.key.toLowerCase()==='h')document.querySelector('#guides').click()},true);
