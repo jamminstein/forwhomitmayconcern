@@ -21,7 +21,7 @@ Serve this folder with a static HTTP server, for example `python3 -m http.server
 
 `writings.json` contains Tiago's five passages. `handwriting.js` draws original upper/lowercase glyphs with slight variations on every load. The portrait links to Tiago's LinkedIn profile.
 
-`tiago-mobile.mp4` is the supplied artwork, compressed to H.264 High Level 4.1 at 1080p / 24 fps (CRF 18, four reference frames, capped bitrate), without audio, with fast-start metadata for progressive playback. The soundtrack plays separately.
+`tiago-1-6.mp4` is the supplied artwork, compressed to H.264 High Level 4.1 at 1080p / 24 fps (CRF 18, four reference frames, capped bitrate), without audio, with fast-start metadata for progressive playback. The soundtrack plays separately.
 
 `soundtrack.json` is a snapshot of 962 direct audio links from https://jamminstein.github.io/acervo-public/. Files stream from the original audio repositories; no audio collection is duplicated here.
 
