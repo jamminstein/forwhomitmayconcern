@@ -2,7 +2,7 @@ import {createArtworkSource} from './video-source.js';
 
 const video=document.querySelector('#video'),stage=document.querySelector('.stage-wrap'),button=document.querySelector('#artworkPlayback');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let userPaused=false,allowed=!reduced.matches,initialConsent=!reduced.matches,pending=false,retries=0,retryTimer=0;
+let userPaused=false,allowed=!reduced.matches,initialConsent=!reduced.matches,pending=false,restartRequested=false,retries=0,retryTimer=0;
 let lastProgress=performance.now(),lastTime=0,recoveryBaseline=0;
 const mayPlay=()=>allowed&&!userPaused&&!document.hidden;
 video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=false;
@@ -16,8 +16,11 @@ function publish(){
  window.dispatchEvent(new CustomEvent('site-motion-change',{detail:{paused}}));
 }
 async function start(){
- if(!mayPlay()||pending||(!video.paused&&!video.ended&&video.readyState>=2))return;
- pending=true;video.muted=true;
+ if(!mayPlay())return;
+ // Preserve a newer resume intent while an earlier play/load promise settles.
+ if(pending){restartRequested=true;return}
+ if(!video.paused&&!video.ended&&video.readyState>=2)return;
+ pending=true;video.muted=true;let mayDrain=true;
  try{
   await source.resumeLoading();
   if(!mayPlay()||!source.initialized)return;
@@ -25,10 +28,16 @@ async function start(){
   await video.play();video.dataset.playResult='resolved';
   if(!mayPlay())video.pause();
  }catch(error){
+  // A pause interrupts play with AbortError. Policy/network failures must keep
+  // their existing gesture or bounded-recovery path instead of retrying here.
+  mayDrain=error.name==='AbortError';
   video.dataset.playResult=error.name+': '+error.message;
   video.dataset.playback=error.name==='NotAllowedError'?'needs-tap':'waiting';
   if(error.name!=='NotAllowedError'&&error.name!=='AbortError')scheduleRecovery();
- }finally{pending=false}
+ }finally{
+  pending=false;const requested=restartRequested;restartRequested=false;
+  if(requested&&mayDrain&&mayPlay()&&video.paused)queueMicrotask(start);
+ }
 }
 function clearRecovery(){clearTimeout(retryTimer);retryTimer=0}
 function scheduleRecovery(){

@@ -11,6 +11,38 @@ function tone(){
 const audioBytes=tone(),collection=[11827,11774,10598].map(id=>({name:`Acervo / ${id}`,url:`https://audio.fixture/${id}.m4a`,remote:true}));
 const fulfillAudio=r=>r.fulfill({body:audioBytes,contentType:'audio/wav'});
 async function routeAudio(page){await page.route('**/soundtrack.json*',r=>r.fulfill({json:collection}));await page.route('**/*.m4a*',fulfillAudio)}
+async function pendingVisibility(page){
+ // Hold a *fulfilled* native play promise: paused becomes false before the
+ // controller's pending flag clears, exactly as a rapid tab switch can do.
+ await page.evaluate(()=>{
+  const video=document.querySelector('#video'),nativePlay=video.play.bind(video);
+  window.heldPlay={armed:false,held:false,calls:0,release:null};
+  video.play=()=>{const c=window.heldPlay;c.calls++;const result=nativePlay();if(!c.armed)return result;c.armed=false;return result.then(()=>new Promise(resolve=>{c.held=true;c.release=resolve}))};
+  document.querySelector('#artworkPlayback').click();
+ });
+ assert(await page.evaluate(()=>document.querySelector('#video').paused));
+ await page.evaluate(()=>{heldPlay.armed=true;heldPlay.held=false;document.querySelector('#artworkPlayback').click()});
+ await page.waitForFunction(()=>heldPlay.held);
+ const before=await page.evaluate(()=>{
+  const time=video.currentTime;
+  Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));
+  Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));
+  heldPlay.release();return time;
+ });
+ await page.waitForFunction(time=>!video.paused&&video.currentTime>time+.04,before);
+ // A newer explicit pause wins even if visibility changes while play settles.
+ await page.evaluate(()=>{document.querySelector('#artworkPlayback').click();heldPlay.armed=true;heldPlay.held=false;document.querySelector('#artworkPlayback').click()});
+ await page.waitForFunction(()=>heldPlay.held);
+ const calls=await page.evaluate(()=>{
+  document.querySelector('#artworkPlayback').click();
+  Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));
+  Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));
+  heldPlay.release();return heldPlay.calls;
+ });
+ await page.waitForTimeout(250);
+ assert(await page.evaluate(()=>video.paused&&window.siteVisualMotionPaused));
+ assert.equal(await page.evaluate(()=>heldPlay.calls),calls);
+}
 async function lifecycle(browser,name){
  const p=await browser.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));await routeAudio(p);
  await p.route('**/audio-mixer.js*',async r=>{await new Promise(resolve=>setTimeout(resolve,3500));await r.continue()});
@@ -33,7 +65,7 @@ async function lifecycle(browser,name){
  await q.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'))});
  assert(await q.evaluate(()=>document.querySelector('#video').paused));
  await q.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'))});
- await q.waitForFunction(()=>!document.querySelector('#video').paused);assert.deepEqual(errors,[]);await q.close();
+ await q.waitForFunction(()=>!document.querySelector('#video').paused);await pendingVisibility(q);assert.deepEqual(errors,[]);await q.close();
  console.log(`${name}: delayed startup, rapid transport, reduced motion and visibility passed`);
 }
 async function failures(browser){

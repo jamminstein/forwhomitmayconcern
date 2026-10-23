@@ -457,4 +457,3 @@ html[data-theme=dark] #overlay .point:focus-visible{outline-color:#fff}
  .shell{padding-bottom:80px}
  .stage-wrap{width:min(calc(100vw - 100px),calc(177.7778svh - 337.7778px))}
 }
-/* Optional comparison only: no changes to placement, lettering or default ink. */
