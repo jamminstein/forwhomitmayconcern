@@ -8,6 +8,9 @@ import {MEDIA} from './site-config.js';
   let savedTheme='light';try{savedTheme=localStorage.getItem('jamminstein-theme')||'light'}catch{}setTheme(savedTheme==='dark'?'dark':'light');
   themeButton.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
   const stage=document.querySelector('#stage'), video=document.querySelector('#video'), canvas=document.querySelector('#gl'), overlay=document.querySelector('#overlay');
+  // Filter the mesh contents, not the SVG viewport: edge nodes must paint beyond the video.
+  const meshDrawing=document.createElementNS('http://www.w3.org/2000/svg','g');
+  meshDrawing.classList.add('mesh-drawing');overlay.appendChild(meshDrawing);
   const videoPlay=document.querySelector('#videoPlay'), timeLabel=document.querySelector('#videoTime'), editToggle=document.querySelector('#editToggle'), editHint=document.querySelector('#editHint');
   const videoFile=document.querySelector('#videoFile');
   const soundtrack=initializeSoundtrack();
@@ -44,7 +47,7 @@ import {MEDIA} from './site-config.js';
   for(const event of ['loadeddata','seeked','resize'])video.addEventListener(event,()=>{videoFrameDirty=true});
   function render(){
     const now=performance.now();animateMorph(now);animateMotion();
-    if(overlayDirty&&(!isEditing||!overlay.children.length||!wrap.classList.contains('guides-idle')||now<guidePaintUntil)){overlayDirty=false;paintOverlay()}
+    if(overlayDirty&&(!isEditing||!meshDrawing.children.length||!wrap.classList.contains('guides-idle')||now<guidePaintUntil)){overlayDirty=false;paintOverlay()}
     const source=video.readyState>=2?video:textureSource||(firstFrame.complete&&firstFrame.naturalWidth?firstFrame:null);
     const upload=source&&(source!==textureSource||(source===video&&video.readyState>=2&&(videoFrameDirty||(!hasVideoFrameCallback&&video.currentTime!==uploadedVideoTime))));
     if(renderer.available&&source&&(upload||geometryDirty)&&renderer.draw(source,upload,geometryDirty?surfaceVertices():null)){
@@ -64,11 +67,11 @@ import {MEDIA} from './site-config.js';
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
   let overlayDirty=true,geometryDirty=true,guidePaintUntil=0;
   function drawOverlay(){overlayDirty=true;geometryDirty=true;const h=1/(gridSize-1)/3;const warped=points.some((p,i)=>Math.abs(p.x-(i%gridSize)/(gridSize-1))>1e-5||Math.abs(p.y-Math.floor(i/gridSize)/(gridSize-1))>1e-5||['left','right','up','down'].some(dir=>{const x=dir==='left'?-h:dir==='right'?h:0,y=dir==='up'?-h:dir==='down'?h:0;return Math.abs(p[dir].x-x)>1e-5||Math.abs(p[dir].y-y)>1e-5}));document.querySelector('#dockReset').classList.toggle('available',warped)}
-  function paintOverlay(){if(!overlay.isConnected)return;const hadFocus=overlay.contains(document.activeElement);const w=stage.clientWidth,h=stage.clientHeight;overlay.setAttribute('viewBox',`0 0 ${w} ${h}`);if(!isEditing){overlay.replaceChildren();return}let cursor=0;function el(tag,attrs){let e=overlay.children[cursor];if(!e||e.localName!==tag){const fresh=document.createElementNS('http://www.w3.org/2000/svg',tag);if(e)overlay.replaceChild(fresh,e);else overlay.appendChild(fresh);e=fresh}cursor++;if(!('data-direction' in attrs))e.removeAttribute('data-direction');for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);return e}
+  function paintOverlay(){if(!overlay.isConnected)return;const hadFocus=overlay.contains(document.activeElement);const w=stage.clientWidth,h=stage.clientHeight;overlay.setAttribute('viewBox',`0 0 ${w} ${h}`);if(!isEditing){meshDrawing.replaceChildren();return}let cursor=0;function el(tag,attrs){let e=meshDrawing.children[cursor];if(!e||e.localName!==tag){const fresh=document.createElementNS('http://www.w3.org/2000/svg',tag);if(e)meshDrawing.replaceChild(fresh,e);else meshDrawing.appendChild(fresh);e=fresh}cursor++;if(!('data-direction' in attrs))e.removeAttribute('data-direction');for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);return e}
     for(let axis=0;axis<2;axis++)for(let n=0;n<gridSize;n++){let d='';for(let j=0;j<=64;j++){const p=surface(axis?j/64:n/(gridSize-1),axis?n/(gridSize-1):j/64);d+=(j?' L ':'M ')+p.x*w+' '+p.y*h}el('path',{d,class:'net'})}
     points.forEach((p,i)=>{if(!isCorner(i)&&i!==selectedPoint)return;directions(i).forEach(dir=>{const q=p[dir],x=(p.x+q.x+spring.x)*w,y=(p.y+q.y+spring.y)*h;el('line',{x1:p.x*w,y1:p.y*h,x2:x,y2:y,class:'handle-line selected'});const hit=el('circle',{cx:x,cy:y,r:13,class:'point touch-target',tabindex:-1,role:'presentation','aria-pressed':'false','data-index':i,'data-direction':dir,'aria-hidden':'true'});bind(hit);const end=el('circle',{cx:x,cy:y,r:5,'aria-hidden':'false',class:'point tangent','data-index':i,'data-direction':dir,role:'button',tabindex:isMeshFocus(i,dir)?0:-1,'aria-pressed':String(isMeshFocus(i,dir)&&meshEditing),'aria-label':`Warp point ${i+1} ${dir} tangent handle`});bind(end)})});
     points.forEach((p,i)=>{const hit=el('circle',{cx:p.x*w,cy:p.y*h,r:13,class:'point touch-target',tabindex:-1,role:'presentation','aria-pressed':'false','data-index':i,'aria-hidden':'true'});bind(hit);const c=el('circle',{cx:p.x*w,cy:p.y*h,r:isCorner(i)?6:4,'aria-hidden':'false',class:'point '+(isCorner(i)?'corner':'handle'),'data-index':i,role:'button',tabindex:isMeshFocus(i)?0:-1,'aria-pressed':String(isMeshFocus(i)&&meshEditing),'aria-label':`Warp point ${i+1}`});bind(c)})
-    while(overlay.children.length>cursor)overlay.lastChild.remove();
+    while(meshDrawing.children.length>cursor)meshDrawing.lastChild.remove();
     if(hadFocus)focusMesh();
     function bind(e){if(e.dataset.bound)return;e.dataset.bound='true';e.addEventListener('pointerdown',startDrag);e.addEventListener('keydown',keyboardMove)}
   }
