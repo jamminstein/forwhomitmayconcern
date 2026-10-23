@@ -237,7 +237,6 @@ html[data-theme=dark] .transform-grip,html[data-theme=dark] .rotate-grip{color:#
 #overlay .net{stroke:#111;stroke-width:.7;stroke-opacity:.4;stroke-dasharray:none;stroke-linecap:round;stroke-linejoin:round}
 #overlay .handle-line.selected{stroke:#111;stroke-width:.8;stroke-opacity:.65;stroke-dasharray:none;stroke-linecap:round}
 #overlay .point.corner,#overlay .point.handle,#overlay .point.tangent{fill:var(--gallery-bg,#fff);fill-opacity:.7;stroke:#111;stroke-width:.85;r:4;transition:none}
-#overlay .point.corner{r:4.5}
 #overlay .point:hover{stroke-width:1.1}
 html[data-theme=dark] #overlay .net,html[data-theme=dark] #overlay .handle-line.selected,html[data-theme=dark] #overlay .point{stroke:#f5f5f5}
 html[data-theme=dark] #overlay .point.corner,html[data-theme=dark] #overlay .point.handle,html[data-theme=dark] #overlay .point.tangent{fill:#090a0d;stroke:#f5f5f5}
