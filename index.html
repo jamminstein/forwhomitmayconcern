@@ -569,7 +569,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
 
   // Muted artwork stays independent from the Acervo soundtrack.
   video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;
-  import('./video-source.js?v=hls-3');
+  import('./video-source.js?v=hls-4');
   video.play().catch(()=>showToast('Click the image to start the video.'));
   stage.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{})});
 
@@ -593,7 +593,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   function surface(u,v){const n=gridSize-1,c=Math.min(n-1,Math.floor(u*n)),r=Math.min(n-1,Math.floor(v*n)),x=u*n-c,y=v*n-r,a=points[pointIndex(r,c)],b=points[pointIndex(r,c+1)],d=points[pointIndex(r+1,c)],e=points[pointIndex(r+1,c+1)],top=curve(a,b,'right','left',x),bottom=curve(d,e,'right','left',x),left=curve(a,d,'down','up',y),right=curve(b,e,'down','up',y);const out={};for(const k of ['x','y'])out[k]=(1-y)*top[k]+y*bottom[k]+(1-x)*left[k]+x*right[k]-((1-x)*(1-y)*a[k]+x*(1-y)*b[k]+(1-x)*y*d[k]+x*y*e[k]);return out}
   const vertexCache=new Float32Array(uvs.length);
   function surfaceVertices(){const out=vertexCache;for(let i=0;i<uvs.length;i+=2){const p=surface(uvs[i],uvs[i+1]);out[i]=(p.x-.5)/2;out[i+1]=(.5-p.y)/2}return out}
-  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&(video.readyState>=2||firstFrame.complete&&firstFrame.naturalWidth)){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video.readyState>=2?video:firstFrame);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
+  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&(video.readyState>=2||firstFrame.complete&&firstFrame.naturalWidth)){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video.readyState>=2?video:firstFrame);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){video.dataset.textureError=e.name+': '+e.message;console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
   let selectedPoint=-1,dragState=null;
   function directions(i){const r=Math.floor(i/gridSize),c=i%gridSize;return [...(c>0?['left']:[]),...(c<gridSize-1?['right']:[]),...(r>0?['up']:[]),...(r<gridSize-1?['down']:[])]}
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
@@ -740,7 +740,8 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=clean-loading-2"></script>
 <script type="module" src="song-id.js?v=handwritten-8"></script>
-<script type="module" src="video-playback.js?v=safari-start-2"></script>
+<script type="module" src="video-playback.js?v=safari-debug-3"></script>
 <script type="module" src="morph-icon.js?v=petals-2"></script>
+<script type="module" src="video-diagnostics.js?v=1"></script>
 </body>
 </html>

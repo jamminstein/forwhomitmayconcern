@@ -7,7 +7,7 @@ video.autoplay=true;video.preload='auto';
 function start(){
  if(document.hidden||userPaused||!video.paused&&!video.ended)return;
  video.muted=true;
- video.play().catch(error=>{video.dataset.playback=error.name==='NotAllowedError'?'needs-tap':'waiting'});
+ video.play().then(()=>{video.dataset.playResult='resolved'}).catch(error=>{video.dataset.playResult=error.name+': '+error.message;video.dataset.playback=error.name==='NotAllowedError'?'needs-tap':'waiting'});
 }
 for(const event of ['loadedmetadata','loadeddata','canplay','canplaythrough'])video.addEventListener(event,start);
 video.addEventListener('playing',()=>{video.dataset.playback='playing'});

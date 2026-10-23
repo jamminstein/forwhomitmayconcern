@@ -4,7 +4,7 @@ const video=document.querySelector('#video');
 const manifest='video/1-6/master.m3u8',fallback='tiago-1-6.mp4';
 let hls=null,custom=false,fellBack=false;
 window.stopAdaptiveVideo=()=>{custom=true;hls?.destroy();hls=null};
-function play(){video.muted=true;video.defaultMuted=true;video.play().catch(()=>{})}
+function play(){video.muted=true;video.defaultMuted=true;video.play().then(()=>{video.dataset.playResult='resolved'}).catch(error=>{video.dataset.playResult=error.name+': '+error.message})}
 function useFallback(){
  if(custom||fellBack)return;
  fellBack=true;hls?.destroy();hls=null;
