@@ -694,8 +694,9 @@ html[data-theme=dark] #currentSongId{color:#fff}
   updateVolumeSketch();
   function setPlaybackLevel(level){window.siteMixLevel=level;if(window.setSiteMusicLevel)window.setSiteMusicLevel(level);else audio.volume=level}
   function animateAudioFade(now){if(!fadeActive||audio.paused)return;const t=Math.min(1,Math.max(0,(now-fadeStarted)/3500));setPlaybackLevel(soundtrackLevel*t*t*(3-2*t));if(t===1)fadeActive=false}
-  function beginAudioFade(){musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;setPlaybackLevel(0)}
+  function beginAudioFade(){if(musicStarted)return;const context=window.siteAudioContext;if(context&&context.state!=='running'){setPlaybackLevel(0);return}musicStarted=true;autoplayPending=false;fadeStarted=performance.now();fadeActive=true;setPlaybackLevel(0)}
   function toggleMusic(){
+    if(!musicStarted)setPlaybackLevel(0);
     window.resumeSiteAudio?.();
     if(audio.paused||userPausedMusic){userPausedMusic=false;window.prepareSiteMusic?.();audio.play().catch(()=>{autoplayPending=false})}
     else{userPausedMusic=true;if(window.pauseSiteMusic)window.pauseSiteMusic();else audio.pause()}
@@ -703,10 +704,11 @@ html[data-theme=dark] #currentSongId{color:#fff}
   function tryAutoplayMusic(fromGesture=false){
     if(userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
     if(!audio.paused&&musicStarted)return;
-    autoplayPending=true;window.prepareSiteMusic?.();if(!musicStarted)setPlaybackLevel(0);
-    audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;if(!fadeActive)setPlaybackLevel(soundtrackLevel)});
+    autoplayPending=true;if(!musicStarted)setPlaybackLevel(0);window.resumeSiteAudio?.();window.prepareSiteMusic?.();
+    audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;if(musicStarted&&!fadeActive)setPlaybackLevel(soundtrackLevel)});
   }
   audio.addEventListener('playing',()=>{if(!musicStarted)beginAudioFade()});
+  window.addEventListener('site-audio-running',()=>{if(!audio.paused&&!musicStarted)beginAudioFade()});
   function unlockSoundtrack(e){
     if(e.type==='keydown'&&(e.repeat||e.metaKey||e.ctrlKey||e.altKey))return;
     window.resumeSiteAudio?.();
@@ -730,13 +732,13 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
 <script type="module" src="brand-strip.js?enso-1&v=drums-mobile-1"></script>
 
-<script type="module" src="drum-machine.js?v=refresh-spin-5"></script>
+<script type="module" src="drum-machine.js?v=audio-start-6"></script>
 <script type="module" src="drum-layout.js?v=outside-refresh-6"></script>
 
 
 <script type="module" src="favicon.js?v=canvas-1"></script>
 <a id="musicWaveform" href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="Only music — open Acervo"><svg viewBox="0 0 64 28"><path d="M2 15 Q10 12 18 15 T34 14 T50 15 L62 13"/></svg></a>
-<script type="module" src="waveform.js?v=soft-transport-5"></script>
+<script type="module" src="waveform.js?v=audio-start-6"></script>
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=clean-loading-2"></script>
 <script type="module" src="song-id.js?v=handwritten-8"></script>

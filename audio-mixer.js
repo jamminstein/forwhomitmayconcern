@@ -4,6 +4,8 @@ export function getMixer(){
  if(mixer){if(mixer.context.state!=='running'&&mixer.context.state!=='closed')mixer.context.resume().catch(()=>{});return mixer}
  const AudioContext=window.AudioContext||window.webkitAudioContext;if(!AudioContext)return null;
  const context=new AudioContext({latencyHint:'interactive'}),music=document.querySelector('#audio');
+ window.siteAudioContext=context;
+ context.addEventListener('statechange',()=>{if(context.state==='running')window.dispatchEvent(new Event('site-audio-running'))});
  const musicGain=context.createGain(),drumGain=context.createGain(),compressor=context.createDynamicsCompressor(),ceiling=context.createWaveShaper();
  compressor.threshold.value=-4;compressor.knee.value=4;compressor.ratio.value=12;compressor.attack.value=.003;compressor.release.value=.12;
  const curve=new Float32Array(4096);for(let i=0;i<curve.length;i++){const x=i*2/(curve.length-1)-1,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.85?a:.85+.15*Math.tanh((a-.85)/.15))}ceiling.curve=curve;
@@ -21,7 +23,7 @@ export function getMixer(){
  window.setSiteMusicLevel=level=>{musicGain.gain.setTargetAtTime(level,context.currentTime,.015);drumGain.gain.setTargetAtTime(level,context.currentTime,.015)};
  mixer={context,musicGain,drumGain,analyser};context.resume().catch(()=>{});return mixer;
 }
-function activateMixer(){try{getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
+function activateMixer(){try{return getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
 window.resumeSiteAudio=activateMixer;
 for(const event of ['pointerdown','touchend','click','keydown'])window.addEventListener(event,e=>{
  if(e.type==='keydown'&&(e.repeat||e.metaKey||e.ctrlKey||e.altKey))return;

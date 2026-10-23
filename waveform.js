@@ -1,4 +1,4 @@
-import {getOutputAnalyser} from './audio-mixer.js?v=soft-transport-3';
+import {getOutputAnalyser} from './audio-mixer.js?v=startup-4';
 const path=document.querySelector('#musicWaveform path');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),samples=new Uint8Array(256);
 const points=Array.from({length:23},(_,i)=>({x:2+i*60/22,y:14,offset:Math.sin(i*2.7)*.65}));
