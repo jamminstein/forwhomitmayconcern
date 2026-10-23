@@ -6,6 +6,7 @@
 -->
 <head>
 <meta charset="utf-8">
+<link rel="preload" as="image" href="video/1-6/poster.jpg" fetchpriority="high">
 <meta name="site-version" content="drums-mobile-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#e9e8e1">
@@ -568,10 +569,11 @@ html[data-theme=dark] #currentSongId{color:#fff}
 
   // Muted artwork stays independent from the Acervo soundtrack.
   video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;
-  video.src='tiago-1-6.mp4';
+  import('./video-source.js?v=hls-1');
   video.play().catch(()=>showToast('Click the image to start the video.'));
   stage.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{})});
 
+  const firstFrame=new Image();firstFrame.src='video/1-6/poster.jpg';
   let texture=null,program=null,posBuffer=null,uvBuffer=null,indexBuffer=null,indexCount=0,locations={};
   if(gl){
     const vs=`attribute vec2 aPosition;attribute vec2 aUv;varying vec2 vUv;void main(){gl_Position=vec4(aPosition,0.0,1.0);vUv=aUv;}`;
@@ -591,7 +593,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   function surface(u,v){const n=gridSize-1,c=Math.min(n-1,Math.floor(u*n)),r=Math.min(n-1,Math.floor(v*n)),x=u*n-c,y=v*n-r,a=points[pointIndex(r,c)],b=points[pointIndex(r,c+1)],d=points[pointIndex(r+1,c)],e=points[pointIndex(r+1,c+1)],top=curve(a,b,'right','left',x),bottom=curve(d,e,'right','left',x),left=curve(a,d,'down','up',y),right=curve(b,e,'down','up',y);const out={};for(const k of ['x','y'])out[k]=(1-y)*top[k]+y*bottom[k]+(1-x)*left[k]+x*right[k]-((1-x)*(1-y)*a[k]+x*(1-y)*b[k]+(1-x)*y*d[k]+x*y*e[k]);return out}
   const vertexCache=new Float32Array(uvs.length);
   function surfaceVertices(){const out=vertexCache;for(let i=0;i<uvs.length;i+=2){const p=surface(uvs[i],uvs[i+1]);out[i]=(p.x-.5)/2;out[i+1]=(.5-p.y)/2}return out}
-  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&video.readyState>=2){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
+  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&(video.readyState>=2||firstFrame.complete&&firstFrame.naturalWidth)){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video.readyState>=2?video:firstFrame);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
   let selectedPoint=-1,dragState=null;
   function directions(i){const r=Math.floor(i/gridSize),c=i%gridSize;return [...(c>0?['left']:[]),...(c<gridSize-1?['right']:[]),...(r>0?['up']:[]),...(r<gridSize-1?['down']:[])]}
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
@@ -668,7 +670,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   editToggle.addEventListener('click',()=>{isEditing=!isEditing;editToggle.classList.toggle('active',isEditing);editToggle.textContent=isEditing?'Warp on':'Warp off';editToggle.setAttribute('aria-pressed',String(isEditing));editHint.hidden=!isEditing;drawOverlay()});
   document.querySelector('#resetWarp').addEventListener('click',()=>{initialPoints();drawOverlay();showToast('Mesh returned to its original shape.')});
   document.querySelector('#videoUpload').addEventListener('click',()=>videoFile.click());
-  function loadVideoFile(file){if(!file)return;video.pause();if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null}if(video.dataset.objectUrl)URL.revokeObjectURL(video.dataset.objectUrl);const url=URL.createObjectURL(file);video.dataset.objectUrl=url;video.src=url;video.load();video.play().catch(()=>{})}
+  function loadVideoFile(file){if(!file)return;window.stopAdaptiveVideo?.();video.pause();if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null}if(video.dataset.objectUrl)URL.revokeObjectURL(video.dataset.objectUrl);const url=URL.createObjectURL(file);video.dataset.objectUrl=url;video.src=url;video.load();video.play().catch(()=>{})}
   videoFile.addEventListener('change',()=>loadVideoFile(videoFile.files?.[0]));
   document.querySelector('#fullScreen').addEventListener('click',()=>{const el=document.querySelector('.stage-wrap');if(!document.fullscreenElement)el.requestFullscreen?.();else document.exitFullscreen?.()});
 

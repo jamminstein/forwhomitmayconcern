@@ -50,3 +50,9 @@ The favicon contains a valid 16-frame GIF and a script that replaces a single ic
 ## Hidden CORPUS dancers
 
 Five transparent 36.8-second dance collages sit behind the warped video. One is randomly selected per page load, excluding the previous session choice. Only that render downloads, at low priority after the main video has initial data; the other four are never preloaded. Eight real footage-cut phrases from the local CORPUS library crossfade into each continuous loop; provenance and file sizes are in `dancer-sources.json`. Renders are 96 × 128 pixels and use matching stills for reduced-motion preferences. No library runtime or source footage is loaded by the site.
+
+### Adaptive artwork delivery
+
+The current artwork uses `video/1-6/master.m3u8`: 480p, 720p and 1080p H.264 renditions with aligned two-second keyframes and fragmented MP4 segments. All assets are served by GitHub Pages. Safari uses native HLS; other compatible browsers use the locally bundled MIT-licensed hls.js 1.7.3 light build. Playback starts at 480p in hls.js, then adapts without a screen-size cap, preserving access to full 1080p when bandwidth allows. The JS player keeps a short forward buffer rather than fetching the whole movie up front.
+
+`video/1-6/poster.jpg` is a preloaded first-frame image rendered through the same WebGL mesh until a decoded video frame is available. `video-source.js` falls back to `tiago-1-6.mp4` on unsupported browsers or fatal HLS errors. Source audio remains excluded; Acervo plays separately. Custom local video uploads detach the adaptive player first.
