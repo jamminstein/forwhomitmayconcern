@@ -20,11 +20,10 @@
   #overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
   #overlay .net{fill:none;stroke:#f3f3e9;stroke-opacity:.48;stroke-width:1;vector-effect:non-scaling-stroke}
   #overlay .handle-line{stroke:#d1f266;stroke-width:1;stroke-dasharray:3 4;stroke-opacity:.95;vector-effect:non-scaling-stroke}
-  #overlay .point{pointer-events:all;cursor:grab;stroke:#121410;stroke-width:1.5;vector-effect:non-scaling-stroke;transition:r .12s ease}
+  #overlay .point{pointer-events:all;cursor:grab;stroke:#121410;stroke-width:1.5;vector-effect:non-scaling-stroke}
   #overlay .point:active{cursor:grabbing}
   #overlay .point.corner{fill:var(--acid)}
   #overlay .point.handle{fill:#f4f2e9}
-  #overlay .point:hover{r:9}
   .edit-hint{position:absolute;left:17px;top:15px;color:white;font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase;display:flex;gap:8px;align-items:center;pointer-events:none;text-shadow:0 1px 8px #000}
   .edit-hint b{background:var(--acid);color:#171916;border-radius:99px;padding:4px 7px;font-weight:600;text-shadow:none}
   .stage-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#f4f3ed;border-top:1px solid #c5c5ba}
@@ -82,10 +81,9 @@
   #overlay .net{fill:none;stroke:#f5f5eb;stroke-opacity:.62;stroke-width:1;vector-effect:non-scaling-stroke}
   #overlay .handle-line{display:none;stroke:#d1f266;stroke-width:1.5;stroke-dasharray:4 4;stroke-opacity:1}
   #overlay .handle-line.selected{display:block;stroke-dasharray:none}
-  #overlay .point.tangent{fill:#fff;stroke:#598cf2;stroke-width:2;r:5}
-  #overlay .point.corner{fill:#d1f266;stroke:#fff;stroke-width:2;r:5}
-  #overlay .point.handle{display:block;fill:#fff;stroke:#d1f266;stroke-width:2;r:4}
-  #overlay .point.corner:hover,#overlay .point.handle:hover{r:7}
+  #overlay .point.tangent{fill:#fff;stroke:#598cf2;stroke-width:2}
+  #overlay .point.corner{fill:#d1f266;stroke:#fff;stroke-width:2}
+  #overlay .point.handle{display:block;fill:#fff;stroke:#d1f266;stroke-width:2}
   @media(max-width:760px){.stage-wrap{width:90vw;max-width:none}.shell{min-height:100svh}}
   @media(max-width:430px){.stage-wrap{width:92vw}}
 
@@ -236,7 +234,7 @@ html[data-theme=dark] .transform-grip,html[data-theme=dark] .rotate-grip{color:#
 #overlay .mesh-drawing{filter:url(#pencilWobble)}
 #overlay .net{stroke:#111;stroke-width:.7;stroke-opacity:.4;stroke-dasharray:none;stroke-linecap:round;stroke-linejoin:round}
 #overlay .handle-line.selected{stroke:#111;stroke-width:.8;stroke-opacity:.65;stroke-dasharray:none;stroke-linecap:round}
-#overlay .point.corner,#overlay .point.handle,#overlay .point.tangent{fill:var(--gallery-bg,#fff);fill-opacity:.7;stroke:#111;stroke-width:.85;r:4;transition:none}
+#overlay .point.corner,#overlay .point.handle,#overlay .point.tangent{fill:var(--gallery-bg,#fff);fill-opacity:.7;stroke:#111;stroke-width:.85;r:4px;transition:none}
 #overlay .point:hover{stroke-width:1.1}
 html[data-theme=dark] #overlay .net,html[data-theme=dark] #overlay .handle-line.selected,html[data-theme=dark] #overlay .point{stroke:#f5f5f5}
 html[data-theme=dark] #overlay .point.corner,html[data-theme=dark] #overlay .point.handle,html[data-theme=dark] #overlay .point.tangent{fill:#090a0d;stroke:#f5f5f5}
