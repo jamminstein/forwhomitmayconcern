@@ -1,4 +1,5 @@
-// Local HLS renditions; Safari uses native HLS, other browsers use bundled hls.js.
+// Safari uses progressive MP4 for reliable autoplay and WebGL texture updates.
+// Other browsers use local HLS renditions with an MP4 fallback.
 const video=document.querySelector('#video');
 const manifest='video/1-6/master.m3u8',fallback='tiago-1-6.mp4';
 let hls=null,custom=false,fellBack=false;
@@ -13,6 +14,8 @@ function useFallback(){
  play();
 }
 async function setup(){
+ const appleWebKit=/Apple/.test(navigator.vendor)||/iPad|iPhone|iPod/.test(navigator.userAgent);
+ if(appleWebKit){useFallback();return}
  if(video.canPlayType('application/vnd.apple.mpegurl')){
   video.dataset.delivery='native-hls';
   video.addEventListener('error',useFallback,{once:true});
