@@ -1,5 +1,6 @@
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-#contactLink{position:fixed;left:23px;top:140px;width:32px;height:32px;z-index:24;color:#000}
+#identityDetails{position:fixed;left:23px;top:100px;z-index:24;display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:max-content;pointer-events:none}
+#contactLink{position:relative;width:32px;height:32px;color:#000;pointer-events:auto}
 #contactEmail{display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:5px;border:0;background:transparent;color:inherit;cursor:pointer;transform:rotate(-8deg);touch-action:manipulation}
 #contactEmail svg{width:20px;height:16px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
 #contactEmail:focus-visible{outline:1px dashed currentColor;outline-offset:2px}
@@ -8,7 +9,7 @@
 #contactFallback{position:absolute;left:36px;top:3px;width:186px;height:27px;padding:3px 5px;border:1px solid currentColor;border-radius:0;background:var(--gallery-bg,#fff);color:inherit;font:12px/1.4 monospace}
 #contactFallback[hidden]{display:none}
 html[data-theme=dark] #contactLink{color:#fff}
-@media(max-width:700px),(hover:none) and (pointer:coarse){#contactLink{position:absolute;left:17px;top:114px}}
+@media(max-width:700px),(hover:none) and (pointer:coarse){#identityDetails{position:absolute;left:17px;top:81px}}
 #artworkPlayback{position:absolute;right:-8px;bottom:-34px;width:32px;height:32px;padding:5px;border:0;background:transparent;color:#000;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s ease}
 #artworkPlayback svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
 #artworkPlayback .motion-play{display:none}
