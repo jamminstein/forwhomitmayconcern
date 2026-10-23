@@ -32,7 +32,7 @@ npm test
 - Music controls navigate the shuffled Acervo collection. The volume slider controls the shared mix. The waveform links to Acervo; the envelope copies `tiagopereira@me.com` and confirms only after a successful copy. If browser copying fails, a selectable address appears.
 - A visual pause control is available on keyboard focus and for reduced-motion visitors. Pausing keeps the artwork's shape and stops automatic visual motion. Music is independent. Failed artwork playback exposes the same small control as a retry action.
 
-The default handwriting remains unchanged. `?readability=1` is an optional comparison with a faint, theme-aware halo around the writing. On touch layouts the video stays fixed above the scrolling text. The transport stays reachable at the viewport bottom, with invisible touch targets around its small drawings. The drum and contact controls remain usable when overlapping the video.
+On touch layouts the video stays fixed above the scrolling text. The transport stays reachable at the viewport bottom, with invisible touch targets around its small drawings. The drum and contact controls remain usable when overlapping the video.
 
 ## Runtime responsibilities
 
@@ -43,7 +43,7 @@ The default handwriting remains unchanged. `?readability=1` is an optional compa
 - `drum-machine.js`, `drum-layout.js`: kit loading/playback and collision-aware placement.
 - `handwriting.js`, `song-id.js`, `brand-strip.js`, `contact.js`: text and identity UI.
 - `waveform.js`, `morph-icon.js`, `favicon.js`, `dancers.js`: small visual details. They honor visual-pause preferences.
-- `styles.css`, `contact.css`, `readability.js`: layout, focus/touch presentation, and the optional reading experiment.
+- `styles.css`, `contact.css`: layout and focus/touch presentation.
 
 ## Media and performance
 
