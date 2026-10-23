@@ -9,7 +9,7 @@ function start(){
  video.muted=true;
  video.play().catch(error=>{video.dataset.playback=error.name==='NotAllowedError'?'needs-tap':'waiting'});
 }
-for(const event of ['loadeddata','canplay'])video.addEventListener(event,start);
+for(const event of ['loadedmetadata','loadeddata','canplay','canplaythrough'])video.addEventListener(event,start);
 video.addEventListener('playing',()=>{video.dataset.playback='playing'});
 video.addEventListener('error',()=>{video.dataset.playback='error'});
 for(const event of ['pointerdown','touchend','click','keydown'])window.addEventListener(event,e=>{
@@ -19,4 +19,10 @@ for(const event of ['pointerdown','touchend','click','keydown'])window.addEventL
 },{capture:true,passive:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)start()});
 window.addEventListener('pageshow',start);
+// A source may become playable after Safari rejects the initial early play call.
+let startupAttempts=0;
+const startupRetry=setInterval(()=>{
+ if(video.currentTime>0||userPaused||++startupAttempts>=24){clearInterval(startupRetry);return}
+ start();
+},250);
 start();

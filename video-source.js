@@ -4,12 +4,12 @@ const video=document.querySelector('#video');
 const manifest='video/1-6/master.m3u8',fallback='tiago-1-6.mp4';
 let hls=null,custom=false,fellBack=false;
 window.stopAdaptiveVideo=()=>{custom=true;hls?.destroy();hls=null};
-function play(){video.play().catch(()=>{})}
+function play(){video.muted=true;video.defaultMuted=true;video.play().catch(()=>{})}
 function useFallback(){
  if(custom||fellBack)return;
  fellBack=true;hls?.destroy();hls=null;
  const time=video.currentTime||0;
- video.dataset.delivery='mp4';video.src=fallback;
+ video.dataset.delivery='mp4';video.muted=true;video.defaultMuted=true;video.src=fallback;
  video.addEventListener('loadedmetadata',()=>{if(time)video.currentTime=time;play()},{once:true});
  play();
 }

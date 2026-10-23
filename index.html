@@ -109,7 +109,7 @@
   .topbar,.intro,.stage-controls,.section-grid,.footer{display:none!important}
   .stage-wrap{width:min(78vw,135vh);max-width:1320px;background:transparent;border:0;box-shadow:none;overflow:visible}
   .stage{width:100%;aspect-ratio:16/9;min-height:0;max-height:none;overflow:visible;background:transparent;box-shadow:none}
-  #video{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  #video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;opacity:.001;pointer-events:none}
   .edit-hint{display:none!important}
   #overlay .net{fill:none;stroke:#f5f5eb;stroke-opacity:.62;stroke-width:1;vector-effect:non-scaling-stroke}
   #overlay .handle-line{display:none;stroke:#d1f266;stroke-width:1.5;stroke-dasharray:4 4;stroke-opacity:1}
@@ -569,7 +569,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
 
   // Muted artwork stays independent from the Acervo soundtrack.
   video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;
-  import('./video-source.js?v=hls-2');
+  import('./video-source.js?v=hls-3');
   video.play().catch(()=>showToast('Click the image to start the video.'));
   stage.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{})});
 
@@ -740,7 +740,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=clean-loading-2"></script>
 <script type="module" src="song-id.js?v=handwritten-8"></script>
-<script type="module" src="video-playback.js?v=mobile-1"></script>
+<script type="module" src="video-playback.js?v=safari-start-2"></script>
 <script type="module" src="morph-icon.js?v=petals-2"></script>
 </body>
 </html>
