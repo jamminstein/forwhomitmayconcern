@@ -11,6 +11,52 @@ function tone(){
 const audioBytes=tone(),collection=[11827,11774,10598].map(id=>({name:`Acervo / ${id}`,url:`https://audio.fixture/${id}.m4a`,remote:true}));
 const fulfillAudio=r=>r.fulfill({body:audioBytes,contentType:'audio/wav'});
 async function routeAudio(page){await page.route('**/soundtrack.json*',r=>r.fulfill({json:collection}));await page.route('**/*.m4a*',fulfillAudio)}
+async function startupSignal(browser,name){
+ for(const mode of ['delayed','anti-phase','center-channel','source-change','paused','unavailable']){
+  const p=await browser.newPage();
+  await p.route('**/__audio_startup_test.html',r=>r.fulfill({contentType:'text/html',body:'<audio id="audio"></audio>'}));
+  await p.goto(BASE+'/__audio_startup_test.html');
+  const result=await p.evaluate(async mode=>{
+   const context=new OfflineAudioContext(2,48000,48000),media=document.querySelector('#audio'),input=context.createGain();
+   let paused=false,disconnected=0,analyserCount=0,timerId=0;const timers=new Map();
+   Object.defineProperty(media,'paused',{get:()=>paused});
+   // Drive checks at exact audio-clock boundaries; no wall-clock test deadlines.
+   window.setTimeout=callback=>{timers.set(++timerId,callback);return timerId};window.clearTimeout=id=>timers.delete(id);
+   const flush=()=>{for(const [id,callback] of [...timers]){timers.delete(id);callback()}};
+   const disconnect=input.disconnect.bind(input);input.disconnect=target=>{disconnect(target);if(target instanceof GainNode)disconnected++};
+   const facade=new Proxy(context,{get(target,key){
+    if(key==='state')return 'running';if(key==='resume')return ()=>Promise.resolve();if(key==='addEventListener')return ()=>{};
+    if(key==='createMediaElementSource')return ()=>input;
+    if(key==='createAnalyser')return ()=>{const node=context.createAnalyser();if(++analyserCount===1&&mode==='unavailable')node.getFloatTimeDomainData=()=>{throw Error('Unsupported analyser')};return node};
+    const value=Reflect.get(target,key,target);return typeof value==='function'?value.bind(target):value;
+   }});
+   window.AudioContext=function(){return facade};window.siteMixLevel=.32;
+   const {getMixer}=await import('./audio-mixer.js'),mix=getMixer();window.setSiteMusicLevel(.17);
+   let signal;
+   if(mode==='anti-phase'||mode==='center-channel'){signal=context.createBufferSource();signal.buffer=context.createBuffer(mode==='anti-phase'?2:6,48000,48000);if(mode==='anti-phase'){signal.buffer.getChannelData(0).fill(.25,19200);signal.buffer.getChannelData(1).fill(-.25,19200)}else signal.buffer.getChannelData(2).fill(.25,19200);signal.connect(input);signal.start()}
+   else{signal=context.createConstantSource();signal.offset.value=.25;signal.connect(input);signal.start(.4)}
+   const hold=context.suspend(.5),render=context.startRendering();await hold;
+   let silentCheck=null;
+   if(mode==='paused'){paused=true;media.dispatchEvent(new Event('pause'));flush()}
+   else if(mode==='source-change'){
+    signal.stop(context.currentTime);media.dispatchEvent(new Event('emptied'));media.dispatchEvent(new Event('playing'));flush();
+    const replacement=context.createConstantSource();replacement.offset.value=.25;replacement.connect(input);replacement.start(.8);
+    const silence=context.suspend(.7);await context.resume();await silence;flush();silentCheck=disconnected;
+    const arrival=context.suspend(.9);await context.resume();await arrival;flush();
+   }else flush();
+   const queued=timers.size;await context.resume();const data=(await render).getChannelData(0);
+   let first=-1,delta=0,peak=0;for(let i=0;i<data.length;i++){const value=data[i];if(first<0&&Math.abs(value)>1e-7)first=i/context.sampleRate;peak=Math.max(peak,Math.abs(value));if(i)delta=Math.max(delta,Math.abs(value-data[i-1]))}
+   return {first,delta,peak,disconnected,queued,silentCheck,musicLevel:mix.musicGain.gain.value,drumLevel:mix.drumGain.gain.value};
+  },mode);
+  assert(Math.abs(result.musicLevel-.17)<1e-5&&Math.abs(result.drumLevel-.17)<1e-5,`${name}: startup must retain explicit volume and drum level`);
+  assert.equal(result.queued,0,`${name}: startup polling must end after readiness or pause`);
+  if(mode==='paused'){assert.equal(result.peak,0);assert.equal(result.disconnected,0)}
+  else{assert.equal(result.disconnected,1);assert(result.first>=(mode==='source-change'?.9:.5));assert(result.peak>.02);assert(result.delta<.001,`${name}: delayed PCM must enter through the envelope`)}
+  if(mode==='source-change')assert.equal(result.silentCheck,0,`${name}: stale source data must not open the envelope`);
+  await p.close();
+ }
+ console.log(`${name}: delayed/stereo PCM, source changes, pause and analyser fallback passed`);
+}
 async function pendingVisibility(page){
  // Hold a *fulfilled* native play promise: paused becomes false before the
  // controller's pending flag clears, exactly as a rapid tab switch can do.
@@ -93,6 +139,6 @@ async function videoFailure(browser){
  fail=false;await p.locator('#artworkPlayback').focus();await p.locator('#artworkPlayback').press('Enter');await p.waitForFunction(()=>document.querySelector('#video').currentTime>.1);await p.close();console.log('Progressive video failure retries are bounded; explicit retry succeeds');
 }
 (async()=>{
- const chrome=await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});try{await lifecycle(chrome,'Chromium');await failures(chrome)}finally{await chrome.close()}
- const safari=await webkit.launch(webkitOptions);try{await lifecycle(safari,'WebKit');await videoFailure(safari)}finally{await safari.close()}
+ const chrome=await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});try{await startupSignal(chrome,'Chromium');await lifecycle(chrome,'Chromium');await failures(chrome)}finally{await chrome.close()}
+ const safari=await webkit.launch(webkitOptions);try{await startupSignal(safari,'WebKit');await lifecycle(safari,'WebKit');await videoFailure(safari)}finally{await safari.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});
