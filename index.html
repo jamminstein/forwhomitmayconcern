@@ -705,7 +705,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
     if(userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
     if(!audio.paused&&musicStarted)return;
     autoplayPending=true;if(!musicStarted)setPlaybackLevel(0);window.resumeSiteAudio?.();window.prepareSiteMusic?.();
-    audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false;if(musicStarted&&!fadeActive)setPlaybackLevel(soundtrackLevel)});
+    audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false});
   }
   audio.addEventListener('playing',()=>{if(!musicStarted)beginAudioFade()});
   window.addEventListener('site-audio-running',()=>{if(!audio.paused&&!musicStarted)beginAudioFade()});
