@@ -50,11 +50,14 @@ async function lifecycle(browser,name){
  assert(await p.evaluate(()=>document.querySelectorAll('#overlay .point').length>0&&document.querySelector('#audio').paused&&document.querySelector('#audio').currentTime===0));
  await p.locator('#musicNext').click({noWaitAfter:true});await p.waitForTimeout(2800);await p.locator('#stage').click();
  await p.waitForFunction(()=>window.siteAudioContext?.state==='running'&&document.querySelector('#audio').currentTime>.1);
- await p.evaluate(()=>{document.querySelector('#musicNext').click();setTimeout(()=>document.querySelector('#musicPlay').click(),5)});await p.waitForTimeout(160);
+ await p.evaluate(()=>{document.querySelector('#musicNext').click();setTimeout(()=>document.querySelector('#musicPlay').click(),5)});
+ // Media loading and the fade timer can settle later on a busy browser runner.
+ await p.waitForFunction(()=>document.querySelector('#audio').paused&&document.querySelector('#audio').src.includes('/'+document.querySelector('#currentSongId').dataset.songId+'.m4a'),null,{timeout:3000});
+ await p.waitForTimeout(160);
  assert(await p.evaluate(()=>document.querySelector('#audio').paused&&document.querySelector('#audio').src.includes('/'+document.querySelector('#currentSongId').dataset.songId+'.m4a')));
  await p.locator('#musicPlay').click();await p.waitForFunction(()=>!document.querySelector('#audio').paused);
- await p.evaluate(()=>{for(let i=0;i<4;i++)document.querySelector('#musicNext').click()});await p.waitForTimeout(160);
- assert(await p.evaluate(()=>!document.querySelector('#audio').paused&&document.querySelector('#audio').src.includes('/'+document.querySelector('#currentSongId').dataset.songId+'.m4a')));
+ await p.evaluate(()=>{for(let i=0;i<4;i++)document.querySelector('#musicNext').click()});
+ await p.waitForFunction(()=>!document.querySelector('#audio').paused&&document.querySelector('#audio').src.includes('/'+document.querySelector('#currentSongId').dataset.songId+'.m4a'),null,{timeout:3000});
  assert.deepEqual(errors,[]);await p.close();
  const q=await browser.newPage({reducedMotion:'reduce'});await routeAudio(q);q.on('pageerror',e=>errors.push(e.message));await q.goto(BASE);await q.waitForTimeout(200);
  assert(await q.evaluate(()=>window.siteVisualMotionPaused&&document.querySelector('#video').paused&&!document.querySelector('#video').currentSrc));
