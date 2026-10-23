@@ -56,3 +56,13 @@ Five transparent 36.8-second dance collages sit behind the warped video. One is 
 The current artwork uses `video/2-3/master.m3u8`: 480p, 720p and 1080p H.264 renditions with aligned two-second keyframes and fragmented MP4 segments. All assets are served by GitHub Pages. Safari uses the fast-start 1080p MP4 for reliable autoplay and WebGL texture updates; other compatible browsers use native HLS or the locally bundled MIT-licensed hls.js 1.7.3 light build. Playback starts at 480p in hls.js, then adapts without a screen-size cap, preserving access to full 1080p when bandwidth allows. The JS player keeps a short forward buffer rather than fetching the whole movie up front.
 
 `video/2-3/poster.jpg` is a preloaded first-frame image rendered through the same WebGL mesh until a decoded video frame is available. `video-source.js` falls back to `tiago-2-3.mp4` on unsupported browsers or fatal HLS errors. Source audio remains excluded; Acervo plays separately. Custom local video uploads detach the adaptive player first.
+
+### Runtime efficiency and audio startup
+
+Video textures upload only when a decoded frame changes; mesh animation and dragging remain on the display animation clock. The renderer reuses the last texture while buffering and redraws on mesh or canvas changes even when video is paused. Hidden guides stop updating after their fade completes and catch up when shown. Unchanged waveform paths and stage transforms skip DOM writes. Drum placement tests its preferred free position before building a collision-search grid.
+
+Playlist playback waits for the shared audio-mixer module, including early Play/Next gestures, so the native media path cannot begin audibly and switch to Web Audio during startup. Initial gain is zero before playback; the existing audio-clock fade and transport envelopes remain.
+
+The portrait uses a full-resolution lossless WebP, verified byte-for-byte against the original PNG's decoded RGBA pixels: 911,586 bytes instead of 1,674,647 bytes. The original PNG is retained.
+
+This pass was checked in Chromium and WebKit for frame uploads, hidden-guide updates, paused redraws, video looping, delayed mixer loading, startup fades, mobile touch priority and dragging, and constrained GPU-buffer alignment. Native Safari listening and device performance can still differ from automation.

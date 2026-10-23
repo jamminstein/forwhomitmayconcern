@@ -1,4 +1,4 @@
-import {getMixer} from './audio-mixer.js?v=audio-clock-5';
+import {getMixer} from './audio-mixer.js?v=review-6';
 export function chooseKit(manifest,previous={},rng=Math.random){return Object.fromEntries(['kick','snare','hat'].map(kind=>{const pool=manifest[kind].filter(url=>url!==previous[kind]);const choices=pool.length?pool:manifest[kind];return [kind,choices[Math.floor(rng()*choices.length)]]}))}
 const padKeys={j:'kick',k:'snare',l:'hat'},pads=[...document.querySelectorAll('.drum-pad')],active=new Set();let lastHat=null,currentKit={},data=null;
 const machine=document.querySelector('#drumMachine'),refresh=document.querySelector('#drumRefresh');

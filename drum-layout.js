@@ -19,12 +19,15 @@ function arrange(){
  }
  const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#workCredits,.glass-dock,#musicWaveform,.project-links,#themeToggle')].filter(el=>!mobile||getComputedStyle(el).position!=='fixed').map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
  const preferred=userPosition||placedPosition||{x:width*(mobile?.13:.07),y:mobile?height*1.45:height*.8-66};
- const candidates=[];
- if(preferred.x>=14&&preferred.x<=width-150&&preferred.y>=14&&preferred.y<=limit-84)candidates.push(preferred);
- for(let y=30;y<limit-90;y+=10)for(let x=24;x<width-162;x+=10)candidates.push({x,y});
- candidates.sort((a,b)=>Math.hypot(a.x-preferred.x,a.y-preferred.y)-Math.hypot(b.x-preferred.x,b.y-preferred.y));
+ // Most arrangements can keep their current location without allocating and sorting a full search grid.
+ const validPreferred=preferred.x>=14&&preferred.x<=width-150&&preferred.y>=14&&preferred.y<=limit-84;
  // Include the rotated shell and its overflowing pencil strokes in the footprint.
  const clear=p=>obstacles.every(r=>p.x+150<r.left||p.x-12>r.right||p.y+84<r.top||p.y-12>r.bottom);
+ if(validPreferred&&clear(preferred)){placedPosition=preferred;machine.style.left=`${preferred.x}px`;machine.style.top=`${preferred.y}px`;machine.style.bottom='auto';return}
+ const candidates=[];
+ if(validPreferred)candidates.push(preferred);
+ for(let y=30;y<limit-90;y+=10)for(let x=24;x<width-162;x+=10)candidates.push({x,y});
+ candidates.sort((a,b)=>Math.hypot(a.x-preferred.x,a.y-preferred.y)-Math.hypot(b.x-preferred.x,b.y-preferred.y));
  const spot=candidates.find(clear);
  if(spot){placedPosition=spot;machine.style.left=`${spot.x}px`;machine.style.top=`${spot.y}px`;machine.style.bottom='auto'}
 }

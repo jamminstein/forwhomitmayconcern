@@ -1,8 +1,8 @@
-import {getOutputAnalyser} from './audio-mixer.js?v=audio-clock-5';
+import {getOutputAnalyser} from './audio-mixer.js?v=review-6';
 const path=document.querySelector('#musicWaveform path');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),samples=new Uint8Array(256);
 const points=Array.from({length:23},(_,i)=>({x:2+i*60/22,y:14,offset:Math.sin(i*2.7)*.65}));
-let last=0;
+let last=0,lastPath='';
 function frame(now){
  requestAnimationFrame(frame);
  if(document.hidden||now-last<33)return;last=now;
@@ -17,6 +17,6 @@ function frame(now){
   p.y+=(target-p.y)*(active?.85:.18);
   d+=`${i?' L':'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
  }
- path.setAttribute('d',d);
+ if(d!==lastPath){path.setAttribute('d',d);lastPath=d}
 }
 requestAnimationFrame(frame);

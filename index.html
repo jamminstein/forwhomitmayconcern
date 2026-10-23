@@ -513,7 +513,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   <footer class="footer"><span>Image / sound / gesture</span><span>Move the picture around ↗</span></footer>
 </main>
 <div class="keyboard-hint">T · transform &nbsp; / &nbsp; Space + drag · move &nbsp; / &nbsp; H · guides</div>
-<a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-cutout.png" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-cutout.webp" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div id="writtenName" class="written-name"></div>
 <div id="pageWritings"></div>
 <div id="drumMachine" role="group" aria-label="Drum machine: J kick, K snare, L hi-hat">
@@ -561,6 +561,8 @@ html[data-theme=dark] #currentSongId{color:#fff}
   const gridSize=5, pointIndex=(r,c)=>r*gridSize+c;
   let points=[];
   let morphing=false,morphFrom=null,morphTo=null,morphStarted=0;
+  // A late mixer must never replace an already audible native playback path.
+  let audioMixerReady=false;
   let soundtrackLevel=.32;let musicStarted=false,userPausedMusic=false,autoplayPending=false,fadeStarted=0,fadeActive=false;
   function initialPoints(){points=[];const h=1/(gridSize-1)/3;for(let r=0;r<gridSize;r++)for(let c=0;c<gridSize;c++)points.push({x:c/(gridSize-1),y:r/(gridSize-1),left:{x:-h,y:0},right:{x:h,y:0},up:{x:0,y:-h},down:{x:0,y:h}});}
 
@@ -593,11 +595,35 @@ html[data-theme=dark] #currentSongId{color:#fff}
   function surface(u,v){const n=gridSize-1,c=Math.min(n-1,Math.floor(u*n)),r=Math.min(n-1,Math.floor(v*n)),x=u*n-c,y=v*n-r,a=points[pointIndex(r,c)],b=points[pointIndex(r,c+1)],d=points[pointIndex(r+1,c)],e=points[pointIndex(r+1,c+1)],top=curve(a,b,'right','left',x),bottom=curve(d,e,'right','left',x),left=curve(a,d,'down','up',y),right=curve(b,e,'down','up',y);const out={};for(const k of ['x','y'])out[k]=(1-y)*top[k]+y*bottom[k]+(1-x)*left[k]+x*right[k]-((1-x)*(1-y)*a[k]+x*(1-y)*b[k]+(1-x)*y*d[k]+x*y*e[k]);return out}
   const vertexCache=new Float32Array(uvs.length);
   function surfaceVertices(){const out=vertexCache;for(let i=0;i<uvs.length;i+=2){const p=surface(uvs[i],uvs[i+1]);out[i]=(p.x-.5)/2;out[i+1]=(.5-p.y)/2}return out}
-  function render(){animateAudioFade(performance.now());animateMorph(performance.now());animateMotion();if(overlayDirty){overlayDirty=false;paintOverlay()}if(gl&&program&&(video.readyState>=2||firstFrame.complete&&firstFrame.naturalWidth)){try{gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video.readyState>=2?video:firstFrame);gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);window.renderGlass?.(canvas,stage,displayView)}catch(e){video.dataset.textureError=e.name+': '+e.message;console.warn('Video texture update failed',e)}}requestAnimationFrame(render)}
+  // Upload each decoded frame once; keep mesh motion on the display animation clock.
+  let textureSource=null,videoFrameDirty=true,uploadedVideoTime=-1;
+  const hasVideoFrameCallback=typeof video.requestVideoFrameCallback==='function';
+  if(hasVideoFrameCallback){const onFrame=()=>{videoFrameDirty=true;video.requestVideoFrameCallback(onFrame)};video.requestVideoFrameCallback(onFrame)}
+  for(const event of ['loadeddata','seeked','resize'])video.addEventListener(event,()=>{videoFrameDirty=true});
+  function render(){
+    const now=performance.now();animateAudioFade(now);animateMorph(now);animateMotion();
+    if(overlayDirty&&(!isEditing||!overlay.children.length||!wrap.classList.contains('guides-idle')||now<guidePaintUntil)){overlayDirty=false;paintOverlay()}
+    const source=video.readyState>=2?video:textureSource||(firstFrame.complete&&firstFrame.naturalWidth?firstFrame:null);
+    const upload=source&&(source!==textureSource||(source===video&&video.readyState>=2&&(videoFrameDirty||(!hasVideoFrameCallback&&video.currentTime!==uploadedVideoTime))));
+    if(gl&&program&&source&&(upload||geometryDirty)){
+      try{
+        gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(program);
+        gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);
+        if(upload){gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,source);textureSource=source;videoFrameDirty=false;uploadedVideoTime=video.currentTime}
+        gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);
+        if(geometryDirty){gl.bufferData(gl.ARRAY_BUFFER,surfaceVertices(),gl.DYNAMIC_DRAW);geometryDirty=false}
+        gl.enableVertexAttribArray(locations.position);gl.vertexAttribPointer(locations.position,2,gl.FLOAT,false,0,0);
+        gl.bindBuffer(gl.ARRAY_BUFFER,uvBuffer);gl.enableVertexAttribArray(locations.uv);gl.vertexAttribPointer(locations.uv,2,gl.FLOAT,false,0,0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);
+        window.renderGlass?.(canvas,stage,displayView);
+      }catch(e){video.dataset.textureError=e.name+': '+e.message;console.warn('Video texture update failed',e)}
+    }
+    requestAnimationFrame(render);
+  }
   let selectedPoint=-1,dragState=null;
   function directions(i){const r=Math.floor(i/gridSize),c=i%gridSize;return [...(c>0?['left']:[]),...(c<gridSize-1?['right']:[]),...(r>0?['up']:[]),...(r<gridSize-1?['down']:[])]}
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
-  let overlayDirty=true,geometryDirty=true;
+  let overlayDirty=true,geometryDirty=true,guidePaintUntil=0;
   function drawOverlay(){overlayDirty=true;geometryDirty=true;const h=1/(gridSize-1)/3;const warped=points.some((p,i)=>Math.abs(p.x-(i%gridSize)/(gridSize-1))>1e-5||Math.abs(p.y-Math.floor(i/gridSize)/(gridSize-1))>1e-5||['left','right','up','down'].some(dir=>{const x=dir==='left'?-h:dir==='right'?h:0,y=dir==='up'?-h:dir==='down'?h:0;return Math.abs(p[dir].x-x)>1e-5||Math.abs(p[dir].y-y)>1e-5}));document.querySelector('#dockReset').classList.toggle('available',warped)}
   function paintOverlay(){if(!overlay.isConnected)return;const w=stage.clientWidth,h=stage.clientHeight;overlay.setAttribute('viewBox',`0 0 ${w} ${h}`);if(!isEditing){overlay.replaceChildren();return}let cursor=0;function el(tag,attrs){let e=overlay.children[cursor];if(!e||e.localName!==tag){const fresh=document.createElementNS('http://www.w3.org/2000/svg',tag);if(e)overlay.replaceChild(fresh,e);else overlay.appendChild(fresh);e=fresh}cursor++;if(!('data-direction' in attrs))e.removeAttribute('data-direction');for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);return e}
     for(let axis=0;axis<2;axis++)for(let n=0;n<gridSize;n++){let d='';for(let j=0;j<=64;j++){const p=surface(axis?j/64:n/(gridSize-1),axis?n/(gridSize-1):j/64);d+=(j?' L ':'M ')+p.x*w+' '+p.y*h}el('path',{d,class:'net'})}
@@ -610,10 +636,11 @@ html[data-theme=dark] #currentSongId{color:#fff}
   stage.addEventListener('pointermove',e=>{if(!dragState)return;const d=dragState,p=points[d.i],q=d.dir?p[d.dir]:p,gain=e.shiftKey?.18:.55,dx=(e.clientX-d.startX)/view.scale,dy=(e.clientY-d.startY)/view.scale,cos=Math.cos(view.angle),sin=Math.sin(view.angle);q.x=d.x+(dx*cos+dy*sin)/stage.clientWidth*gain;q.y=d.y+(-dx*sin+dy*cos)/stage.clientHeight*gain;drawOverlay()});
   function endDrag(){dragState=null;wrap.classList.remove('bezier-dragging')}stage.addEventListener('pointerup',endDrag);stage.addEventListener('pointercancel',endDrag);stage.addEventListener('lostpointercapture',endDrag);
   function keyboardMove(e){setMorph(false);const i=Number(e.currentTarget.dataset.index),dir=e.currentTarget.dataset.direction;if(e.key==='Enter'||e.key===' '){e.preventDefault();selectedPoint=i;drawOverlay();return}if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const p=dir?points[i][dir]:points[i],step=e.shiftKey?.001:.004;p.x+=e.key==='ArrowRight'?step:e.key==='ArrowLeft'?-step:0;p.y+=e.key==='ArrowDown'?step:e.key==='ArrowUp'?-step:0;const label=e.currentTarget.getAttribute('aria-label');drawOverlay();[...overlay.querySelectorAll('.point')].find(p=>p.getAttribute('aria-label')===label)?.focus()}
-  const spring={x:0,y:0,vx:0,vy:0},displayView={x:0,y:0,scale:1,angle:0};let lastFrame=0;
+  const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+  const spring={x:0,y:0,vx:0,vy:0},displayView={x:0,y:0,scale:1,angle:0};let lastFrame=0,lastTransform='';
   const wrap=document.querySelector('.stage-wrap'),view={x:0,y:0,scale:1,angle:0};let transformMode=false,spaceHeld=false,objectDrag=null;
   function applyView(){document.querySelector('#zoom').value=view.scale;updateZoomSketch()}
-  function animateMotion(){const now=performance.now(),dt=Math.min(.033,(now-lastFrame)/1000||1/60);lastFrame=now;const blend=1-Math.exp(-24*dt),oldX=displayView.x,oldY=displayView.y;for(const k of ['x','y','scale','angle'])displayView[k]+=(view[k]-displayView[k])*blend;const cos=Math.cos(displayView.angle),sin=Math.sin(displayView.angle),dx=(displayView.x-oldX)/stage.clientWidth,dy=(displayView.y-oldY)/stage.clientHeight;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){spring.vx-=((dx*cos+dy*sin)/displayView.scale)*12;spring.vy-=((-dx*sin+dy*cos)/displayView.scale)*12}const was=Math.abs(spring.x)+Math.abs(spring.y);spring.vx+=(-110*spring.x-15*spring.vx)*dt;spring.vy+=(-110*spring.y-15*spring.vy)*dt;spring.x=Math.max(-.025,Math.min(.025,spring.x+spring.vx*dt));spring.y=Math.max(-.025,Math.min(.025,spring.y+spring.vy*dt));if(was+Math.abs(spring.x)+Math.abs(spring.y)>.00001){geometryDirty=true;overlayDirty=true}wrap.style.transform=`translate(${displayView.x}px,${displayView.y}px) rotate(${displayView.angle}rad) scale(${displayView.scale})`}
+  function animateMotion(){const now=performance.now(),dt=Math.min(.033,(now-lastFrame)/1000||1/60);lastFrame=now;const blend=1-Math.exp(-24*dt),oldX=displayView.x,oldY=displayView.y;for(const k of ['x','y','scale','angle'])displayView[k]+=(view[k]-displayView[k])*blend;const cos=Math.cos(displayView.angle),sin=Math.sin(displayView.angle),dx=(displayView.x-oldX)/stage.clientWidth,dy=(displayView.y-oldY)/stage.clientHeight;if(!motionPreference.matches){spring.vx-=((dx*cos+dy*sin)/displayView.scale)*12;spring.vy-=((-dx*sin+dy*cos)/displayView.scale)*12}const was=Math.abs(spring.x)+Math.abs(spring.y);spring.vx+=(-110*spring.x-15*spring.vx)*dt;spring.vy+=(-110*spring.y-15*spring.vy)*dt;spring.x=Math.max(-.025,Math.min(.025,spring.x+spring.vx*dt));spring.y=Math.max(-.025,Math.min(.025,spring.y+spring.vy*dt));if(was+Math.abs(spring.x)+Math.abs(spring.y)>.00001){geometryDirty=true;overlayDirty=true}const transform=`translate(${displayView.x}px,${displayView.y}px) rotate(${displayView.angle}rad) scale(${displayView.scale})`;if(lastTransform!==transform){wrap.style.transform=transform;lastTransform=transform}}
   function setTransform(){transformMode=false}
   const frame=document.createElement('div');frame.className='transform-frame';
   frame.innerHTML=`<button class="transform-grip" data-corner="br" aria-label="Resize video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 L19 19 M5 11 L5 5 L11 5 M13 19 L19 19 L19 13"/></svg></button><button class="rotate-grip" aria-label="Rotate video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12 V6 Q7 3 9 5 V10 V3 Q11 1 12 4 V10 V4 Q15 2 15 5 V11 V7 Q18 5 18 9 L18 15 Q17 21 12 21 Q9 21 7 17 L4 13 Q3 10 5 11 L7 13"/></svg></button>`;wrap.appendChild(frame);
@@ -658,7 +685,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   window.addEventListener('gesturechange',e=>{if(!safariGesture)return;e.preventDefault();pinchScale(gestureScale*e.scale,e.clientX||innerWidth/2,e.clientY||innerHeight/2)},{passive:false});
   window.addEventListener('gestureend',e=>{if(safariGesture)e.preventDefault();safariGesture=false},{passive:false});
   let guideIdleTimer;
-  function wakeGuides(){clearTimeout(guideIdleTimer);wrap.classList.remove('guides-idle');guideIdleTimer=setTimeout(()=>{if(dragState||objectDrag){wakeGuides();return}wrap.classList.add('guides-idle')},2200)}
+  function wakeGuides(){clearTimeout(guideIdleTimer);wrap.classList.remove('guides-idle');guideIdleTimer=setTimeout(()=>{if(dragState||objectDrag){wakeGuides();return}guidePaintUntil=performance.now()+650;wrap.classList.add('guides-idle')},2200)}
   wrap.addEventListener('pointerenter',wakeGuides);wrap.addEventListener('pointermove',wakeGuides);wrap.addEventListener('pointerdown',wakeGuides);wrap.addEventListener('pointerup',wakeGuides);wrap.addEventListener('focusin',wakeGuides);wrap.addEventListener('keydown',wakeGuides);
   new ResizeObserver(sizeCanvas).observe(stage);sizeCanvas();render();
   const videoDuration=()=>Number.isFinite(video.duration)&&video.duration>0?video.duration:24;
@@ -678,7 +705,7 @@ html[data-theme=dark] #currentSongId{color:#fff}
   document.querySelector('#addSongs').addEventListener('click',()=>audioFiles.click());
   audioFiles.addEventListener('change',()=>{const files=[...audioFiles.files||[]].filter(f=>f.type.startsWith('audio/'));if(!files.length)return;files.forEach(file=>{const url=URL.createObjectURL(file);audioURLs.push(url);tracks.push({name:file.name.replace(/\.[^.]+$/,''),url})});audioFiles.value='';renderTracks();if(currentTrack<0)selectTrack(0,false);showToast(`${files.length} song${files.length===1?'':'s'} added.`)});
   function renderTracks(){if(tracks.some(t=>t.remote)){document.querySelector('#trackCount').textContent=`${tracks.length} TRACKS`;[audioPlay,audioSeek,document.querySelector('#prevTrack'),document.querySelector('#nextTrack')].forEach(b=>b.disabled=false);updateDockMusic();return}document.querySelector('#trackCount').textContent=`${tracks.length} TRACK${tracks.length===1?'':'S'}`;trackList.replaceChildren();if(!tracks.length){const li=document.createElement('li');li.className='empty-playlist';li.textContent='Add your own audio files. They play independently from the moving image.';trackList.appendChild(li)}else tracks.forEach((track,i)=>{const li=document.createElement('li');li.className='track'+(i===currentTrack?' selected':'');li.tabIndex=0;li.setAttribute('role','button');li.innerHTML=`<span class="track-no">${String(i+1).padStart(2,'0')}</span><span><span class="track-name"></span><span class="track-meta">jamminstein / original</span></span><span class="track-length" data-duration="${i}">--:--</span>`;li.querySelector('.track-name').textContent=track.name;li.addEventListener('click',()=>selectTrack(i,true));li.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectTrack(i,true)}});trackList.appendChild(li);const probe=new Audio();probe.preload='metadata';probe.src=track.url;probe.addEventListener('loadedmetadata',()=>{const d=trackList.querySelector(`[data-duration="${i}"]`);if(d)d.textContent=formatTime(probe.duration)},{once:true})});const has=tracks.length>0;[audioPlay,audioSeek,document.querySelector('#prevTrack'),document.querySelector('#nextTrack')].forEach(b=>b.disabled=!has)}
-  function selectTrack(i,playNow){if(!tracks.length)return;if(playNow){userPausedMusic=false;window.resumeSiteAudio?.();}currentTrack=(i+tracks.length)%tracks.length;audio.src=tracks[currentTrack].url;audio.load();audioSeek.value=0;audioTime.textContent='00:00';renderTracks();if(playNow)audio.play().then(()=>updateAudioState()).catch(()=>showToast('Tap play to start the selected song.'));else updateAudioState()}
+  function selectTrack(i,playNow){if(!tracks.length)return;if(playNow){userPausedMusic=false;if(!musicStarted)setPlaybackLevel(0);window.resumeSiteAudio?.();}currentTrack=(i+tracks.length)%tracks.length;audio.src=tracks[currentTrack].url;audio.load();audioSeek.value=0;audioTime.textContent='00:00';renderTracks();if(playNow&&audioMixerReady)audio.play().then(()=>updateAudioState()).catch(()=>showToast('Tap play to start the selected song.'));else updateAudioState()}
   function updateAudioState(){audioPlay.textContent=audio.paused?'▶':'Ⅱ';audioPlay.setAttribute('aria-label',audio.paused?'Play audio':'Pause audio');document.querySelector('#audioStatus').textContent=audio.paused?'Video sound off':'Playlist playing';}
   audioPlay.addEventListener('click',()=>{if(currentTrack<0){showToast('Add a song to begin.');return}toggleMusic()});
   document.querySelector('#prevTrack').addEventListener('click',()=>previousSong());document.querySelector('#nextTrack').addEventListener('click',()=>nextSong());
@@ -696,13 +723,14 @@ html[data-theme=dark] #currentSongId{color:#fff}
   function animateAudioFade(now){if(!fadeActive||audio.paused)return;const t=Math.min(1,Math.max(0,(now-fadeStarted)/3500));setPlaybackLevel(soundtrackLevel*t*t*(3-2*t));if(t===1)fadeActive=false}
   function beginAudioFade(){if(musicStarted)return;const context=window.siteAudioContext;if(context&&context.state!=='running'){setPlaybackLevel(0);return}musicStarted=true;autoplayPending=false;fadeStarted=performance.now();setPlaybackLevel(0);if(window.fadeSiteMusic){window.fadeSiteMusic(soundtrackLevel,3.5);fadeActive=false}else fadeActive=true}
   function toggleMusic(){
+    if(!audioMixerReady){userPausedMusic=false;return}
     if(!musicStarted)setPlaybackLevel(0);
     window.resumeSiteAudio?.();
     if(audio.paused||userPausedMusic){userPausedMusic=false;window.prepareSiteMusic?.();audio.play().catch(()=>{autoplayPending=false})}
     else{userPausedMusic=true;if(window.pauseSiteMusic)window.pauseSiteMusic();else audio.pause()}
   }
   function tryAutoplayMusic(fromGesture=false){
-    if(userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
+    if(!audioMixerReady||userPausedMusic||(!fromGesture&&autoplayPending)||!tracks.length||currentTrack<0)return;
     if(!audio.paused&&musicStarted)return;
     autoplayPending=true;if(!musicStarted)setPlaybackLevel(0);window.resumeSiteAudio?.();window.prepareSiteMusic?.();
     audio.play().then(()=>{autoplayPending=false;if(!musicStarted)beginAudioFade()}).catch(()=>{autoplayPending=false});
@@ -722,8 +750,9 @@ html[data-theme=dark] #currentSongId{color:#fff}
   window.addEventListener('pageshow',recoverSoundtrack);
   let songQueue=[],songHistory=[];
   function shuffled(values){const out=[...values];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}return out}
-  function nextSong(){if(!tracks.length)return;if(!songQueue.length)songQueue=shuffled(tracks.map((_,i)=>i).filter(i=>i!==currentTrack));if(!songQueue.length){audio.currentTime=0;audio.play().catch(()=>{});return}if(currentTrack>=0)songHistory.push(currentTrack);selectTrack(songQueue.pop(),true)}
+  function nextSong(){if(!tracks.length)return;if(!songQueue.length)songQueue=shuffled(tracks.map((_,i)=>i).filter(i=>i!==currentTrack));if(!songQueue.length){audio.currentTime=0;userPausedMusic=false;tryAutoplayMusic(true);return}if(currentTrack>=0)songHistory.push(currentTrack);selectTrack(songQueue.pop(),true)}
   function previousSong(){if(!tracks.length)return;if(!songHistory.length){if(!songQueue.length)songQueue=shuffled(tracks.map((_,i)=>i).filter(i=>i!==currentTrack));if(!songQueue.length){audio.currentTime=0;return}}const previous=songHistory.length?songHistory.pop():songQueue.pop();if(currentTrack>=0)songQueue.push(currentTrack);selectTrack(previous,true)}
+  import('./audio-mixer.js?v=review-6').catch(error=>console.warn('Audio mixer unavailable; using native playback',error)).finally(()=>{audioMixerReady=true;tryAutoplayMusic()});
   fetch('soundtrack.json').then(r=>{if(!r.ok)throw Error('Soundtrack unavailable');return r.json()}).then(collection=>{tracks=shuffled(collection);songQueue=shuffled(tracks.map((_,i)=>i).slice(1));selectTrack(0,false);updateDockMusic();tryAutoplayMusic()}).catch(()=>{document.querySelector('#songLabel').textContent='Acervo unavailable'});
   window.addEventListener('beforeunload',()=>audioURLs.forEach(URL.revokeObjectURL));
 })();
@@ -732,13 +761,13 @@ html[data-theme=dark] #currentSongId{color:#fff}
 <script type="module" src="handwriting.js?v=thanks-mixed-2"></script>
 <script type="module" src="brand-strip.js?enso-1&v=drums-mobile-1"></script>
 
-<script type="module" src="drum-machine.js?v=audio-clock-7"></script>
-<script type="module" src="drum-layout.js?v=outside-refresh-6"></script>
+<script type="module" src="drum-machine.js?v=review-8"></script>
+<script type="module" src="drum-layout.js?v=review-7"></script>
 
 
 <script type="module" src="favicon.js?v=canvas-1"></script>
 <a id="musicWaveform" href="https://jamminstein.github.io/acervo-public/" target="_blank" rel="noopener noreferrer" aria-label="Only music — open Acervo"><svg viewBox="0 0 64 28"><path d="M2 15 Q10 12 18 15 T34 14 T50 15 L62 13"/></svg></a>
-<script type="module" src="waveform.js?v=audio-clock-7"></script>
+<script type="module" src="waveform.js?v=review-8"></script>
 <picture id="hiddenDancers" aria-hidden="true"><source media="(prefers-reduced-motion: reduce)"><img width="96" height="128" alt="" decoding="async" fetchpriority="low"></picture>
 <script type="module" src="dancers.js?v=clean-loading-2"></script>
 <script type="module" src="song-id.js?v=handwritten-8"></script>
