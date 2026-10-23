@@ -1,3 +1,4 @@
+import {createLevelAutomation} from './audio-level.js?v=1';
 import {createTransportEnvelope} from './transport-envelope.js?v=1';
 let mixer=null;
 export function getMixer(){
@@ -20,7 +21,9 @@ export function getMixer(){
  if(!music.paused)envelope.open();
  const analyser=context.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;ceiling.connect(analyser);
  const level=window.siteMixLevel??.32;musicGain.gain.value=level;drumGain.gain.value=level;music.volume=1;
- window.setSiteMusicLevel=level=>{musicGain.gain.setTargetAtTime(level,context.currentTime,.015);drumGain.gain.setTargetAtTime(level,context.currentTime,.015)};
+ const levels=createLevelAutomation(context,[musicGain.gain,drumGain.gain],level);
+ window.setSiteMusicLevel=levels.set;
+ window.fadeSiteMusic=(target,seconds)=>{levels.fade(target,seconds);window.siteMixLevel=target};
  mixer={context,musicGain,drumGain,analyser};context.resume().catch(()=>{});return mixer;
 }
 function activateMixer(){try{return getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
