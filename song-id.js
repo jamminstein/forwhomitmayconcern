@@ -1,4 +1,4 @@
-import {drawWriting} from './handwriting.js?v=thanks-mixed-2';
+import {drawWriting} from './handwriting.js';
 const label=document.querySelector('#currentSongId');
 function render(){
  const id=label.dataset.songId||'';

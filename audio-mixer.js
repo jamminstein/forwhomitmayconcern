@@ -1,5 +1,5 @@
-import {createLevelAutomation} from './audio-level.js?v=1';
-import {createTransportEnvelope} from './transport-envelope.js?v=1';
+import {createLevelAutomation} from './audio-level.js';
+import {createTransportEnvelope} from './transport-envelope.js';
 let mixer=null;
 export function getMixer(){
  if(mixer){if(mixer.context.state!=='running'&&mixer.context.state!=='closed')mixer.context.resume().catch(()=>{});return mixer}
@@ -13,10 +13,12 @@ export function getMixer(){
  musicGain.connect(compressor);drumGain.connect(compressor);compressor.connect(ceiling);ceiling.connect(context.destination);
  const envelope=createTransportEnvelope(context);
  const source=context.createMediaElementSource(music);source.connect(envelope.node);envelope.node.connect(musicGain);
- let pauseTimer;
- window.prepareSiteMusic=()=>{clearTimeout(pauseTimer);if(music.paused)envelope.reset();else envelope.open()};
- window.pauseSiteMusic=()=>{clearTimeout(pauseTimer);envelope.close();pauseTimer=setTimeout(()=>music.pause(),30)};
- music.addEventListener('playing',()=>{clearTimeout(pauseTimer);envelope.open()});
+ let pauseTimer,transportHeld=false;
+ window.prepareSiteMusic=()=>{transportHeld=false;clearTimeout(pauseTimer);if(music.paused)envelope.reset();else envelope.open()};
+ window.pauseSiteMusic=()=>{transportHeld=true;clearTimeout(pauseTimer);envelope.close();pauseTimer=setTimeout(()=>music.pause(),30)};
+ window.fadeOutSiteMusic=()=>{transportHeld=true;clearTimeout(pauseTimer);envelope.close();return new Promise(resolve=>setTimeout(resolve,30))};
+ window.resetSiteMusicEnvelope=()=>{clearTimeout(pauseTimer);envelope.reset()};
+ music.addEventListener('playing',()=>{if(!transportHeld){clearTimeout(pauseTimer);envelope.open()}});
  for(const event of ['pause','ended','emptied'])music.addEventListener(event,envelope.reset);
  if(!music.paused)envelope.open();
  const analyser=context.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;ceiling.connect(analyser);

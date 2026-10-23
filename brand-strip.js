@@ -1,4 +1,5 @@
-import {drawWriting} from './handwriting.js?v=thanks-mixed-2';
+import {drawWriting} from './handwriting.js';
+import {assetURL} from './asset-url.js';
 export const brands=[
  ['SpaceX','spacex'],['Nike','nike'],['Google','google'],['Nickelodeon','nickelodeon'],['Lyft','lyft'],["Arc'Teryx",'arcteryx'],["Ben & Jerry's",'benandjerrys'],['Indeed','indeed'],['Comedy Central','comedycentral']
 ];
@@ -13,8 +14,8 @@ function takeEntry(){if(!queue.length){queue=shuffled(entries);if(queue.length>1
 const host=document.querySelector('#workCredits');
 document.querySelector('#workCreditsLabel').appendChild(drawWriting('thank you',{height:11,maxWidth:100,caseMode:'preserve',weight:1.25}));
 const image=document.querySelector('#currentBrand'),person=document.querySelector('#currentPerson');
-const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-for(const [,file] of [...brands,...agencies]){const preload=new Image();preload.src=`brand-logos/${file}.png?v=transparent-2`}
-function showEntry(){const entry=takeEntry(),isPerson=entry.category==='people';host.dataset.category=entry.category;host.dataset.brand=entry.file||'';image.hidden=isPerson;person.hidden=!isPerson;person.replaceChildren();if(isPerson){person.appendChild(drawWriting(entry.name,{height:31,maxWidth:98,caseMode:'lower',weight:1.2,cursive:true}))}else{image.src=`brand-logos/${entry.file}.png?v=transparent-2`;image.alt=entry.name}}
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+for(const [,file] of [...brands,...agencies]){const preload=new Image();preload.src=assetURL(`brand-logos/${file}.png`)}
+function showEntry(){const entry=takeEntry(),isPerson=entry.category==='people';host.dataset.category=entry.category;host.dataset.brand=entry.file||'';image.hidden=isPerson;person.hidden=!isPerson;person.replaceChildren();if(isPerson){person.appendChild(drawWriting(entry.name,{height:31,maxWidth:98,caseMode:'lower',weight:1.2,cursive:true}))}else{image.src=assetURL(`brand-logos/${entry.file}.png`);image.alt=entry.name}}
 showEntry();
-setInterval(()=>{if(document.hidden)return;showEntry()},reduced?5000:2600);
+setInterval(()=>{if(document.hidden||(window.siteVisualMotionPaused??reduced.matches))return;showEntry()},2600);

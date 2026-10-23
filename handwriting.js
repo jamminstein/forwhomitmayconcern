@@ -31,7 +31,7 @@ export function drawWriting(text,{height=29,maxWidth=240,caseMode='preserve',sla
  }
  maxX=Math.max(maxX,x)+12;svg.setAttribute('viewBox',`0 0 ${maxX} ${y+46}`);svg.style.width=`${Math.min(maxWidth,maxX*unit)}px`;svg.style.height='auto';return svg;
 }
-const name=document.querySelector('#writtenName');name.appendChild(drawWriting('tiago pereira',{height:30,maxWidth:170,caseMode:'lower'}));name.style.transform=`rotate(${random(-6,1)}deg)`;
+const name=document.querySelector('#writtenName');name.appendChild(drawWriting(document.querySelector('#identityName').textContent,{height:30,maxWidth:170,caseMode:'lower'}));name.style.transform=`rotate(${random(-6,1)}deg)`;
 const slots=[
  {left:'3%',top:'27%',angle:-9,height:44,width:265,mode:'mixed',weight:1.25},
  {left:'5%',bottom:'19%',angle:3,height:25,width:285,mode:'lower',weight:1.15,loose:true},
@@ -40,9 +40,11 @@ const slots=[
  {right:'4%',bottom:'18%',angle:-5,height:24,width:270,mode:'preserve',weight:1.2,loose:true},
  {left:'22%',top:'21%',angle:5,height:19,width:190,mode:'preserve',weight:1.1}
 ];
-fetch('writings.json?v=thanks-mixed-2',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No writings');return r.json()}).then(phrases=>{phrases.slice(0,slots.length).forEach((entry,i)=>{
- const text=typeof entry==='string'?entry:entry.text,div=document.createElement('div'),slot=slots[i];div.className='page-writing';
+// The accessible HTML is also the source of the drawn copy, so both stay in sync.
+const phrases=[...document.querySelectorAll('#siteText [data-writing]')].map(node=>node.textContent);
+phrases.slice(0,slots.length).forEach((text,i)=>{
+ const div=document.createElement('div'),slot=slots[i];div.className='page-writing';
  for(const key of ['left','right','top','bottom'])if(slot[key])div.style[key]=slot[key];
  div.style.transform=`translate(${random(-14,14)}px,${random(-10,10)}px) rotate(${slot.angle+random(-4,4)}deg)`;
  div.appendChild(drawWriting(text,{height:slot.height*random(.9,1.1),maxWidth:slot.width,caseMode:slot.mode,slant:random(-10,9),weight:slot.weight,loose:slot.loose}));document.querySelector('#pageWritings').appendChild(div)
- });}).catch(()=>{});
+});

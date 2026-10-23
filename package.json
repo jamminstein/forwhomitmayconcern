@@ -1,0 +1,14 @@
+{
+  "name": "tiago-lol",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node tests/smoke.cjs && node tests/layout.cjs && node tests/media.cjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

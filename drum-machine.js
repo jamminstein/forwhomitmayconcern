@@ -1,14 +1,15 @@
-import {getMixer} from './audio-mixer.js?v=review-6';
+import {getMixer} from './audio-mixer.js';
 export function chooseKit(manifest,previous={},rng=Math.random){return Object.fromEntries(['kick','snare','hat'].map(kind=>{const pool=manifest[kind].filter(url=>url!==previous[kind]);const choices=pool.length?pool:manifest[kind];return [kind,choices[Math.floor(rng()*choices.length)]]}))}
 const padKeys={j:'kick',k:'snare',l:'hat'},pads=[...document.querySelectorAll('.drum-pad')],active=new Set();let lastHat=null,currentKit={},data=null;
 const machine=document.querySelector('#drumMachine'),refresh=document.querySelector('#drumRefresh');
-const manifestReady=fetch('drum-samples.json?v=drums-1').then(r=>{if(!r.ok)throw Error('Missing drum manifest');return r.json()});
+let manifestPending=null;
+function getManifest(){if(!manifestPending)manifestPending=fetch('drum-samples.json?v=drums-1').then(r=>{if(!r.ok)throw Error('Missing drum manifest');return r.json()}).catch(error=>{manifestPending=null;throw error});return manifestPending}
 async function decodeKit(kit,mix){
  if(!kit.decoding)kit.decoding=Promise.all(Object.entries(kit.blobs).map(async([kind,blob])=>{kit.buffers[kind]=await mix.context.decodeAudioData(blob.slice(0))})).catch(error=>{kit.decoding=null;throw error});
  await kit.decoding;
 }
 async function loadKit(mix){
- const manifest=await manifestReady;let previous=currentKit;
+ const manifest=await getManifest();let previous=currentKit;
  if(!Object.keys(previous).length)try{previous=JSON.parse(sessionStorage.getItem('last-drum-kit')||'{}')}catch{}
  const chosen=chooseKit(manifest,previous),next={blobs:{},buffers:{},decoding:null};
  await Promise.all(Object.entries(chosen).map(async([kind,url])=>{const r=await fetch(url);if(!r.ok)throw Error('Missing drum hit');next.blobs[kind]=await r.arrayBuffer()}));

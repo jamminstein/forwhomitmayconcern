@@ -1,0 +1,5 @@
+.artwork-poster{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
+.stage[data-renderer="fallback"] .artwork-poster{display:block}
+.stage[data-renderer="fallback"] #gl{visibility:hidden}
+.stage[data-renderer="fallback"] #video{opacity:1}
+.stage[data-renderer="fallback"] #overlay{visibility:hidden}

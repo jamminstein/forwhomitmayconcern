@@ -2,11 +2,12 @@
 const machine=document.querySelector('#drumMachine');
 let pending=false,userPosition=null,placedPosition=null,drag=null;
 let layoutWidth=document.documentElement.clientWidth;
-function layoutHeight(){return matchMedia('(max-width:700px)').matches?document.querySelector('#pageWritings').getBoundingClientRect().height/2.35:innerHeight}
+const mobileLayout=matchMedia('(max-width:700px), (hover:none) and (pointer:coarse)');
+function layoutHeight(){return mobileLayout.matches?document.querySelector('#pageWritings').getBoundingClientRect().height/2.35:innerHeight}
 function arrange(){
  pending=false;
  if(drag)return;
- const mobile=matchMedia('(max-width:700px)').matches;
+ const mobile=mobileLayout.matches;
  const width=document.documentElement.clientWidth,height=layoutHeight();
  const scroll=mobile?scrollY:0;
  const limit=mobile?height*2.35:height;
@@ -17,7 +18,7 @@ function arrange(){
   machine.style.left=`${userPosition.x}px`;machine.style.top=`${userPosition.y}px`;machine.style.bottom='auto';
   return;
  }
- const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#workCredits,.glass-dock,#musicWaveform,.project-links,#themeToggle')].filter(el=>!mobile||getComputedStyle(el).position!=='fixed').map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
+ const obstacles=[...document.querySelectorAll('.page-writing,.page-writing svg,.page-writing svg path,.written-name,.written-name svg path,.portrait-link,#contactLink,#workCredits,.glass-dock,#musicWaveform,.project-links,#themeToggle')].filter(el=>!mobile||getComputedStyle(el).position!=='fixed').map(el=>el.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({left:r.left-30,right:r.right+30,top:r.top+scroll-30,bottom:r.bottom+scroll+30}));
  const preferred=userPosition||placedPosition||{x:width*(mobile?.13:.07),y:mobile?height*1.45:height*.8-66};
  // Most arrangements can keep their current location without allocating and sorting a full search grid.
  const validPreferred=preferred.x>=14&&preferred.x<=width-150&&preferred.y>=14&&preferred.y<=limit-84;
@@ -41,22 +42,23 @@ for(const el of document.querySelectorAll('.written-name'))sizes.observe(el);
 window.addEventListener('resize',()=>{
  const width=document.documentElement.clientWidth;
  // Mobile browser chrome changes viewport height during scrolling, not the page layout.
- if(matchMedia('(max-width:700px)').matches&&width===layoutWidth)return;
+ if(mobileLayout.matches&&width===layoutWidth)return;
  layoutWidth=width;schedule();
 });
+mobileLayout.addEventListener('change',()=>{placedPosition=null;schedule()});
 window.addEventListener('load',schedule);
 schedule();
 
 const grip=machine.querySelector('.drum-grab');
 grip.addEventListener('pointerdown',e=>{
- if(e.button!==0)return;
+ if(e.button!==0||drag)return;
  e.preventDefault();
  drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:machine.offsetLeft,top:machine.offsetTop};
  grip.setPointerCapture(e.pointerId);
 });
 grip.addEventListener('pointermove',e=>{
  if(!drag||drag.id!==e.pointerId)return;
- const mobile=matchMedia('(max-width:700px)').matches;
+ const mobile=mobileLayout.matches;
  const x=Math.max(14,Math.min(document.documentElement.clientWidth-150,drag.left+e.clientX-drag.x));
  const y=Math.max(14,Math.min((mobile?layoutHeight()*2.35:innerHeight)-80,drag.top+e.clientY-drag.y));
  userPosition={x,y};machine.style.left=`${x}px`;machine.style.top=`${y}px`;machine.style.bottom='auto';
@@ -64,6 +66,7 @@ grip.addEventListener('pointermove',e=>{
 function finish(e){if(!drag||drag.id!==e.pointerId)return;drag=null;schedule()}
 grip.addEventListener('pointerup',finish);
 grip.addEventListener('pointercancel',finish);
+grip.addEventListener('lostpointercapture',finish);
 grip.addEventListener('keydown',e=>{
  const delta={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]}[e.key];
  if(!delta)return;e.preventDefault();userPosition={x:machine.offsetLeft+delta[0],y:machine.offsetTop+delta[1]};schedule();

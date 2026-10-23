@@ -13,9 +13,10 @@ function frame(now){
 }
 function update(){
  cancelAnimationFrame(request);last=null;
- if(button.getAttribute('aria-pressed')==='true'&&!reduced.matches)request=requestAnimationFrame(frame);
+ if(button.getAttribute('aria-pressed')==='true'&&!reduced.matches&&!window.siteVisualMotionPaused&&!document.hidden)request=requestAnimationFrame(frame);
 }
 new MutationObserver(update).observe(button,{attributes:true,attributeFilter:['aria-pressed']});
 reduced.addEventListener('change',update);
-document.addEventListener('visibilitychange',()=>{last=null});
+document.addEventListener('visibilitychange',update);
+window.addEventListener('site-motion-change',update);
 update();
