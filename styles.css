@@ -422,8 +422,10 @@ html[data-theme=dark] #hiddenDancers{filter:invert(1)}
 html[data-theme=dark] #currentSongId{color:#fff}
 #currentSongId svg{display:block;height:auto;overflow:visible;max-width:52px}
 #currentSongId svg path{stroke-width:.86;vector-effect:none}
-#overlay .touch-target{display:none}
-@media(max-width:700px), (any-pointer:coarse){#overlay .touch-target{display:block;fill:transparent!important;stroke:none!important;pointer-events:all;r:13}}
+/* Forgiving grab areas without enlarging the drawn nodes or tangent ends. */
+#overlay{z-index:1}
+#overlay .point.touch-target{display:block;fill:transparent!important;stroke:none!important;pointer-events:all;r:10px}
+@media(max-width:700px), (any-pointer:coarse){#overlay .point.touch-target{r:13px}}
 .drum-refresh{position:absolute;right:-20px;top:auto;bottom:-12px;width:25px;height:25px;padding:0;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .drum-refresh svg{width:16px;height:16px}
 .drum-refresh:disabled{opacity:.4;cursor:wait}
