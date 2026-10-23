@@ -6,7 +6,7 @@
 -->
 <head>
 <meta charset="utf-8">
-<link rel="preload" as="image" href="video/1-6/poster.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="video/2-3/poster.jpg" fetchpriority="high">
 <meta name="site-version" content="drums-mobile-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#e9e8e1">
@@ -569,11 +569,11 @@ html[data-theme=dark] #currentSongId{color:#fff}
 
   // Muted artwork stays independent from the Acervo soundtrack.
   video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;
-  import('./video-source.js?v=hls-4');
+  import('./video-source.js?v=video-2-3');
   video.play().catch(()=>showToast('Click the image to start the video.'));
   stage.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{})});
 
-  const firstFrame=new Image();firstFrame.src='video/1-6/poster.jpg';
+  const firstFrame=new Image();firstFrame.src='video/2-3/poster.jpg';
   let texture=null,program=null,posBuffer=null,uvBuffer=null,indexBuffer=null,indexCount=0,locations={};
   if(gl){
     const vs=`attribute vec2 aPosition;attribute vec2 aUv;varying vec2 vUv;void main(){gl_Position=vec4(aPosition,0.0,1.0);vUv=aUv;}`;

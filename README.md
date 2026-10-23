@@ -21,7 +21,7 @@ Serve this folder with a static HTTP server, for example `python3 -m http.server
 
 `writings.json` contains Tiago's five passages. `handwriting.js` draws original upper/lowercase glyphs with slight variations on every load. The portrait links to Tiago's LinkedIn profile.
 
-`tiago-1-6.mp4` is the supplied artwork, compressed to H.264 High Level 4.1 at 1080p / 24 fps (CRF 18, four reference frames, capped bitrate), without audio, with fast-start metadata for progressive playback. The soundtrack plays separately.
+`tiago-2-3.mp4` is the supplied artwork, compressed to H.264 High Level 4.1 at 1080p / 24 fps (CRF 18, four reference frames, capped bitrate), without audio, with fast-start metadata for progressive playback. The soundtrack plays separately.
 
 `soundtrack.json` is a snapshot of 962 direct audio links from https://jamminstein.github.io/acervo-public/. Files stream from the original audio repositories; no audio collection is duplicated here.
 
@@ -53,6 +53,6 @@ Five transparent 36.8-second dance collages sit behind the warped video. One is 
 
 ### Adaptive artwork delivery
 
-The current artwork uses `video/1-6/master.m3u8`: 480p, 720p and 1080p H.264 renditions with aligned two-second keyframes and fragmented MP4 segments. All assets are served by GitHub Pages. Safari uses the fast-start 1080p MP4 for reliable autoplay and WebGL texture updates; other compatible browsers use native HLS or the locally bundled MIT-licensed hls.js 1.7.3 light build. Playback starts at 480p in hls.js, then adapts without a screen-size cap, preserving access to full 1080p when bandwidth allows. The JS player keeps a short forward buffer rather than fetching the whole movie up front.
+The current artwork uses `video/2-3/master.m3u8`: 480p, 720p and 1080p H.264 renditions with aligned two-second keyframes and fragmented MP4 segments. All assets are served by GitHub Pages. Safari uses the fast-start 1080p MP4 for reliable autoplay and WebGL texture updates; other compatible browsers use native HLS or the locally bundled MIT-licensed hls.js 1.7.3 light build. Playback starts at 480p in hls.js, then adapts without a screen-size cap, preserving access to full 1080p when bandwidth allows. The JS player keeps a short forward buffer rather than fetching the whole movie up front.
 
-`video/1-6/poster.jpg` is a preloaded first-frame image rendered through the same WebGL mesh until a decoded video frame is available. `video-source.js` falls back to `tiago-1-6.mp4` on unsupported browsers or fatal HLS errors. Source audio remains excluded; Acervo plays separately. Custom local video uploads detach the adaptive player first.
+`video/2-3/poster.jpg` is a preloaded first-frame image rendered through the same WebGL mesh until a decoded video frame is available. `video-source.js` falls back to `tiago-2-3.mp4` on unsupported browsers or fatal HLS errors. Source audio remains excluded; Acervo plays separately. Custom local video uploads detach the adaptive player first.
