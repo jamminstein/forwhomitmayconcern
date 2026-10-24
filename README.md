@@ -23,7 +23,7 @@ npm test
 
 ## Interaction
 
-- Drag anchors or tangent handles directly with the pointer; hold Shift for slower, precise adjustments. Guides appear on hover/focus and fade after inactivity.
+- Drag anchors or tangent handles with slight resistance (78% of pointer movement); hold Shift for slower, precise adjustments. Guides appear on hover/focus and fade after inactivity.
 - Drag near the video's center, or hold Space and drag, to move it. The top-right trace resizes; the top-left trace rotates. Clicking either trace restores that transform. Pinch resizes the artwork.
 - The large scribble makes a wild warp. The looping petals toggle continuous morphing. Editing a point stops morphing.
 - Command-Z or Control-Z undoes shape and view edits. One drag is one edit; continuous zoom input is grouped. No artwork is persisted between visits.
