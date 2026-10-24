@@ -19,7 +19,7 @@ SITE_ROOT=dist npm run serve
 npm test
 ```
 
-`BASE_URL` can point the tests to another preview port. Tests cover desktop and five touch layouts, undo and keyboard controls, email copying, WebGL loss/restoration, autoplay, delayed mixer startup, rapid track changes, reduced motion, and recoverable media failures. Audio tests generate their own short WAV fixture. They do not modify the soundtrack collection. Native Safari listening, actual device performance, and trackpad gestures still need device testing.
+`BASE_URL` can point the tests to another preview port. Tests cover desktop and five touch layouts, undo and keyboard controls, email copying, WebGL loss/restoration, autoplay, theme before module loading, delayed music startup, rapid track changes, accessible drum activation, kit replacement failures, reduced motion, and recoverable media failures. Audio tests generate their own short WAV fixture. They do not modify the soundtrack collection. Native Safari listening, actual device performance, and trackpad gestures still need device testing.
 
 ## Interaction
 
@@ -51,11 +51,13 @@ The current artwork is an 82.3-second H.264 video at 1920×1080 and 24 fps, with
 
 Textures upload only when decoded video frames change. Mesh interaction stays on the display animation clock. Hidden guides and unchanged transforms/waveforms skip DOM writes. The main video pauses and HLS stops loading while the page is hidden, resuming when visible unless deliberately paused. Reduced-motion visitors start with the poster and can deliberately start the artwork. Secondary motion also respects visual pause; only one of the five small CORPUS renders is selected and loaded.
 
-`soundtrack.json` contains 962 direct links from https://jamminstein.github.io/acervo-public/. The files remain on their original repositories. Startup waits for mixer readiness, begins at zero gain, and fades to a low default level. Next/Previous uses a brief fade before switching; the latest playback intent wins. Recoverable failures retry twice, then wait for a manual retry or restored connectivity.
+`soundtrack.json` contains 962 direct links from https://jamminstein.github.io/acervo-public/. The files remain on their original repositories. Startup waits for mixer readiness and the first decoded audio signal before a 3.5-second music-only fade; drums remain available while music loads. A volume chosen during loading takes precedence over the introductory fade. Next/Previous uses a brief fade before switching; the latest playback intent wins. An explicit Play action can replace a stale pending request. Recoverable failures retry twice, then wait for a manual retry or restored connectivity.
 
-The drum selection contains 16 normalized mono WAV files per category from the local Sample Stacker collection. Only material recorded as CC0/public-domain in its provenance was included; see `drum-samples/SOURCES.json`. The full library is not uploaded. Music and drums share a compressor and soft ceiling. Per-class active-RMS normalization and peak headroom balance hits; hats choke their preceding tail.
+The drum selection contains 16 normalized mono WAV files per category from the local Sample Stacker collection. Only material recorded as CC0/public-domain in its provenance was included; see `drum-samples/SOURCES.json`. The full library is not uploaded. Music and drums share a compressor and soft ceiling. Per-class active-RMS normalization and peak headroom balance hits; hats choke their preceding tail. Refresh replaces a stalled initial load immediately, with a 12-second deadline for each kit load. A complete replacement swaps all three samples together; a failed replacement preserves the current kit. Missing samples do not queue delayed hits. Pads support pointer, keyboard, and click-only assistive activation without duplicate hits. Browser modifier shortcuts are left intact.
 
-Five transparent 36.8-second CORPUS collages are 96×128 pixels. Their provenance is in `dancer-sources.json`; the other four are never preloaded. The portrait is a lossless WebP matching the original cutout's pixels. Logos use transparent noise masks rather than opaque stripes.
+Five transparent 36.8-second CORPUS collages are 96×128 pixels. Their provenance is in `dancer-sources.json`; the other four are never preloaded. The portrait uses a 400-pixel-wide transparent, lossless WebP thumbnail (71 KB) for its 73–94 CSS-pixel display. The original remains available for cached pages. Logos use transparent noise masks rather than opaque stripes.
+
+The saved light/dark theme is applied in the document head before styles and application modules load. Storage restrictions fall back to light mode; the theme switch remains usable.
 
 The favicon has a 16-frame GIF plus a script that replaces one icon link with successive PNG frames. Browsers may suppress tab-icon animation. Reduced motion and visual pause intentionally freeze it.
 

@@ -6,7 +6,7 @@ import {MEDIA} from './site-config.js';
 (()=>{
   const themeButton=document.querySelector('#themeToggle');
   function setTheme(theme){document.documentElement.dataset.theme=theme;themeButton.innerHTML=theme==='dark'?'<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M14 14 L12 18 Q10 23 16 26 L20 28 Q26 26 27 21 L26 16 Q22 11 17 13 L13 16 M15 27 L19 29 L23 27 M20 3 L21 5 L19 9 M33 8 L30 11 L28 11 M36 21 L33 20 L30 22 M31 34 L29 30 L26 29 M17 37 L19 34 L18 30 M5 30 L8 29 L11 25 M3 15 L6 17 L9 16 M9 5 L11 9 L14 10"/></svg>':'<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M26 5 L22 4 Q14 5 10 12 L8 17 Q6 24 12 30 L17 34 Q25 36 30 29 L34 23 L29 25 Q22 25 19 19 L18 14 Q19 8 26 5 M9 24 L11 28 L15 31 M29 28 L32 25"/></svg>';themeButton.setAttribute('aria-label',theme==='dark'?'Switch to light mode':'Switch to dark mode');document.querySelector('meta[name="theme-color"]').setAttribute('content',theme==='dark'?'#090a0d':'#ffffff');try{localStorage.setItem('jamminstein-theme',theme)}catch{}}
-  let savedTheme='light';try{savedTheme=localStorage.getItem('jamminstein-theme')||'light'}catch{}setTheme(savedTheme==='dark'?'dark':'light');
+  setTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
   themeButton.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
   const stage=document.querySelector('#stage'), video=document.querySelector('#video'), canvas=document.querySelector('#gl'), overlay=document.querySelector('#overlay');
   // Keep the viewport unclipped so edge nodes and their small filters can paint outside the video.

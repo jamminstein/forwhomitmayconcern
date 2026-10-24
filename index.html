@@ -9,7 +9,11 @@
 <link rel="preload" as="image" href="video/2-3/poster.jpg" fetchpriority="high">
 <meta name="site-version" content="drums-mobile-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#e9e8e1">
+<meta name="theme-color" content="#ffffff">
+<script>
+// Restore the saved canvas color before styles or modules can paint the page.
+(()=>{let theme='light';try{if(localStorage.getItem('jamminstein-theme')==='dark')theme='dark'}catch{}document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#090a0d':'#ffffff'})();
+</script>
 <link id="doodleFavicon" rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=static-1">
 <title>to whom it may concern</title>
 <meta name="description" content="tiago ➝ creative direction">
@@ -94,7 +98,7 @@ and making music</p>
   <footer class="footer"><span>Image / sound / gesture</span><span>Move the picture around ↗</span></footer>
 </main>
 <div class="keyboard-hint">T · transform &nbsp; / &nbsp; Space + drag · move &nbsp; / &nbsp; H · guides</div>
-<a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-cutout.webp" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a id="portraitLink" href="https://www.linkedin.com/in/tiagop" class="portrait-link" aria-label="Visit my LinkedIn profile" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 1460 1077" role="img" aria-label="Portrait of Tiago"><defs><filter id="portraitOutline" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="13" result="expanded"/><feComposite in="expanded" in2="SourceAlpha" operator="out" result="edge"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="edge" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="roughEdge"/><feFlood flood-color="currentColor" result="ink"/><feComposite in="ink" in2="roughEdge" operator="in" result="outline"/><feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><image href="portrait-thumb.webp" width="1460" height="1077" /><path class="portrait-frame" d="M-13 3 Q350 -11 727 -4 T1471 5 L1468 360 Q1478 740 1469 1086 Q1070 1072 728 1083 T-10 1085 L-7 680 Q-18 370 -13 3 Z" fill="none" stroke="currentColor" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <div id="identityDetails">
  <div id="writtenName" class="written-name" aria-hidden="true"></div>
  <div id="contactLink">

@@ -4,7 +4,8 @@ import {createReadStream} from 'node:fs';
 import path from 'node:path';
 import {MEDIA} from '../site-config.js';
 const root=path.resolve('.'),out=path.join(root,'dist');
-const assets=['brand-logos','drum-samples','dancers','vendor','favicon.svg','favicon.png','favicon.ico','favicon.gif','portrait-cutout.webp','share-preview.jpg','CNAME',MEDIA.fallback,path.dirname(MEDIA.manifest)];
+// Retain the old portrait URL for already-cached pages; new pages use the thumbnail.
+const assets=['brand-logos','drum-samples','dancers','vendor','favicon.svg','favicon.png','favicon.ico','favicon.gif','portrait-cutout.webp','portrait-thumb.webp','share-preview.jpg','CNAME',MEDIA.fallback,path.dirname(MEDIA.manifest)];
 const runtime=(await readdir(root)).filter(name=>/\.(js|css|html|json)$/.test(name)&&!['package.json','package-lock.json','glass.js','project-links.js'].includes(name)).sort();
 const hash=createHash('sha256');for(const name of runtime)hash.update(name).update(await readFile(name));
 hash.update(await readFile('scripts/build.mjs'));

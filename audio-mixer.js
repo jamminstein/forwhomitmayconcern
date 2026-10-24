@@ -11,14 +11,17 @@ export function getMixer(){
  compressor.threshold.value=-4;compressor.knee.value=4;compressor.ratio.value=12;compressor.attack.value=.003;compressor.release.value=.12;
  const curve=new Float32Array(4096);for(let i=0;i<curve.length;i++){const x=i*2/(curve.length-1)-1,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.85?a:.85+.15*Math.tanh((a-.85)/.15))}ceiling.curve=curve;
  musicGain.connect(compressor);drumGain.connect(compressor);compressor.connect(ceiling);ceiling.connect(context.destination);
- const envelope=createTransportEnvelope(context);
- const source=context.createMediaElementSource(music);source.connect(envelope.node);envelope.node.connect(musicGain);
+ const envelope=createTransportEnvelope(context),intro=context.createGain();
+ // The long first-song fade is music-only; drum hits remain audible while it loads.
+ intro.gain.value=window.siteMusicIntroPending?0:1;
+ const source=context.createMediaElementSource(music);source.connect(envelope.node);envelope.node.connect(intro);intro.connect(musicGain);
  let pauseTimer,transportHeld=false,signalReady=false,signalTimer=0,signalGeneration=0,signalTap=null,signalSplitter=null;const signalProbes=[];
+ window.siteMusicSignalReady=false;
  const signalSamples=new Float32Array(256);
  function releaseSignalProbe(){if(signalTap){try{source.disconnect(signalTap)}catch{}signalTap.disconnect();signalTap=null}if(signalSplitter){signalSplitter.disconnect();signalSplitter=null}for(const probe of signalProbes)probe.disconnect();signalProbes.length=0}
  // Inspect channels separately: a mono analyser cancels anti-phase stereo.
  // Speaker downmix on this observation branch also preserves center-only files.
- try{signalTap=context.createGain();signalTap.channelCount=2;signalTap.channelCountMode='explicit';signalTap.channelInterpretation='speakers';signalSplitter=context.createChannelSplitter(2);signalTap.connect(signalSplitter);for(let i=0;i<2;i++){const probe=context.createAnalyser();probe.fftSize=signalSamples.length;signalProbes.push(probe);signalSplitter.connect(probe,i)}source.connect(signalTap)}catch{releaseSignalProbe();signalReady=true}
+ try{signalTap=context.createGain();signalTap.channelCount=2;signalTap.channelCountMode='explicit';signalTap.channelInterpretation='speakers';signalSplitter=context.createChannelSplitter(2);signalTap.connect(signalSplitter);for(let i=0;i<2;i++){const probe=context.createAnalyser();probe.fftSize=signalSamples.length;signalProbes.push(probe);signalSplitter.connect(probe,i)}source.connect(signalTap)}catch{releaseSignalProbe();signalReady=true;window.siteMusicSignalReady=true}
  function cancelSignalWatch(){clearTimeout(signalTimer);signalTimer=0;signalGeneration++}
  function openTransport(){
   if(transportHeld||music.paused)return;
@@ -30,7 +33,7 @@ export function getMixer(){
    if(context.currentTime-from>=signalSamples.length/context.sampleRate){
     let available=true,hasSignal=false;
     try{for(const probe of signalProbes){probe.getFloatTimeDomainData(signalSamples);for(const value of signalSamples){if(!Number.isFinite(value)){available=false;break}if(Math.abs(value)>1e-7)hasSignal=true}}}catch{available=false}
-    if(hasSignal||!available){signalReady=true;cancelSignalWatch();releaseSignalProbe();envelope.open();return}
+    if(hasSignal||!available){signalReady=true;window.siteMusicSignalReady=true;cancelSignalWatch();releaseSignalProbe();envelope.open();window.dispatchEvent(new Event('site-music-ready'));return}
    }
    signalTimer=setTimeout(check,16);
   };
@@ -48,9 +51,9 @@ export function getMixer(){
  if(!music.paused)openTransport();
  const analyser=context.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.72;ceiling.connect(analyser);
  const level=window.siteMixLevel??.32;musicGain.gain.value=level;drumGain.gain.value=level;music.volume=1;
- const levels=createLevelAutomation(context,[musicGain.gain,drumGain.gain],level);
- window.setSiteMusicLevel=levels.set;
- window.fadeSiteMusic=(target,seconds)=>{levels.fade(target,seconds);window.siteMixLevel=target};
+ const levels=createLevelAutomation(context,[musicGain.gain,drumGain.gain],level),introduction=createLevelAutomation(context,[intro.gain],intro.gain.value);
+ window.setSiteMusicLevel=level=>{levels.set(level);introduction.set(1)};
+ window.fadeSiteMusic=(target,seconds)=>{introduction.fade(1,seconds);window.siteMixLevel=target};
  mixer={context,musicGain,drumGain,analyser};context.resume().catch(()=>{});return mixer;
 }
 function activateMixer(){try{return getMixer()}catch(error){console.warn('Audio mixer unavailable',error)}}
