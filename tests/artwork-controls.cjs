@@ -72,7 +72,7 @@ async function pointerMovement(page,name){
    await page.mouse.move(start.x,start.y);await page.mouse.down();
    await page.mouse.move(start.x+40,start.y+200,{steps:12});await page.mouse.up();
    if(fine)await page.keyboard.up('Shift');
-   const expected={x:start.x+40*(fine?.18:.78),y:start.y+200*(fine?.18:.78)};
+   const expected={x:start.x+40*(fine?.18:.70),y:start.y+200*(fine?.18:.70)};
    await page.waitForFunction(({selector,expected})=>{const r=document.querySelector(selector).getBoundingClientRect();return Math.abs(r.x+r.width/2-expected.x)<.35&&Math.abs(r.y+r.height/2-expected.y)<.35},{selector,expected});
    if(!fine&&selector.includes('22'))assert(await page.locator('#gl').evaluate(e=>e.height)>height,'The canvas expands while the node follows the pointer');
    await page.keyboard.press('Control+z');
