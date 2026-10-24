@@ -64,7 +64,7 @@ refresh.addEventListener('click',e=>{e.stopPropagation();refreshKit()});
 function flash(kind){const pad=document.querySelector(`[data-drum="${kind}"]`);pad.classList.remove('hit');void pad.offsetWidth;pad.classList.add('hit');setTimeout(()=>pad.classList.remove('hit'),120)}
 export async function triggerDrum(kind){flash(kind);const requested=performance.now();try{const ready=await prepareHit();if(!ready||ready.kit!==data||performance.now()-requested>HIT_LIFETIME||ready.mix.context.state!=='running')return;const {mix,kit}=ready,{context,drumGain}=mix,now=context.currentTime;const source=context.createBufferSource(),gain=context.createGain();source.buffer=kit.buffers[kind];gain.gain.value=.92;source.connect(gain);gain.connect(drumGain);
  if(kind==='hat'&&lastHat){lastHat.gain.gain.cancelScheduledValues(now);lastHat.gain.gain.setTargetAtTime(0,now,.004);try{lastHat.source.stop(now+.025)}catch{}}
- const voice={source,gain};if(kind==='hat')lastHat=voice;active.add(voice);source.onended=()=>{source.disconnect();gain.disconnect();active.delete(voice)};source.start(now);
+ const voice={source,gain};if(kind==='hat')lastHat=voice;active.add(voice);source.onended=()=>{source.disconnect();gain.disconnect();active.delete(voice)};source.start(now);window.dispatchEvent(new Event('site-drum-hit'));
  if(active.size>24){const oldest=active.values().next().value;oldest.gain.gain.setTargetAtTime(0,now,.003);try{oldest.source.stop(now+.02)}catch{}}
  }catch(error){console.warn('Drum hit unavailable',error)}}
 for(const pad of pads){

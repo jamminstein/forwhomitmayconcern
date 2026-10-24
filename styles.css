@@ -436,6 +436,15 @@ html[data-theme=dark] #currentSongId{color:#fff}
 #overlay .point:focus{outline:none}
 #overlay .point:focus-visible{outline:1px dashed #111;outline-offset:5px;stroke-width:1.6}
 html[data-theme=dark] #overlay .point:focus-visible{outline-color:#fff}
+
+/* Reveal the existing motion control with the editing traces. Its hit box
+   stays below the corner node; hovering it keeps it available after idle. */
+.stage-wrap #artworkPlayback{bottom:-48px;z-index:0}
+.stage-wrap:not(.guides-idle) #artworkPlayback,.stage-wrap #artworkPlayback:hover,.stage-wrap #artworkPlayback:focus-visible{opacity:1;pointer-events:auto}
+#centerMove{position:absolute;left:35%;top:32%;width:30%;height:36%;margin:0;padding:0;border:0;background:transparent;color:#111;pointer-events:none}
+#centerMove:focus{outline:none}
+#centerMove:focus-visible{outline:1px dashed currentColor;outline-offset:4px}
+html[data-theme=dark] #centerMove{color:#fff}
 .transform-frame button:focus-visible,#themeToggle:focus-visible{outline:1px dashed currentColor;outline-offset:3px}
 @media(any-pointer:coarse){
  .drum-pad::before{content:'';position:absolute;inset:-7px -1.5px;background:transparent}
@@ -455,4 +464,5 @@ html[data-theme=dark] #overlay .point:focus-visible{outline-color:#fff}
  #pageWritings{height:max(235svh,1600px)}
  .shell{padding-bottom:80px}
  .stage-wrap{width:min(calc(100vw - 100px),calc(177.7778svh - 337.7778px))}
+ .stage-wrap #artworkPlayback{right:-48px;bottom:calc(50% - 16px)}
 }

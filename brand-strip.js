@@ -18,4 +18,16 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 for(const [,file] of [...brands,...agencies]){const preload=new Image();preload.src=assetURL(`brand-logos/${file}.png`)}
 function showEntry(){const entry=takeEntry(),isPerson=entry.category==='people';host.dataset.category=entry.category;host.dataset.brand=entry.file||'';image.hidden=isPerson;person.hidden=!isPerson;person.replaceChildren();if(isPerson){person.appendChild(drawWriting(entry.name,{height:31,maxWidth:98,caseMode:'lower',weight:1.2,cursive:true}))}else{image.src=assetURL(`brand-logos/${entry.file}.png`);image.alt=entry.name}}
 showEntry();
-setInterval(()=>{if(document.hidden||(window.siteVisualMotionPaused??reduced.matches))return;showEntry()},2600);
+let timer=0,due=0,remaining=2600;
+function stop(){if(timer){remaining=Math.max(0,due-performance.now());clearTimeout(timer);timer=0}}
+function update(){
+ if(document.hidden||(window.siteVisualMotionPaused??reduced.matches)){stop();return}
+ if(timer)return;
+ due=performance.now()+remaining;
+ timer=setTimeout(()=>{timer=0;remaining=2600;if(!document.hidden&&!(window.siteVisualMotionPaused??reduced.matches))showEntry();update()},remaining);
+}
+reduced.addEventListener('change',update);
+window.addEventListener('site-motion-change',update);
+document.addEventListener('visibilitychange',update);
+window.addEventListener('pagehide',stop);window.addEventListener('pageshow',update);
+update();

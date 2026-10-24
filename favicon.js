@@ -14,7 +14,16 @@ function draw(){
  icon.href=canvas.toDataURL('image/png');
 }
 function restore(){icon.href=assetURL('favicon.png')}
-setInterval(draw,1000);
-reduced.addEventListener('change',()=>{if(reduced.matches)restore();else draw()});
-window.addEventListener('site-motion-change',()=>{if(!window.siteVisualMotionPaused)draw()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)draw()});
+let timer=0,due=0,remaining=1000;
+function stop(){if(timer){remaining=Math.max(0,due-performance.now());clearTimeout(timer);timer=0}}
+function update(){
+ if(!ctx||document.hidden||(window.siteVisualMotionPaused??reduced.matches)){stop();return}
+ if(timer)return;
+ due=performance.now()+remaining;
+ timer=setTimeout(()=>{timer=0;remaining=1000;draw();update()},remaining);
+}
+reduced.addEventListener('change',()=>{if(reduced.matches)restore();update()});
+window.addEventListener('site-motion-change',update);
+document.addEventListener('visibilitychange',update);
+window.addEventListener('pagehide',stop);window.addEventListener('pageshow',update);
+update();

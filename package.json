@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
-    "test": "node tests/warp-surface.cjs && node tests/theme-startup.cjs && node tests/smoke.cjs && node tests/layout.cjs && node tests/media.cjs && node tests/video-startup.cjs && node tests/drum-recovery.cjs && node tests/soundtrack-recovery.cjs",
+    "test": "node tests/warp-surface.cjs && node tests/theme-startup.cjs && node tests/smoke.cjs && node tests/layout.cjs && node tests/media.cjs && node tests/video-startup.cjs && node tests/drum-recovery.cjs && node tests/soundtrack-recovery.cjs && node tests/artwork-controls.cjs && node tests/animation-idle.cjs && node tests/waveform-idle.cjs && node tests/renderer-bounds.cjs",
     "serve": "node scripts/serve.mjs"
   },
   "devDependencies": {
