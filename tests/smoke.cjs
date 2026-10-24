@@ -4,6 +4,12 @@ const base=process.env.BASE_URL||'http://127.0.0.1:8766';
 const webkitLocal='/Users/tiago/Library/Caches/ms-playwright/webkit-2370/pw_run.sh';
 const engines=[['Chromium',chromium,{}],['WebKit',webkit,fs.existsSync(webkitLocal)?{executablePath:webkitLocal}:{}]];
 const anchors=p=>p.locator('#overlay .point:not(.touch-target):not(.tangent)').evaluateAll(nodes=>nodes.map(e=>[e.getAttribute('cx'),e.getAttribute('cy')]));
+// Undo paints on the next animation frame. Slow CI frames can exceed 80 ms,
+// so wait for the exact coordinates instead of sampling before that paint.
+const waitForAnchors=(page,expected,changed=false)=>page.waitForFunction(({expected,changed})=>{
+ const actual=[...document.querySelectorAll('#overlay .point:not(.touch-target):not(.tangent)')].map(e=>[e.getAttribute('cx'),e.getAttribute('cy')]);
+ return (JSON.stringify(actual)===JSON.stringify(expected))!==changed;
+},{expected,changed},{timeout:5000});
 async function checkPointerOwnership(page){
  const corner=page.locator('#overlay .point.corner[data-index="0"]');
  await page.dispatchEvent('.stage-wrap','pointerenter');
@@ -35,9 +41,9 @@ async function checkPointerOwnership(page){
  await page.addInitScript(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.copiedEmail=text}}})});
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>document.querySelectorAll('#overlay .point').length>25);
  await page.waitForFunction(()=>document.querySelector('#video').currentTime>.1);
- await page.locator('#stage').hover();const original=await anchors(page);await page.locator('#randomize').click();await page.waitForTimeout(80);assert.notDeepEqual(await anchors(page),original);
- await page.keyboard.press('Control+z');await page.waitForTimeout(80);assert.deepEqual(await anchors(page),original);
- await page.locator('#randomize').click();await page.waitForTimeout(80);await page.keyboard.press('Meta+z');await page.waitForTimeout(80);assert.deepEqual(await anchors(page),original);
+ await page.locator('#stage').hover();const original=await anchors(page);await page.locator('#randomize').click();await waitForAnchors(page,original,true);assert.notDeepEqual(await anchors(page),original);
+ await page.keyboard.press('Control+z');await waitForAnchors(page,original);assert.deepEqual(await anchors(page),original);
+ await page.locator('#randomize').click();await waitForAnchors(page,original,true);await page.keyboard.press('Meta+z');await waitForAnchors(page,original);assert.deepEqual(await anchors(page),original);
  await page.locator('#zoom').evaluate(e=>{e.value='1.4';e.dispatchEvent(new Event('input',{bubbles:true}))});await page.keyboard.press('Control+z');assert.equal(await page.locator('#zoom').inputValue(),'1');
  assert.deepEqual(await page.evaluate(()=>{
    const zoom=document.querySelector('#zoom'),values=[];
@@ -51,8 +57,8 @@ async function checkPointerOwnership(page){
  assert.equal(await page.locator('#overlay [tabindex="0"]').count(),1);
  await page.locator('#overlay [tabindex="0"]').focus();await page.waitForTimeout(3100);assert.equal(await page.locator('#overlay').evaluate(e=>getComputedStyle(e).opacity),'1');
  await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.dataset.index),'1');
- await page.keyboard.press('Enter');await page.keyboard.press('ArrowRight');await page.waitForTimeout(80);assert.notDeepEqual(await anchors(page),original);
- await page.keyboard.press('Control+z');await page.waitForTimeout(80);assert.deepEqual(await anchors(page),original);
+ await page.keyboard.press('Enter');await page.keyboard.press('ArrowRight');await waitForAnchors(page,original,true);assert.notDeepEqual(await anchors(page),original);
+ await page.keyboard.press('Control+z');await waitForAnchors(page,original);assert.deepEqual(await anchors(page),original);
  await page.keyboard.press('Tab');assert(!(await page.evaluate(()=>document.activeElement.closest('#overlay'))));
  await page.locator('#zoom').evaluate(e=>{e.value='1.3';e.dispatchEvent(new Event('input',{bubbles:true}))});await page.locator('.transform-grip').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#zoom').inputValue(),'1');
  await page.locator('#contactEmail').click();assert.equal(await page.evaluate(()=>window.copiedEmail),'tiagopereira@me.com');assert.equal(await page.locator('.contact-status-text').textContent(),'email copied to clipboard');
