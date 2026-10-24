@@ -55,6 +55,32 @@ async function keyboard(page,name){
  assert.equal(await page.evaluate(()=>document.activeElement.dataset.index),'1');await position(page,0,0);
  console.log(`${name}: center keyboard movement, fine step, grouped undo, reset and mesh isolation passed`);
 }
+async function pointerMovement(page,name){
+ // Check screen-space response after scaling/rotation, beyond the original
+ // video edge and across a renderer allocation boundary.
+ await page.locator('#zoom').evaluate(e=>{e.value='.5';e.dispatchEvent(new Event('input',{bubbles:true}))});
+ await page.locator('.rotate-grip').focus();
+ for(let i=0;i<3;i++)await page.keyboard.press('ArrowRight');
+ await page.waitForFunction(()=>Math.abs(new DOMMatrixReadOnly(getComputedStyle(document.querySelector('.stage-wrap')).transform).a-Math.cos(Math.PI/12)*.5)<.00001);
+ for(const selector of ['#overlay .point.handle[data-index="22"]','#overlay .point.tangent[data-index="24"][data-direction="up"]']){
+  for(const fine of [false,true]){
+   await page.locator('#centerMove').focus();
+   const node=page.locator(selector),box=await node.boundingBox(),start={x:box.x+box.width/2,y:box.y+box.height/2};
+   const original=await node.evaluate(e=>[e.getAttribute('cx'),e.getAttribute('cy')]);
+   const height=await page.locator('#gl').evaluate(e=>e.height);
+   if(fine)await page.keyboard.down('Shift');
+   await page.mouse.move(start.x,start.y);await page.mouse.down();
+   await page.mouse.move(start.x+40,start.y+200,{steps:12});await page.mouse.up();
+   if(fine)await page.keyboard.up('Shift');
+   const expected={x:start.x+40*(fine?.18:1),y:start.y+200*(fine?.18:1)};
+   await page.waitForFunction(({selector,expected})=>{const r=document.querySelector(selector).getBoundingClientRect();return Math.abs(r.x+r.width/2-expected.x)<.35&&Math.abs(r.y+r.height/2-expected.y)<.35},{selector,expected});
+   if(!fine&&selector.includes('22'))assert(await page.locator('#gl').evaluate(e=>e.height)>height,'The canvas expands while the node follows the pointer');
+   await page.keyboard.press('Control+z');
+   await page.waitForFunction(({selector,original})=>{const e=document.querySelector(selector);return e.getAttribute('cx')===original[0]&&e.getAttribute('cy')===original[1]},{selector,original});
+  }
+ }
+ console.log(`${name}: anchors and tangents follow pointer one-to-one, Shift stays precise, crop growth and undo passed`);
+}
 async function controls(browser,name,options){
  const page=await setup(browser,options),pause=page.locator('#artworkPlayback');
  try{
@@ -82,6 +108,7 @@ async function controls(browser,name,options){
   await page.locator('#themeToggle').click();await page.locator('#centerMove').focus();
   assert.equal(await page.locator('#centerMove').evaluate(e=>getComputedStyle(e).color),'rgb(255, 255, 255)');
   assert.equal(await pause.evaluate(e=>getComputedStyle(e).color),'rgb(255, 255, 255)');
+  if(!options.hasTouch)await pointerMovement(page,name);
  }finally{await page.close()}
 }
 (async()=>{
