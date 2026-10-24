@@ -437,10 +437,9 @@ html[data-theme=dark] #currentSongId{color:#fff}
 #overlay .point:focus-visible{outline:1px dashed #111;outline-offset:5px;stroke-width:1.6}
 html[data-theme=dark] #overlay .point:focus-visible{outline-color:#fff}
 
-/* Reveal the existing motion control with the editing traces. Its hit box
-   stays below the corner node; hovering it keeps it available after idle. */
+/* Keep the keyboard/retry motion control clear of the corner node.
+   Ordinary pointer editing does not reveal a pause symbol. */
 .stage-wrap #artworkPlayback{bottom:-48px;z-index:0}
-.stage-wrap:not(.guides-idle) #artworkPlayback,.stage-wrap #artworkPlayback:hover,.stage-wrap #artworkPlayback:focus-visible{opacity:1;pointer-events:auto}
 #centerMove{position:absolute;left:35%;top:32%;width:30%;height:36%;margin:0;padding:0;border:0;background:transparent;color:#111;pointer-events:none}
 #centerMove:focus{outline:none}
 #centerMove:focus-visible{outline:1px dashed currentColor;outline-offset:4px}

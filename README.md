@@ -31,7 +31,7 @@ npm test
 - The next Tab stop is the video's center grab area. Arrows move the whole artwork by eight screen pixels; Shift moves one pixel. Holding a key groups its movement into one undo step. Enter or Space recenters it while preserving size, rotation, and warp.
 - The three drum pads respond to clicks or J/K/L. The small refresh drawing loads a new kit. Drag the drum's center trace to place it; its arrows work from keyboard focus.
 - Music controls navigate the shuffled Acervo collection. The volume slider controls the shared mix. The waveform links to Acervo; the envelope copies `tiagopereira@me.com` and confirms only after a successful copy. If browser copying fails, a selectable address appears.
-- A visual pause control appears with the mesh guides, on keyboard focus, and for reduced-motion visitors. It sits below the video, or beside it on short touch layouts to avoid the transport. Pausing keeps the artwork's shape and stops automatic visual motion. Music is independent. Failed artwork playback exposes the same small control as a retry action.
+- The visual pause control stays hidden during ordinary pointer editing. It remains available on keyboard focus and for reduced-motion visitors. It sits below the video, or beside it on short touch layouts to avoid the transport. Pausing keeps the artwork's shape and stops automatic visual motion. Music is independent. Failed artwork playback exposes the same small control as a retry action.
 
 On touch layouts the video stays fixed above the scrolling text. The transport stays reachable at the viewport bottom, with invisible touch targets around its small drawings. The drum and contact controls remain usable when overlapping the video.
 

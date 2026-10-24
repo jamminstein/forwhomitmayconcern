@@ -55,27 +55,25 @@ async function keyboard(page,name){
  assert.equal(await page.evaluate(()=>document.activeElement.dataset.index),'1');await position(page,0,0);
  console.log(`${name}: center keyboard movement, fine step, grouped undo, reset and mesh isolation passed`);
 }
-async function controls(browser,name,options,desktop=false){
+async function controls(browser,name,options){
  const page=await setup(browser,options),pause=page.locator('#artworkPlayback');
  try{
   await page.waitForFunction(()=>document.querySelector('#video').currentTime>.1);
   assert.equal(await pause.evaluate(e=>getComputedStyle(e).pointerEvents),'none','Pause starts quiet with the hidden guides');
   const bounds=await page.locator('#stage').boundingBox();
   await page.mouse.move(bounds.x+bounds.width*.56,bounds.y+bounds.height*.56);
+  await page.waitForFunction(()=>!document.querySelector('.stage-wrap').classList.contains('guides-idle'));
+  assert.equal(await pause.evaluate(e=>getComputedStyle(e).opacity),'0','Pointer editing does not reveal a pause symbol');
+  assert.equal(await pause.evaluate(e=>getComputedStyle(e).pointerEvents),'none');
+  await page.keyboard.press('Tab');await pause.focus();
   await page.waitForFunction(()=>Number(getComputedStyle(document.querySelector('#artworkPlayback')).opacity)>.95);
   const hit=await pause.evaluate(node=>{const r=node.getBoundingClientRect(),stage=document.querySelector('#stage').getBoundingClientRect(),dock=document.querySelector('.glass-dock').getBoundingClientRect();return{reachable:node.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)),gap:Math.max(r.top-stage.bottom,r.left-stage.right),bottom:r.bottom,right:r.right,dock:dock.top,height:innerHeight,width:innerWidth}});
-  assert(hit.reachable,`${name}: pause is reachable when guides appear`);
+  assert(hit.reachable,`${name}: pause remains reachable on keyboard focus`);
   assert(hit.gap>=15,`${name}: pause clears the bottom corner hit target`);
   assert(hit.bottom<=hit.height,`${name}: pause remains in the viewport`);
   assert(hit.right<=hit.width,`${name}: pause remains in the viewport horizontally`);
   if(options.hasTouch)assert(hit.bottom<=hit.dock,`${name}: pause does not overlap transport controls`);
-  if(desktop){
-   await pause.hover();await page.waitForTimeout(2800);
-   assert.equal(await pause.evaluate(e=>getComputedStyle(e).pointerEvents),'auto','A stationary hover keeps the pause action available');
-   assert.equal(await pause.evaluate(e=>getComputedStyle(e).opacity),'1');
-   // Space-drag must not swallow a click on the explicit pause button.
-   await page.keyboard.down('Space');await pause.click();await page.keyboard.up('Space');
-  }else await pause.tap();
+  await page.keyboard.press('Enter');
   await page.waitForFunction(()=>window.siteVisualMotionPaused===true);
   await keyboard(page,name);
   // Pointer hit priority remains with the mesh, even in the center grab region.
@@ -90,7 +88,7 @@ async function controls(browser,name,options,desktop=false){
  for(const [name,type,options] of engines){
   const browser=await type.launch(options);
   try{
-   await controls(browser,name+' desktop',{viewport:{width:1280,height:800}},true);
+   await controls(browser,name+' desktop',{viewport:{width:1280,height:800}});
    await controls(browser,name+' phone',{viewport:{width:390,height:844},hasTouch:true,isMobile:true});
    await controls(browser,name+' landscape phone',{viewport:{width:844,height:390},hasTouch:true,isMobile:true});
    const reduced=await setup(browser,{reducedMotion:'reduce'});
