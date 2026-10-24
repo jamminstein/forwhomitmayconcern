@@ -11,10 +11,13 @@ if(new URLSearchParams(location.search).has('videoDebug')){
  video.requestVideoFrameCallback?.(frame);
  setInterval(()=>{box.textContent=[
   'Video diagnostics — '+video.dataset.delivery,
+  'release: '+(document.querySelector('meta[name="site-version"]')?.content||'local'),
   'time: '+video.currentTime.toFixed(2)+' / '+video.duration,
   'paused: '+video.paused+' ready: '+video.readyState+' network: '+video.networkState,
   'decoded frames: '+(video.getVideoPlaybackQuality?.().totalVideoFrames??'?')+' callbacks: '+frames,
   'play result: '+(video.dataset.playResult||video.dataset.playback||'pending'),
+  'playback state: '+(video.dataset.playback||'pending')+' muted: '+video.muted,
+  'motion paused: '+!!window.siteVisualMotionPaused+' reduced motion: '+matchMedia('(prefers-reduced-motion: reduce)').matches,
   'media error: '+(video.error?video.error.code+' '+video.error.message:'none'),
   'texture error: '+(video.dataset.textureError||'none'),
   'source: '+video.currentSrc.split('/').pop(),
