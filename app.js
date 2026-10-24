@@ -1,5 +1,6 @@
 import {createUndoHistory} from './undo-history.js';
 import {createWarpRenderer} from './warp-renderer.js';
+import {createSurfaceSampler} from './warp-surface.js';
 import {initializeSoundtrack} from './soundtrack.js';
 import {MEDIA} from './site-config.js';
 (()=>{
@@ -8,7 +9,7 @@ import {MEDIA} from './site-config.js';
   let savedTheme='light';try{savedTheme=localStorage.getItem('jamminstein-theme')||'light'}catch{}setTheme(savedTheme==='dark'?'dark':'light');
   themeButton.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
   const stage=document.querySelector('#stage'), video=document.querySelector('#video'), canvas=document.querySelector('#gl'), overlay=document.querySelector('#overlay');
-  // Filter the mesh contents, not the SVG viewport: edge nodes must paint beyond the video.
+  // Keep the viewport unclipped so edge nodes and their small filters can paint outside the video.
   const meshDrawing=document.createElementNS('http://www.w3.org/2000/svg','g');
   meshDrawing.classList.add('mesh-drawing');overlay.appendChild(meshDrawing);
   const videoPlay=document.querySelector('#videoPlay'), timeLabel=document.querySelector('#videoTime'), editToggle=document.querySelector('#editToggle'), editHint=document.querySelector('#editHint');
@@ -38,8 +39,8 @@ import {MEDIA} from './site-config.js';
   function sizeCanvas(){renderer.resize(stage.clientWidth,stage.clientHeight);drawOverlay()}
   function curve(a,b,dir,opposite,t){const w=bezier(t);return {x:w[0]*a.x+w[1]*(a.x+a[dir].x+spring.x)+w[2]*(b.x+b[opposite].x+spring.x)+w[3]*b.x,y:w[0]*a.y+w[1]*(a.y+a[dir].y+spring.y)+w[2]*(b.y+b[opposite].y+spring.y)+w[3]*b.y}}
   function surface(u,v){const n=gridSize-1,c=Math.min(n-1,Math.floor(u*n)),r=Math.min(n-1,Math.floor(v*n)),x=u*n-c,y=v*n-r,a=points[pointIndex(r,c)],b=points[pointIndex(r,c+1)],d=points[pointIndex(r+1,c)],e=points[pointIndex(r+1,c+1)],top=curve(a,b,'right','left',x),bottom=curve(d,e,'right','left',x),left=curve(a,d,'down','up',y),right=curve(b,e,'down','up',y);const out={};for(const k of ['x','y'])out[k]=(1-y)*top[k]+y*bottom[k]+(1-x)*left[k]+x*right[k]-((1-x)*(1-y)*a[k]+x*(1-y)*b[k]+(1-x)*y*d[k]+x*y*e[k]);return out}
-  const vertexCache=new Float32Array(uvs.length);
-  function surfaceVertices(){const out=vertexCache;for(let i=0;i<uvs.length;i+=2){const p=surface(uvs[i],uvs[i+1]);out[i]=(p.x-.5)/2;out[i+1]=(.5-p.y)/2}return out}
+  const vertexCache=new Float32Array(uvs.length),sampleSurface=createSurfaceSampler(gridSize,uvs);
+  function surfaceVertices(){return sampleSurface(points,spring,vertexCache)}
   // Upload each decoded frame once; keep mesh motion on the display animation clock.
   let textureSource=null,videoFrameDirty=true,uploadedVideoTime=-1;
   const hasVideoFrameCallback=typeof video.requestVideoFrameCallback==='function';
@@ -61,15 +62,29 @@ import {MEDIA} from './site-config.js';
   const meshHelp=document.createElement('p');meshHelp.id='meshHelp';meshHelp.className='sr-only';meshHelp.textContent='Arrow keys select a warp point. Bracket keys select its tangent handles. Enter starts or stops editing; while editing, arrows move the point and Shift moves it finely. Escape leaves editing. Tab leaves the mesh. Command or Control Z undoes an edit.';stage.after(meshHelp);
   const pointKey=(i,dir)=>`${i}:${dir||'anchor'}`;
   const isMeshFocus=(i,dir)=>i===meshFocus.index&&(dir||null)===meshFocus.dir;
-  function focusMesh(){const node=[...overlay.querySelectorAll('.point:not(.touch-target)')].find(e=>isMeshFocus(Number(e.dataset.index),e.dataset.direction));node?.focus({preventScroll:true})}
+  function focusMesh(){const node=[...overlay.querySelectorAll('.point:not(.touch-target)')].find(e=>isMeshFocus(Number(e.dataset.index),e.dataset.direction));if(node&&document.activeElement!==node)node.focus({preventScroll:true})}
+
+  // Draw the pencil variation into the traces themselves. Filtering the entire
+  // moving mesh makes WebKit rasterize a large turbulence/displacement surface.
+  // These subpixel offsets stay fixed between frames and meet at each anchor.
+  const pencilTraces=Array.from({length:gridSize*2},(_,seed)=>{
+    const offsets=new Float32Array(130);
+    for(let j=0;j<=64;j++){const amount=j%16===0?0:.24*Math.sin(j*Math.PI/16);offsets[j*2]=Math.sin(j*1.7+seed*2.3)*amount;offsets[j*2+1]=Math.cos(j*1.3+seed*3.1)*amount}
+    return offsets;
+  });
+  function pencilLine(x1,y1,x2,y2,seed){
+    let d='';const amount=Math.min(.24,Math.hypot(x2-x1,y2-y1)/40);
+    for(let j=0;j<=16;j++){const t=j/16,w=j===0||j===16?0:Math.sin(t*Math.PI)*amount;d+=(j?' L ':'M ')+(x1+(x2-x1)*t+Math.sin(j*1.7+seed)*w)+' '+(y1+(y2-y1)*t+Math.cos(j*1.3+seed)*w)}
+    return d;
+  }
 
   function directions(i){const r=Math.floor(i/gridSize),c=i%gridSize;return [...(c>0?['left']:[]),...(c<gridSize-1?['right']:[]),...(r>0?['up']:[]),...(r<gridSize-1?['down']:[])]}
   function isCorner(i){const r=Math.floor(i/gridSize),c=i%gridSize;return (r===0||r===gridSize-1)&&(c===0||c===gridSize-1)}
   let overlayDirty=true,geometryDirty=true,guidePaintUntil=0;
   function drawOverlay(){overlayDirty=true;geometryDirty=true;const h=1/(gridSize-1)/3;const warped=points.some((p,i)=>Math.abs(p.x-(i%gridSize)/(gridSize-1))>1e-5||Math.abs(p.y-Math.floor(i/gridSize)/(gridSize-1))>1e-5||['left','right','up','down'].some(dir=>{const x=dir==='left'?-h:dir==='right'?h:0,y=dir==='up'?-h:dir==='down'?h:0;return Math.abs(p[dir].x-x)>1e-5||Math.abs(p[dir].y-y)>1e-5}));document.querySelector('#dockReset').classList.toggle('available',warped)}
-  function paintOverlay(){if(!overlay.isConnected)return;const hadFocus=overlay.contains(document.activeElement);const w=stage.clientWidth,h=stage.clientHeight;overlay.setAttribute('viewBox',`0 0 ${w} ${h}`);if(!isEditing){meshDrawing.replaceChildren();return}let cursor=0;function el(tag,attrs){let e=meshDrawing.children[cursor];if(!e||e.localName!==tag){const fresh=document.createElementNS('http://www.w3.org/2000/svg',tag);if(e)meshDrawing.replaceChild(fresh,e);else meshDrawing.appendChild(fresh);e=fresh}cursor++;if(!('data-direction' in attrs))e.removeAttribute('data-direction');for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);return e}
-    for(let axis=0;axis<2;axis++)for(let n=0;n<gridSize;n++){let d='';for(let j=0;j<=64;j++){const p=surface(axis?j/64:n/(gridSize-1),axis?n/(gridSize-1):j/64);d+=(j?' L ':'M ')+p.x*w+' '+p.y*h}el('path',{d,class:'net'})}
-    points.forEach((p,i)=>{if(!isCorner(i)&&i!==selectedPoint)return;directions(i).forEach(dir=>{const q=p[dir],x=(p.x+q.x+spring.x)*w,y=(p.y+q.y+spring.y)*h;el('line',{x1:p.x*w,y1:p.y*h,x2:x,y2:y,class:'handle-line selected'});const hit=el('circle',{cx:x,cy:y,r:13,class:'point touch-target',tabindex:-1,role:'presentation','aria-pressed':'false','data-index':i,'data-direction':dir,'aria-hidden':'true'});bind(hit);const end=el('circle',{cx:x,cy:y,r:4,'aria-hidden':'false',class:'point tangent','data-index':i,'data-direction':dir,role:'button',tabindex:isMeshFocus(i,dir)?0:-1,'aria-pressed':String(isMeshFocus(i,dir)&&meshEditing),'aria-label':`Warp point ${i+1} ${dir} tangent handle`});bind(end)})});
+  function paintOverlay(){if(!overlay.isConnected)return;const hadFocus=overlay.contains(document.activeElement);const w=stage.clientWidth,h=stage.clientHeight,viewBox=`0 0 ${w} ${h}`;if(overlay.getAttribute('viewBox')!==viewBox)overlay.setAttribute('viewBox',viewBox);if(!isEditing){meshDrawing.replaceChildren();return}let cursor=0;function el(tag,attrs){let e=meshDrawing.children[cursor];if(!e||e.localName!==tag){const fresh=document.createElementNS('http://www.w3.org/2000/svg',tag);if(e)meshDrawing.replaceChild(fresh,e);else meshDrawing.appendChild(fresh);e=fresh}cursor++;if(!('data-direction' in attrs)&&e.hasAttribute('data-direction'))e.removeAttribute('data-direction');for(const [k,v]of Object.entries(attrs)){const value=String(v);if(e.getAttribute(k)!==value)e.setAttribute(k,value)}return e}
+    for(let axis=0;axis<2;axis++)for(let n=0;n<gridSize;n++){let d='';const offsets=pencilTraces[axis*gridSize+n];for(let j=0;j<=64;j++){const p=surface(axis?j/64:n/(gridSize-1),axis?n/(gridSize-1):j/64);d+=(j?' L ':'M ')+(p.x*w+offsets[j*2])+' '+(p.y*h+offsets[j*2+1])}el('path',{d,class:'net'})}
+    points.forEach((p,i)=>{if(!isCorner(i)&&i!==selectedPoint)return;directions(i).forEach((dir,di)=>{const q=p[dir],x=(p.x+q.x+spring.x)*w,y=(p.y+q.y+spring.y)*h;el('path',{d:pencilLine(p.x*w,p.y*h,x,y,i*4+di),class:'handle-line selected'});const hit=el('circle',{cx:x,cy:y,r:13,class:'point touch-target',tabindex:-1,role:'presentation','aria-pressed':'false','data-index':i,'data-direction':dir,'aria-hidden':'true'});bind(hit);const end=el('circle',{cx:x,cy:y,r:4,'aria-hidden':'false',class:'point tangent','data-index':i,'data-direction':dir,role:'button',tabindex:isMeshFocus(i,dir)?0:-1,'aria-pressed':String(isMeshFocus(i,dir)&&meshEditing),'aria-label':`Warp point ${i+1} ${dir} tangent handle`});bind(end)})});
     points.forEach((p,i)=>{const hit=el('circle',{cx:p.x*w,cy:p.y*h,r:13,class:'point touch-target',tabindex:-1,role:'presentation','aria-pressed':'false','data-index':i,'aria-hidden':'true'});bind(hit);const c=el('circle',{cx:p.x*w,cy:p.y*h,r:4,'aria-hidden':'false',class:'point '+(isCorner(i)?'corner':'handle'),'data-index':i,role:'button',tabindex:isMeshFocus(i)?0:-1,'aria-pressed':String(isMeshFocus(i)&&meshEditing),'aria-label':`Warp point ${i+1}`});bind(c)})
     while(meshDrawing.children.length>cursor)meshDrawing.lastChild.remove();
     if(hadFocus)focusMesh();

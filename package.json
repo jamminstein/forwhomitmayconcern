@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
-    "test": "node tests/smoke.cjs && node tests/layout.cjs && node tests/media.cjs",
+    "test": "node tests/warp-surface.cjs && node tests/smoke.cjs && node tests/layout.cjs && node tests/media.cjs",
     "serve": "node scripts/serve.mjs"
   },
   "devDependencies": {
