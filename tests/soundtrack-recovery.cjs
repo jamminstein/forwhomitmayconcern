@@ -63,6 +63,8 @@ async function pendingRecovery(browser,name,reject){
   audio.pause();Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));
   Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));
  });
+ // Native pause queues its event; wait for that event to update the control.
+ await p.waitForFunction(()=>audio.paused&&document.querySelector('#musicPlay').getAttribute('aria-label')==='Play music');
  assert.equal(await p.locator('#musicPlay').getAttribute('aria-label'),'Play music');
  const calls=await p.evaluate(()=>playCalls);await p.locator('#musicPlay').click();
  await p.waitForFunction(()=>!audio.paused&&audio.currentTime>.2);assert.equal(await p.evaluate(()=>playCalls),calls+1,`${name}: one explicit play must supersede the held request`);
