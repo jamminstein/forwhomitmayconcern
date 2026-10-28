@@ -18,12 +18,9 @@ import {installCenterMove} from './center-move.js';
   const soundtrack=initializeSoundtrack();
   let isEditing=true;
   const gridSize=5, pointIndex=(r,c)=>r*gridSize+c;
-  let points=[];
+  let points=initialPoints(),resetTransition=null;
   let morphing=false,morphFrom=null,morphTo=null,morphStarted=0;
-  function initialPoints(){points=[];const h=1/(gridSize-1)/3;for(let r=0;r<gridSize;r++)for(let c=0;c<gridSize;c++)points.push({x:c/(gridSize-1),y:r/(gridSize-1),left:{x:-h,y:0},right:{x:h,y:0},up:{x:0,y:-h},down:{x:0,y:h}});}
-
-  initialPoints();
-  const showToast=()=>{};
+  function initialPoints(){const result=[],h=1/(gridSize-1)/3;for(let r=0;r<gridSize;r++)for(let c=0;c<gridSize;c++)result.push({x:c/(gridSize-1),y:r/(gridSize-1),left:{x:-h,y:0},right:{x:h,y:0},up:{x:0,y:-h},down:{x:0,y:h}});return result}
 
   const firstFrame=new Image();firstFrame.src=MEDIA.poster;firstFrame.className='artwork-poster';firstFrame.alt='';firstFrame.setAttribute('aria-hidden','true');stage.prepend(firstFrame);
   function bezier(t){const q=1-t;return[q*q*q,3*q*q*t,3*q*t*t,t*t*t]}
@@ -55,7 +52,7 @@ import {installCenterMove} from './center-move.js';
   firstFrame.addEventListener('load',requestRender);
   function render(now){
     renderRequest=0;if(document.hidden)return;
-    animateMorph(now);const moving=animateMotion(now);
+    animateMorph(now);animateReset(now);const moving=animateMotion(now);
     if(overlayDirty&&(!isEditing||!meshDrawing.children.length||!wrap.classList.contains('guides-idle')||now<guidePaintUntil)){overlayDirty=false;paintOverlay()}
     const source=video.readyState>=2?video:textureSource||(firstFrame.complete&&firstFrame.naturalWidth?firstFrame:null);
     const upload=source&&(source!==textureSource||(source===video&&video.readyState>=2&&(videoFrameDirty||(!hasVideoFrameCallback&&video.currentTime!==uploadedVideoTime))));
@@ -63,7 +60,7 @@ import {installCenterMove} from './center-move.js';
       if(upload){textureSource=source;videoFrameDirty=false;uploadedVideoTime=video.currentTime}
       geometryDirty=false;
     }
-    if(moving||(morphing&&!window.siteVisualMotionPaused)||(!hasVideoFrameCallback&&!video.paused&&!video.ended&&video.readyState>=2))requestRender();
+    if(moving||resetTransition||(morphing&&!window.siteVisualMotionPaused)||(!hasVideoFrameCallback&&!video.paused&&!video.ended&&video.readyState>=2))requestRender();
   }
   let selectedPoint=-1,dragState=null,meshFocus={index:0,dir:null},meshEditing=false;
   overlay.setAttribute('role','group');overlay.setAttribute('aria-label','Video warp controls');overlay.setAttribute('aria-describedby','meshHelp');
@@ -128,18 +125,20 @@ import {installCenterMove} from './center-move.js';
   const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
   const spring={x:0,y:0,vx:0,vy:0},displayView={x:0,y:0,scale:1,angle:0};let lastFrame=0,lastTransform='';
   const wrap=document.querySelector('.stage-wrap'),view={x:0,y:0,scale:1,angle:0};let transformMode=false,spaceHeld=false,objectDrag=null;
-  const history=createUndoHistory(()=>({points,view}),state=>{
+  const undoHistory=createUndoHistory(()=>({points,view}),state=>{
     clearTimeout(zoomTimer);zoomGesture=false;
     setMorph(false);points=state.points;Object.assign(view,state.view);Object.assign(displayView,view);Object.assign(spring,{x:0,y:0,vx:0,vy:0});
     selectedPoint=-1;meshFocus={index:0,dir:null};meshEditing=false;dragState=null;objectDrag=null;applyView();drawOverlay();wakeGuides();
   });
+  // A new edit takes over the current shape, even halfway through a reset.
+  const history={remember(){cancelReset();undoHistory.remember()},undo(){cancelReset();return undoHistory.undo()}};
   window.addEventListener('keydown',e=>{
     if(!(e.metaKey||e.ctrlKey)||e.altKey||e.shiftKey||e.key.toLowerCase()!=='z'||e.target.closest?.('textarea,input:not([type="range"]),[contenteditable="true"]'))return;
     if(history.undo()){e.preventDefault();e.stopImmediatePropagation()}
   },true);
   let zoomGesture=false,zoomTimer;
   function rememberZoom(){if(!zoomGesture){history.remember();zoomGesture=true}clearTimeout(zoomTimer);zoomTimer=setTimeout(()=>{zoomGesture=false},300)}
-  function applyView(){document.querySelector('#zoom').value=view.scale;updateZoomSketch();requestRender()}
+  function applyView(keepReset=false){if(!keepReset)cancelReset();document.querySelector('#zoom').value=view.scale;updateZoomSketch();requestRender()}
   function animateMotion(now){
     const dt=Math.min(.033,(now-lastFrame)/1000||1/60);lastFrame=now;
     const paused=window.siteVisualMotionPaused,blend=paused?1:1-Math.exp(-24*dt),oldX=displayView.x,oldY=displayView.y;
@@ -187,11 +186,45 @@ import {installCenterMove} from './center-move.js';
   document.querySelector('#transform').onclick=()=>setTransform(!transformMode);
   document.querySelector('#zoom').oninput=e=>{rememberZoom();view.scale=Number(e.target.value);applyView()};
   document.querySelector('#guides').onclick=()=>{isEditing=!isEditing;document.querySelector('#guides').setAttribute('aria-pressed',String(isEditing));drawOverlay()};
-  document.querySelector('#dockReset').onclick=()=>{history.remember();setMorph(false);initialPoints();selectedPoint=-1;Object.assign(view,{x:0,y:0,scale:1,angle:0});Object.assign(spring,{x:0,y:0,vx:0,vy:0});applyView();drawOverlay();showToast('Shape and view reset.')};
+  function cancelReset(){resetTransition=null}
+  function resetMesh(resetView=false){
+    if(resetTransition){
+      // The dock arrow can also restore the view during a mesh-only reset.
+      if(resetView){Object.assign(view,{x:0,y:0,scale:1,angle:0});applyView(true)}
+      return;
+    }
+    history.remember();setMorph(false);selectedPoint=-1;meshEditing=false;
+    const pointer=dragState?.id,objectPointer=objectDrag?.id;
+    dragState=null;objectDrag=null;wrap.classList.remove('bezier-dragging','object-moving');
+    if(pointer!==undefined&&stage.hasPointerCapture(pointer))stage.releasePointerCapture(pointer);
+    if(objectPointer!==undefined&&wrap.hasPointerCapture(objectPointer))wrap.releasePointerCapture(objectPointer);
+    clearTimeout(zoomTimer);zoomGesture=false;
+    if(resetView){Object.assign(view,{x:0,y:0,scale:1,angle:0});applyView()}
+    const target=initialPoints();
+    if(motionPreference.matches||window.siteVisualMotionPaused){
+      points=target;Object.assign(spring,{x:0,y:0,vx:0,vy:0});
+      if(resetView)Object.assign(displayView,view);
+    }else resetTransition={from:structuredClone(points),to:target,started:performance.now()};
+    drawOverlay();
+  }
+  function animateReset(now){
+    if(!resetTransition)return;
+    // Ease anchors and tangents together; whole-artwork easing and springs keep
+    // using their existing motion path, so returning to center stays continuous.
+    const {from,to,started}=resetTransition,t=motionPreference.matches||window.siteVisualMotionPaused?1:Math.min(1,Math.max(0,(now-started)/500)),ease=t*t*(3-2*t);
+    if(t===1){points=to;resetTransition=null}
+    else for(let i=0;i<points.length;i++){
+      const p=points[i],a=from[i],b=to[i];
+      for(const key of ['x','y'])p[key]=a[key]+(b[key]-a[key])*ease;
+      for(const dir of ['left','right','up','down'])for(const key of ['x','y'])p[dir][key]=a[dir][key]+(b[dir][key]-a[dir][key])*ease;
+    }
+    drawOverlay();
+  }
+  document.querySelector('#dockReset').onclick=()=>resetMesh(true);
   function randomWarpPoints(){const random=(a,b)=>a+Math.random()*(b-a);return Array.from({length:gridSize*gridSize},(_,i)=>{const p={x:(i%gridSize)/(gridSize-1)+random(-.18,.18),y:Math.floor(i/gridSize)/(gridSize-1)+random(-.22,.22)};for(const dir of ['left','right','up','down']){const angle=random(-Math.PI,Math.PI),length=random(.08,.42);p[dir]={x:Math.cos(angle)*length,y:Math.sin(angle)*length}}return p})}
   function randomizeWarp(){history.remember();points=randomWarpPoints();if(morphing)beginMorph(performance.now());drawOverlay()}
   function beginMorph(now){morphFrom=structuredClone(points);morphTo=randomWarpPoints();morphStarted=now;morphPausedAt=window.siteVisualMotionPaused||document.hidden?now:null}
-  function setMorph(active){morphing=active;const button=document.querySelector('#morph');button.setAttribute('aria-pressed',String(active));button.setAttribute('aria-label',active?'Stop morphing':'Start morphing');if(active){morphPausedAt=null;beginMorph(performance.now())}requestRender()}
+  function setMorph(active){cancelReset();morphing=active;const button=document.querySelector('#morph');button.setAttribute('aria-pressed',String(active));button.setAttribute('aria-label',active?'Stop morphing':'Start morphing');if(active){morphPausedAt=null;beginMorph(performance.now())}requestRender()}
   let morphPausedAt=null;
   function syncMotionPause(){
     const now=performance.now();lastFrame=now;
@@ -229,7 +262,7 @@ import {installCenterMove} from './center-move.js';
   function formatTime(s){if(!Number.isFinite(s))return'00:00';return`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`}
   video.addEventListener('play',()=>{videoPlay.textContent='Ⅱ  Pause';videoPlay.setAttribute('aria-label','Pause video')});video.addEventListener('pause',()=>{videoPlay.textContent='▶  Play';videoPlay.setAttribute('aria-label','Play video')});
   editToggle.addEventListener('click',()=>{isEditing=!isEditing;editToggle.classList.toggle('active',isEditing);editToggle.textContent=isEditing?'Warp on':'Warp off';editToggle.setAttribute('aria-pressed',String(isEditing));editHint.hidden=!isEditing;drawOverlay()});
-  document.querySelector('#resetWarp').addEventListener('click',()=>{history.remember();initialPoints();drawOverlay();showToast('Mesh returned to its original shape.')});
+  document.querySelector('#resetWarp').addEventListener('click',()=>resetMesh());
   document.querySelector('#videoUpload').addEventListener('click',()=>videoFile.click());
   function loadVideoFile(file){if(file)window.loadSiteArtwork?.(file)}
   videoFile.addEventListener('change',()=>loadVideoFile(videoFile.files?.[0]));
@@ -238,7 +271,7 @@ import {installCenterMove} from './center-move.js';
   window.addEventListener('keydown',e=>{
     if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey||e.target.closest?.('input,button,textarea,select,[contenteditable="true"],.point'))return;
     if(e.key.toLowerCase()==='v')videoFile.click();
-    if(e.key.toLowerCase()==='r'){history.remember();setMorph(false);initialPoints();selectedPoint=-1;drawOverlay()}
+    if(e.key.toLowerCase()==='r')resetMesh();
     if(e.key.toLowerCase()==='f')wrap.requestFullscreen?.();
   });
   window.addEventListener('dragover',e=>e.preventDefault());
